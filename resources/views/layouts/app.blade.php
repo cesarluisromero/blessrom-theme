@@ -45,7 +45,7 @@
       @include('sections.footer')
     </div>
     @php(do_action('get_footer'))    
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    
     @stack('scripts') 
     <script>
       document.addEventListener('DOMContentLoaded', function () {
@@ -94,6 +94,8 @@
         }
       });
     </script>   
+    
     @php(wp_footer())    
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
   </body>
 </html>
