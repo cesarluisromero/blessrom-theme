@@ -2,10 +2,6 @@
 @source "../views/";
 @source "../../app/";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 a {
     @apply no-underline hover:no-underline;
   }

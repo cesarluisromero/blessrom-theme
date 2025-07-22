@@ -11,10 +11,12 @@
         padding: 0 !important;
       }
     </style>
-    @vite(['resources/scripts/app.js'])
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
     
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
+
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    
+    @vite(['resources/scripts/app.js'])
 
     @stack('styles')
     @php(wp_head()) 
