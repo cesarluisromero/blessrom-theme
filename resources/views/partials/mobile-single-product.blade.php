@@ -7,5 +7,5 @@
             </div>
         @endforeach
     </div>
-    <div class="swiper-pagination mt-2"></div>
+    <div class="swiper-pagination absolute bottom-1 inset-x-0 flex justify-center"></div>
 </div>
