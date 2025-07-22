@@ -1,3 +1,6 @@
+<div class="text-center text-lg font-semibold text-gray-800">
+        {{ $product->get_name() }}
+</div>
 <div x-data="productGallery()" class="product-swiper swiper block lg:hidden mb-6">
     <div class="swiper-wrapper">
         @php $ids = array_merge([$main_image], $attachment_ids); @endphp
