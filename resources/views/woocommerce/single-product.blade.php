@@ -29,29 +29,3 @@
    @php do_action('woocommerce_after_main_content'); @endphp
 @endsection
 
-@push('scripts')
-    <script>
-        window.wc_add_to_cart_params = {
-            ajax_url: "{{ admin_url('admin-ajax.php') }}",
-            cart_url: "{{ wc_get_cart_url() }}"
-        };
-        function productGallery() {
-            return {
-                init() {
-                new Swiper(this.$el, {
-                    slidesPerView: 1,
-                    spaceBetween: 10,
-                    pagination: { el: this.$el.querySelector('.swiper-pagination'), clickable: true },
-                    breakpoints: {
-                    768: {
-                        pagination: false,
-                        swipe: false,
-                        allowTouchMove: false
-                    }
-                    }
-                });
-                }
-            }
-        }
-    </script>
-@endpush
