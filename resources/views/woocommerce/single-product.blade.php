@@ -2,7 +2,7 @@
 
 @section('content')
   
-    {{-- 🔄 WooCommerce necesita esto inicializar su contenido--}}
+    {{-- 🔄 WooCommerce necesita esto para inicializar el carrito --}}
     @php do_action('woocommerce_before_main_content'); @endphp
     
     <div x-data="{
@@ -10,18 +10,19 @@
     }" class="container max-w-6xl mx-auto px-2 md:px-4 lg:px-6 py-10">
         
         {{-- Imagen principal + galería táctil en móvil --}}
-        <div x-data="productGallery()" class="product-swiper swiper block lg:hidden mb-6">
-            <div class="swiper-wrapper">
-                @php $ids = array_merge([$main_image], $attachment_ids); @endphp
-                @foreach ($ids as $id)
-                    <div class="swiper-slide">
-                        <img src="{{ wp_get_attachment_image_url($id, 'large') }}" class="w-full h-auto object-contain">
-                    </div>
-                @endforeach
-            </div>
-            <div class="swiper-pagination absolute bottom-1 inset-x-0 flex justify-center"></div>
-        </div>
+        @include('partials.mobile-single-product')
 
+        {{-- Galería de escritorio en columnas --}}
+        <div class="grid grid-cols-1 lg:grid-cols-[40%_30%_30%] gap-4 h-[300px] desktop-gallery">
+            {{-- Columna 1: Imágenes --}}
+            @include('partials.single-product-columna1')
+            
+            {{-- Columna 2: Información --}}
+            @include('partials.single-product-columna2')
+            
+            {{-- Columna 3: Acciones y Descripción --}}
+            @include('partials.single-product-columna3')
+        </div>
     </div>
 
     {{-- 🔄 WooCommerce también necesita esto para finalizar su contenido --}}

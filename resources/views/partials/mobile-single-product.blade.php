@@ -8,4 +8,15 @@
         @endforeach
     </div>
     <div class="swiper-pagination absolute bottom-1 inset-x-0 flex justify-center"></div>
+    <div class="px-4 py-4 space-y-3">
+        {{-- Precio --}}
+        <div class="text-center text-xl font-bold text-blue-600">
+            {!! $product->get_price_html() !!}
+        </div>
+
+        {{-- Atributos --}}
+        <div class="text-sm text-center text-gray-700">
+            {!! woocommerce_template_single_add_to_cart() !!}
+        </div>
+    </div>
 </div>
