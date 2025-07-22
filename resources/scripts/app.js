@@ -276,13 +276,14 @@ document.addEventListener('DOMContentLoaded', () => {
   
 
 window.productGallery = function () {
+    return {
+        init() {
     new Swiper('.product-swiper', {
+                pagination: { el: '.swiper-pagination' },
       loop: true,
-      pagination: {
-        el: '.swiper-pagination',
-        clickable: true,
-      },
     });
+        }
+    }
 }
 
 
