@@ -1,4 +1,4 @@
-<div x-data="productGallery()" class="swiper product-swiper block lg:hidden mb-6">
+<div x-data="productGallery()" class="product-swiper block lg:hidden mb-6">
     <div class="swiper-wrapper">
         @php $ids = array_merge([$main_image], $attachment_ids); @endphp
         @foreach ($ids as $id)
