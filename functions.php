@@ -61,6 +61,6 @@ collect(['setup', 'filters'])
 
 //remueve stilos por defecto de woocommerce
 add_filter('woocommerce_enqueue_styles', '__return_empty_array');
-
+//remueve migas de pan
 remove_action('woocommerce_before_main_content', 'woocommerce_breadcrumb', 20);
 
