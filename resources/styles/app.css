@@ -1,0 +1,29 @@
+@import "tailwindcss" theme(static);
+@source "../views/";
+@source "../../app/";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+a {
+    @apply no-underline hover:no-underline;
+  }
+
+/* Ocultar Swiper en desktop */
+@media (min-width: 768px) {
+  .product-swiper { display: none; }
+}
+
+/* Ocultar la galería de escritorio en móviles */
+@media (max-width: 767px) {
+  .desktop-gallery { display: none; }
+}
+
+/* 🔒 Ocultar la sección del cupón en el checkout */
+.woocommerce-form-coupon-toggle {
+  display: none !important;
+}
+
+
+

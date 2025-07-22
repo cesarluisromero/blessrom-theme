@@ -1,0 +1,32 @@
+# Node y dependencias
+/node_modules
+/vendor
+
+# Ignorar todo en public, excepto la carpeta build
+/public/*
+!/public/build/
+/public/build/*
+!/public/build/**
+
+# Archivos de entorno
+.env
+npm-debug.log
+
+# Archivos temporales de sistema
+.DS_Store
+Thumbs.db
+
+# Configuración de IDE/editors
+.vscode/
+.idea/
+
+# Archivos de log o debug
+*.log
+
+# Archivos de backup o empaquetados
+*.bak
+*.zip
+*.tar.gz
+
+# Sistema operativo
+desktop.ini
