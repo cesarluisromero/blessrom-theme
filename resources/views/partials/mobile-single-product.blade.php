@@ -1,9 +1,9 @@
 
-
-<div x-data="productGallery()" class="product-swiper swiper block lg:hidden mb-6">
-    <div class="text-center text-lg font-semibold text-gray-800">
+<div class="text-center text-lg font-semibold text-gray-800 lg:hidden mb-6">
         {{ $product->get_name() }}
-    </div>
+</div>
+<div x-data="productGallery()" class="product-swiper swiper block lg:hidden mb-6">
+    
     <div class="swiper-wrapper">
         @php $ids = array_merge([$main_image], $attachment_ids); @endphp
         @foreach ($ids as $id)
@@ -14,7 +14,10 @@
     </div>
     <div class="swiper-pagination absolute bottom-1 inset-x-0 flex justify-center"></div>
 
-    <div class="px-4 py-4 space-y-3">
+ 
+    
+</div>
+   <div class="px-4 py-4 space-y-3 lg:hidden mb-6">
         {{-- Precio --}}
         <div class="text-center text-xl font-bold text-blue-600">
             {!! $product->get_price_html() !!}
@@ -25,5 +28,3 @@
             {!! woocommerce_template_single_add_to_cart() !!}
         </div>
     </div>
-    
-</div>
