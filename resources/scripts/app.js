@@ -267,6 +267,21 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       
     });
+
+    if (Alpine.store('product')) {
+      Alpine.store('product').swiper = swiperInstance;
+
+      Alpine.store('product').slideToImage = (url) => {
+        const slides = swiperInstance.slides;
+        for (let i = 0; i < slides.length; i++) {
+          const img = slides[i].querySelector('img');
+          if (img && img.src.split('?')[0] === url.split('?')[0]) {
+            swiperInstance.slideToLoop(i);
+            break;
+          }
+        }
+      };
+    }
   });
   
   
