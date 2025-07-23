@@ -108,13 +108,16 @@ foreach ($attributes as $attribute_name => $options) {
                 <button
                     type="button"
                     @click="
-                            selected_pa_color = color; 
-                            quantity = 1; 
-                            errorMessage = ''; 
-                            updateMaxQty();
-                            if ($store.product?.colorImages?.[color]) {
-                                $store.product.currentImage = $store.product.colorImages[color];
-                            }
+                                selected_pa_color = color; 
+                                quantity = 1; 
+                                errorMessage = ''; 
+                                updateMaxQty();
+                                if ($store.product?.colorImages?.[color]) {
+                                    $store.product.currentImage = $store.product.colorImages[color];
+                                    if ($store.product.slideToImage) {
+                                        $store.product.slideToImage($store.product.colorImages[color]);
+                                    }
+                                }
                             "
                     :class="selected_pa_color === color
                         ? 'ring-2 ring-blue-500 border-blue-500 text-white'

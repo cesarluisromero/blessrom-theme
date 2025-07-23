@@ -7,9 +7,8 @@
     <div class="swiper-wrapper">
         @php $ids = array_merge([$main_image], $attachment_ids); @endphp
         @foreach ($ids as $id)
-            <div class="swiper-slide">                          
-                            
-                <img src="$store.product.currentImage = '{{ wp_get_attachment_image_url($id, 'large') }}'" class="w-full h-auto object-contain lg:hidden mb-6">
+            <div class="swiper-slide">
+                <img src="{{ wp_get_attachment_image_url($id, 'large') }}" class="w-full h-auto object-contain lg:hidden mb-6">
             </div>
         @endforeach
     </div>
