@@ -112,7 +112,7 @@ foreach ($attributes as $attribute_name => $options) {
                             quantity = 1; 
                             errorMessage = ''; 
                             updateMaxQty(); 
-                            $store.product.selectedImage = $store.product.colorImages['{{ $colorSlug }}']
+                            $store.product.selectedImage = $store.product.colorImages['{{color }}']
                             "
                     :class="selected_pa_color === color
                         ? 'ring-2 ring-blue-500 border-blue-500 text-white'
