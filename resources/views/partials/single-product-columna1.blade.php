@@ -7,12 +7,12 @@
         @if ($main_image)
             <img src="{{ wp_get_attachment_image_url($main_image, 'thumbnail') }}" 
                 class="w-16 h-16 object-cover cursor-pointer border border-white rounded bg-[#E1E6E4] hover:border-blue-500" 
-                @click="currentImage = '{{ wp_get_attachment_image_url($main_image, 'large') }}'">
+                @click="$store.product.currentImage = '{{ wp_get_attachment_image_url($main_image, 'large') }}'">
         @endif
         @foreach ($attachment_ids as $id)
             <img src="{{ wp_get_attachment_image_url($id, 'thumbnail') }}" 
                 class="w-16 h-16 object-cover cursor-pointer border border-white rounded bg-[#E1E6E4] hover:border-blue-500" 
-                @click="currentImage = '{{ wp_get_attachment_image_url($id, 'large') }}'">
+                @click="$store.product.currentImage = '{{ wp_get_attachment_image_url($id, 'large') }}'">
         @endforeach
     </div>
 
