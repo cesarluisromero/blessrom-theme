@@ -27,10 +27,10 @@
     }" class="container max-w-6xl mx-auto px-2 md:px-4 lg:px-6 py-10">
         
         {{-- Imagen principal + galería táctil en móvil --}}
-        @include('partials.mobile-single-product')
+            @include('partials.mobile-single-product')
 
         {{-- Galería de escritorio en columnas --}}
-        <div class="grid grid-cols-1 lg:grid-cols-[40%_30%_30%] gap-4 h-[300px] desktop-gallery">
+        <div class="grid grid-cols-1 lg:grid-cols-[40%_30%_30%] gap-4 h-[3000px] desktop-gallery">
             {{-- Columna 1: Imágenes --}}
             @include('partials.single-product-columna1')
             
