@@ -52,6 +52,16 @@
             ajax_url: "{{ admin_url('admin-ajax.php') }}",
             cart_url: "{{ wc_get_cart_url() }}"
         };
+        document.addEventListener('alpine:init', () => {
+            Alpine.store('product', {
+            colorImages: @json($colorImages),
+            selectedColor: null,
+            selectedImage: '{{ $defaultImage }}',
+            currentImage: '{{ $defaultImage }}' ,
+            swiper: null,
+            slideToImage: () => {}
+            });
+        })
         function productGallery() {
             return {
                 swiper: null,
@@ -60,6 +70,7 @@
                 this.swiper = new Swiper(this.$el, {
                     slidesPerView: 1,
                     spaceBetween: 10,
+                    loop: true,
                     pagination: {
                     el: this.$el.querySelector('.swiper-pagination'),
                     clickable: true
@@ -73,30 +84,29 @@
                     }
                 });
 
-                // 🔗 Enlazar al store Alpine
-                Alpine.store('product').swiper = this.swiper;
+                // ✅ Guardar swiper en Alpine.store
+                if (Alpine.store('product')) {
+                    Alpine.store('product').swiper = this.swiper;
 
-                Alpine.store('product').slideToImage = (url) => {
+                    Alpine.store('product').slideToImage = (url) => {
+                    const targetUrl = url.split('?')[0];
+
                     const slides = this.swiper.slides;
                     for (let i = 0; i < slides.length; i++) {
-                    const img = slides[i].querySelector('img');
-                    if (img && img.src.split('?')[0] === url.split('?')[0]) {
-                        this.swiper.slideToLoop(i); // porque loop está activado
+                        const img = slides[i].querySelector('img');
+                        if (img && img.src.split('?')[0] === targetUrl) {
+                        this.swiper.slideToLoop(i); // funciona con loop
                         break;
+                        }
                     }
-                    }
-                };
+                    };
+                } else {
+                    console.warn('⚠️ Alpine.store("product") aún no está disponible');
                 }
-            }
+                }
+            };
         };
 
-        document.addEventListener('alpine:init', () => {
-            Alpine.store('product', {
-            colorImages: @json($colorImages),
-            selectedColor: null,
-            selectedImage: '{{ $defaultImage }}',
-            currentImage: '{{ $defaultImage }}'  // NUEVO
-            });
-        })
+        
     </script>
 @endpush
