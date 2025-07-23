@@ -107,7 +107,13 @@ foreach ($attributes as $attribute_name => $options) {
             <template x-for="color in validColors()" :key="color">
                 <button
                     type="button"
-                    @click="selected_pa_color = color; quantity = 1; errorMessage = ''; updateMaxQty()"
+                    @click="
+                            selected_pa_color = color; 
+                            quantity = 1; 
+                            errorMessage = ''; 
+                            updateMaxQty(); 
+                            $store.product.selectedImage = $store.product.colorImages['{{ $colorSlug }}']
+                            "
                     :class="selected_pa_color === color
                         ? 'ring-2 ring-blue-500 border-blue-500 text-white'
                         : 'bg-white text-gray-800 border-gray-300'"
@@ -183,4 +189,5 @@ foreach ($attributes as $attribute_name => $options) {
             </template>
         </div>
     </div>
+    
 </form>

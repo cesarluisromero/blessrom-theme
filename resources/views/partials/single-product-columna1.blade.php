@@ -1,4 +1,5 @@
 {{-- Columna 1: Imágenes --}}
+
 <div class="grid grid-cols-[20%_80%] gap-0 items-start bg-white ml-4">
   
     {{-- Miniaturas --}}
@@ -16,6 +17,7 @@
     </div>
 
     {{-- Imagen principal --}}
+    
     <div 
         x-data="{
             zoomX: 0,
@@ -31,12 +33,15 @@
                 this.zoomY = -y * 1.5 + 275;
             }
         }"
-        x-init="window.addEventListener('resize', () => zoomEnabled = window.innerWidth >= 768)"
+        x-init="
+                window.addEventListener('resize', () => zoomEnabled = window.innerWidth >= 768),
+                $store.product.selectedImage = '{{ $defaultImage }}'
+                "
         class="relative"
     >
         {{-- Imagen principal --}}
         <img 
-            :src="currentImage" 
+            :src="$store.product.selectedImage" 
             class="w-full h-auto object-contain border border-white rounded bg-[#E1E6E4]" 
             alt="Imagen principal"
             @mousemove="updateZoom"
@@ -61,3 +66,4 @@
         </div>
     </div>
 </div>
+{{-- Fin de Columna 1 --}}

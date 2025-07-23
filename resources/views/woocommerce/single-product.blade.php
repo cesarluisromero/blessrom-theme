@@ -1,6 +1,23 @@
 @extends('layouts.app')
 
 @section('content')
+    @php
+        // Obtener todas las variaciones disponibles del producto actual (asumiendo $product es WC_Product_Variable)
+        $variations = $product->get_available_variations();
+        $colorImages = [];
+        foreach ($variations as $variation) {
+            // Suponiendo que el atributo color se llama 'pa_color'
+            if (!empty($variation['attributes']['attribute_pa_color'])) {
+                $colorSlug = $variation['attributes']['attribute_pa_color'];  // slug del color
+                $imgUrl = $variation['image']['url'] ?? '';  // URL de la imagen de la variación
+                if ($imgUrl && !isset($colorImages[$colorSlug])) {
+                    $colorImages[$colorSlug] = $imgUrl;
+                }
+            }
+        }
+        // Obtener imagen por defecto (por ejemplo, la imagen destacada del producto)
+        $defaultImage = wp_get_attachment_image_url($product->get_image_id(), 'large');
+    @endphp
   
     {{-- 🔄 WooCommerce necesita esto para inicializar el carrito --}}
     @php do_action('woocommerce_before_main_content'); @endphp
@@ -52,6 +69,13 @@
                 });
                 }
             }
-        }
+        };
+        document.addEventListener('alpine:init', () => {
+            Alpine.store('product', {
+            colorImages: @json($colorImages),
+            selectedColor: null,
+            selectedImage: '{{ $defaultImage }}'
+            });
+        })
     </script>
 @endpush

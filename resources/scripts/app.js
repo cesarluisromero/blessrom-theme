@@ -101,6 +101,8 @@ function alpineCart() {
             this.addToCartAjax(form);
         },
 
+        
+
         async addToCartAjax(form) {
           console.log('🛒 Ejecutando addToCartAjax', form);
 
@@ -169,6 +171,7 @@ function alpineCart() {
 
     }
 };
+
 window.alpineCart = alpineCart;
 window.Alpine = Alpine;
 Alpine.start();
