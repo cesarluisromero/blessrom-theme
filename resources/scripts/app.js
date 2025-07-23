@@ -238,51 +238,52 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.addEventListener('DOMContentLoaded', function () {
-    new Swiper('.swiper', {
-      slidesPerView: 4,
-      slidesPerGroup: 4,
-      loop:true,
-      spaceBetween: 10,
-      navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
+  const swiperInstance = new Swiper('.swiper', {
+    slidesPerView: 4,
+    slidesPerGroup: 4,
+    loop: true,
+    spaceBetween: 10,
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+    scrollbar: {
+      el: '.swiper-scrollbar',
+      draggable: true,
+    },
+    breakpoints: {
+      0: {
+        slidesPerView: 1,
+        slidesPerGroup: 1,
       },
-      scrollbar: {
-        el: '.swiper-scrollbar',
-        draggable: true,
+      640: {
+        slidesPerView: 3,
+        slidesPerGroup: 3,
       },
-      breakpoints: {
-        0: {
-          slidesPerView: 1,
-          slidesPerGroup: 1,
-        },
-        640: {
-          slidesPerView: 3,
-          slidesPerGroup: 3,
-        },
-        1024: {
-          slidesPerView: 8,
-          slidesPerGroup: 8,
-        },
+      1024: {
+        slidesPerView: 8,
+        slidesPerGroup: 8,
       },
-      
-    });
-
-    if (Alpine.store('product')) {
-      Alpine.store('product').swiper = swiperInstance;
-
-      Alpine.store('product').slideToImage = (url) => {
-        const slides = swiperInstance.slides;
-        for (let i = 0; i < slides.length; i++) {
-          const img = slides[i].querySelector('img');
-          if (img && img.src.split('?')[0] === url.split('?')[0]) {
-            swiperInstance.slideToLoop(i);
-            break;
-          }
-        }
-      };
-    }
+    },
   });
+
+  // ✅ Integración con Alpine
+  if (Alpine.store('product')) {
+    Alpine.store('product').swiper = swiperInstance;
+
+    Alpine.store('product').slideToImage = (url) => {
+      const slides = swiperInstance.slides;
+      for (let i = 0; i < slides.length; i++) {
+        const img = slides[i].querySelector('img');
+        if (img && img.src.split('?')[0] === url.split('?')[0]) {
+          swiperInstance.slideToLoop(i);
+          break;
+        }
+      }
+    };
+  }
+});
+
   
   
   document.addEventListener('DOMContentLoaded', function () {
