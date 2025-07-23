@@ -30,7 +30,7 @@
             @include('partials.mobile-single-product')
 
         {{-- Galería de escritorio en columnas --}}
-        <div class="grid grid-cols-1 lg:grid-cols-[40%_30%_30%] gap-4 h-[3000px] desktop-gallery">
+        <div class="grid grid-cols-1 lg:grid-cols-[40%_30%_30%] gap-4  desktop-gallery">
             {{-- Columna 1: Imágenes --}}
             @include('partials.single-product-columna1')
             
