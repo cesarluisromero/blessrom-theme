@@ -54,11 +54,16 @@
         };
         function productGallery() {
             return {
+                swiper: null,
+
                 init() {
-                new Swiper(this.$el, {
+                this.swiper = new Swiper(this.$el, {
                     slidesPerView: 1,
                     spaceBetween: 10,
-                    pagination: { el: this.$el.querySelector('.swiper-pagination'), clickable: true },
+                    pagination: {
+                    el: this.$el.querySelector('.swiper-pagination'),
+                    clickable: true
+                    },
                     breakpoints: {
                     768: {
                         pagination: false,
@@ -67,9 +72,24 @@
                     }
                     }
                 });
+
+                // 🔗 Enlazar al store Alpine
+                Alpine.store('product').swiper = this.swiper;
+
+                Alpine.store('product').slideToImage = (url) => {
+                    const slides = this.swiper.slides;
+                    for (let i = 0; i < slides.length; i++) {
+                    const img = slides[i].querySelector('img');
+                    if (img && img.src.split('?')[0] === url.split('?')[0]) {
+                        this.swiper.slideToLoop(i); // porque loop está activado
+                        break;
+                    }
+                    }
+                };
                 }
             }
         };
+
         document.addEventListener('alpine:init', () => {
             Alpine.store('product', {
             colorImages: @json($colorImages),

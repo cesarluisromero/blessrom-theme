@@ -238,52 +238,36 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.addEventListener('DOMContentLoaded', function () {
-  const swiperInstance = new Swiper('.swiper', {
-    slidesPerView: 4,
-    slidesPerGroup: 4,
-    loop: true,
-    spaceBetween: 10,
-    navigation: {
-      nextEl: '.swiper-button-next',
-      prevEl: '.swiper-button-prev',
-    },
-    scrollbar: {
-      el: '.swiper-scrollbar',
-      draggable: true,
-    },
-    breakpoints: {
-      0: {
-        slidesPerView: 1,
-        slidesPerGroup: 1,
+    new Swiper('.swiper', {
+      slidesPerView: 4,
+      slidesPerGroup: 4,
+      loop:true,
+      spaceBetween: 10,
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
       },
-      640: {
-        slidesPerView: 3,
-        slidesPerGroup: 3,
+      scrollbar: {
+        el: '.swiper-scrollbar',
+        draggable: true,
       },
-      1024: {
-        slidesPerView: 8,
-        slidesPerGroup: 8,
+      breakpoints: {
+        0: {
+          slidesPerView: 1,
+          slidesPerGroup: 1,
+        },
+        640: {
+          slidesPerView: 3,
+          slidesPerGroup: 3,
+        },
+        1024: {
+          slidesPerView: 8,
+          slidesPerGroup: 8,
+        },
       },
-    },
+      
+    });
   });
-
-  // ✅ Integración con Alpine
-  if (Alpine.store('product')) {
-    Alpine.store('product').swiper = swiperInstance;
-
-    Alpine.store('product').slideToImage = (url) => {
-      const slides = swiperInstance.slides;
-      for (let i = 0; i < slides.length; i++) {
-        const img = slides[i].querySelector('img');
-        if (img && img.src.split('?')[0] === url.split('?')[0]) {
-          swiperInstance.slideToLoop(i);
-          break;
-        }
-      }
-    };
-  }
-});
-
   
   
   document.addEventListener('DOMContentLoaded', function () {
@@ -295,44 +279,15 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   
 
-function productGallery() {
-  return {
-    swiper: null,
-
-    init() {
-      this.swiper = new Swiper(this.$el, {
-        slidesPerView: 1,
-        spaceBetween: 10,
-        pagination: {
-          el: this.$el.querySelector('.swiper-pagination'),
-          clickable: true
-        },
-        breakpoints: {
-          768: {
-            pagination: false,
-            swipe: false,
-            allowTouchMove: false
-          }
+window.productGallery = function () {
+    return {
+        init() {
+    new Swiper('.product-swiper', {
+                pagination: { el: '.swiper-pagination' },
+      loop: true,
+    });
         }
-      });
-
-      // 🔗 Enlazar al store Alpine
-      Alpine.store('product').swiper = this.swiper;
-
-      Alpine.store('product').slideToImage = (url) => {
-        const slides = this.swiper.slides;
-        for (let i = 0; i < slides.length; i++) {
-          const img = slides[i].querySelector('img');
-          if (img && img.src.split('?')[0] === url.split('?')[0]) {
-            this.swiper.slideToLoop(i); // porque loop está activado
-            break;
-          }
-        }
-      };
     }
-  }
 }
-
-
 
 
