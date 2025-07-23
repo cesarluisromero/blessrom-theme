@@ -295,34 +295,44 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   
 
-window.productGallery = function () {
+function productGallery() {
   return {
     swiper: null,
 
     init() {
-      this.swiper = new Swiper('.product-swiper', {
-        pagination: { el: '.swiper-pagination' },
-        loop: true
+      this.swiper = new Swiper(this.$el, {
+        slidesPerView: 1,
+        spaceBetween: 10,
+        pagination: {
+          el: this.$el.querySelector('.swiper-pagination'),
+          clickable: true
+        },
+        breakpoints: {
+          768: {
+            pagination: false,
+            swipe: false,
+            allowTouchMove: false
+          }
+        }
       });
 
-      // Guardar swiper en el store de Alpine
+      // 🔗 Enlazar al store Alpine
       Alpine.store('product').swiper = this.swiper;
 
-      // Función utilitaria para moverse al slide que coincida con una imagen
       Alpine.store('product').slideToImage = (url) => {
         const slides = this.swiper.slides;
         for (let i = 0; i < slides.length; i++) {
           const img = slides[i].querySelector('img');
-          // Aseguramos que la comparación ignore parámetros en la URL (como "?resize")
           if (img && img.src.split('?')[0] === url.split('?')[0]) {
-            this.swiper.slideToLoop(i); // usamos slideToLoop porque tienes loop: true
+            this.swiper.slideToLoop(i); // porque loop está activado
             break;
           }
         }
       };
     }
   }
-};
+}
+
 
 
 
