@@ -33,15 +33,12 @@
                 this.zoomY = -y * 1.5 + 275;
             }
         }"
-        x-init="
-                window.addEventListener('resize', () => zoomEnabled = window.innerWidth >= 768),
-                $store.product.selectedImage = '{{ $defaultImage }}'
-                "
+        x-init="window.addEventListener('resize', () => zoomEnabled = window.innerWidth >= 768)"
         class="relative"
     >
         {{-- Imagen principal --}}
         <img 
-            :src="$store.product.selectedImage" 
+            :src="$store.product.currentImage" 
             class="w-full h-auto object-contain border border-white rounded bg-[#E1E6E4]" 
             alt="Imagen principal"
             @mousemove="updateZoom"
@@ -58,7 +55,7 @@
             style="width: 700px; height: 550px;"
         >
             <img 
-                :src="currentImage" 
+                :src="$store.product.currentImage" 
                 :style="'transform: scale(1.5) translate(' + zoomX + 'px, ' + zoomY + 'px);'"
                 class="w-full h-auto object-contain"
                 alt="Zoom imagen"

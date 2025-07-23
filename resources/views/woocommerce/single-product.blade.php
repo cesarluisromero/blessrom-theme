@@ -74,7 +74,8 @@
             Alpine.store('product', {
             colorImages: @json($colorImages),
             selectedColor: null,
-            selectedImage: '{{ $defaultImage }}'
+            selectedImage: '{{ $defaultImage }}',
+            currentImage: '{{ $defaultImage }}'  // NUEVO
             });
         })
     </script>
