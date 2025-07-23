@@ -100,10 +100,10 @@ foreach ($attributes as $attribute_name => $options) {
             'azul': '#165DFF', 'rojo': '#FF0000', 'verde': '#00AA00',
             'negro': '#000000', 'blanco': '#FFFFFF', 'gris': '#888888',
             'amarillo': '#FFFF00', 'rosado': '#FFC0CB', 'camell': '#cfa781',
-            'marron': '#7B3F00', 'verde-oli': '#556B2F', 'gris-claro': '#ccc',
+            'marron': '#7B3F00', 'verde-oli': '#556B2F', 'gris-claro': '#6D7357',
             'celeste': '#6194CD', 'beige-dorado':'#C7AA81', 'mandarina':'#C47A41',
-            'Negro': '#000000','Perla': '#C6B688','perla': '#C6B688',
-            'verde-claro': '#FF0000',
+            'Negro': '#000000','Perla': '#C6B688','perla': '#C6B688','Verde-claro': '#6D7357',
+            'verde-claro': '#687357',
         } }">
             <template x-for="color in validColors()" :key="color">
                 <button
