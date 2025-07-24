@@ -35,7 +35,8 @@ function get_random_product_image_from_category($category_id) {
             @php
               $image = get_random_product_image_from_category($cat->term_id);
               $cat_link = get_term_link($cat);
-              <h3 class="text-4xl font-semibold text-gray-700 mb-1 font-serif">{{ $cat->name }}</h3>
+              <p>{{ $cat->name }}</p>
+            
             @endphp
         @endif
         <a href="{{ $cat_link }}" class="bg-white rounded-2xl shadow-md hover:shadow-lg transition duration-300 p-15 flex flex-col items-center text-center">
