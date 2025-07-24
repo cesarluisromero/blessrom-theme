@@ -8,11 +8,9 @@
   {{-- Categorías destacadas --}}
   @include('partials.home-categories')
 
-  {{-- Categorías destacadas --}}
+  {{-- Banner después de categorías --}}
   @include('partials.home-despues-categorias')
 
-  {{-- Banner después de categorías --}}
- 
   {{-- Slider productos --}}
   @include('partials.home-slider-products')
 
