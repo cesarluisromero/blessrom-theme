@@ -33,7 +33,7 @@ function get_random_product_image_from_category($category_id) {
       <div class="swiper-wrapper">
         @foreach($categories as $cat)
           @if(in_array(strtolower($cat->name), ['chavo', 'faldas', 'short', 'mujeres']))
-            @php
+            @php 
               $image = get_random_product_image_from_category($cat->term_id);
               $cat_link = get_term_link($cat);            
             @endphp
