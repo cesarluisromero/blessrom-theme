@@ -20,10 +20,10 @@
         
         <div class="swiper-pagination absolute bottom-1 inset-x-0 flex justify-center"></div>
         <!-- Barra inferior -->
-        <div class="swiper-scrollbar"></div>
+        
       </div>
     </div>
-  </div>
+  </div> 
 </section>
 
 
