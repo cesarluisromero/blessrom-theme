@@ -251,6 +251,10 @@ document.addEventListener('DOMContentLoaded', () => {
       el: '.swiper-scrollbar',
       draggable: true,
     },
+    autoplay: {
+      delay: 3000, // ⏱ Tiempo entre slides en milisegundos (3000 = 3 segundos)
+      disableOnInteraction: false // sigue después de hacer clic o tocar
+    },
     breakpoints: {
       0: {
         slidesPerView: 1,
@@ -275,6 +279,10 @@ document.addEventListener('DOMContentLoaded', () => {
     navigation: {
       nextEl: '.category-swiper-button-next',
       prevEl: '.category-swiper-button-prev',
+    },
+    autoplay: {
+      delay: 3000, // ⏱ Tiempo entre slides en milisegundos (3000 = 3 segundos)
+      disableOnInteraction: false // sigue después de hacer clic o tocar
     },
     breakpoints: {
       0: {
