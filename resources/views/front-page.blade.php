@@ -10,7 +10,8 @@
 
   
 
- 
+  {{-- Slider productos --}}
+  @include('partials.home-slider-products')
 
   {{-- Productos más vendidos --}}
   @include('partials.home-best-sellers')
