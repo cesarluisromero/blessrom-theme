@@ -29,7 +29,7 @@ function get_random_product_image_from_category($category_id) {
 @endphp
 <section class="py-2">
   <div class="container mx-auto px-4">
-    <div class="swiper">
+    <div class="swiper category-swiper">
       <div class="swiper-wrapper">
         @foreach($categories as $cat)          
             @php 

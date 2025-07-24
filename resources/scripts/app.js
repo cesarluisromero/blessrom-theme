@@ -238,36 +238,45 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.addEventListener('DOMContentLoaded', function () {
-    new Swiper('.swiper', {
-      slidesPerView: 4,
-      slidesPerGroup: 4,
-      loop:true,
-      spaceBetween: 10,
-      navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
+  new Swiper('.product-swiper', {
+    slidesPerView: 4,
+    slidesPerGroup: 4,
+    loop: true,
+    spaceBetween: 10,
+    navigation: {
+      nextEl: '.product-swiper-button-next',
+      prevEl: '.product-swiper-button-prev',
+    },
+    scrollbar: {
+      el: '.swiper-scrollbar',
+      draggable: true,
+    },
+    breakpoints: {
+      0: {
+        slidesPerView: 1,
+        slidesPerGroup: 1,
       },
-      scrollbar: {
-        el: '.swiper-scrollbar',
-        draggable: true,
+      640: {
+        slidesPerView: 3,
+        slidesPerGroup: 3,
       },
-      breakpoints: {
-        0: {
-          slidesPerView: 1,
-          slidesPerGroup: 1,
-        },
-        640: {
-          slidesPerView: 3,
-          slidesPerGroup: 3,
-        },
-        1024: {
-          slidesPerView: 4,
-          slidesPerGroup: 4,
-        },
+      1024: {
+        slidesPerView: 4,
+        slidesPerGroup: 4,
       },
-      
-    });
+    },
   });
+
+  new Swiper('.category-swiper', {
+    slidesPerView: 1,
+    loop: true,
+    navigation: {
+      nextEl: '.category-swiper-button-next',
+      prevEl: '.category-swiper-button-prev',
+    },
+  });
+});
+
   
   
   document.addEventListener('DOMContentLoaded', function () {
