@@ -31,7 +31,7 @@ function get_random_product_image_from_category($category_id) {
   <div class="container mx-auto px-4">
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
       @foreach($categories as $cat)
-        @if($cat->name === 'chavo' || $cat->name === 'faldas'|| $cat->name === 'Short')
+        @if($cat->name === 'chavo' || $cat->name === 'faldas'|| $cat->name === 'Short' || $cat->name === 'Mujeres')
             @php
               $image = get_random_product_image_from_category($cat->term_id);
               $cat_link = get_term_link($cat);            
