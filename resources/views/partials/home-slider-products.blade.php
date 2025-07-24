@@ -17,8 +17,8 @@
       
 
         <!-- Botones -->
-        <div class="swiper-button-prev text-blue-500 absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-md"></div>
-        <div class="swiper-button-next text-blue-500 absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-md"></div>
+        <div class="swiper-button-prev product-swiper-button-prev text-blue-500 absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-md"></div>
+        <div class="swiper-button-next product-swiper-button-next text-blue-500 absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-md"></div>
         
         <!-- Barra inferior -->
         <div class="swiper-scrollbar"></div>
