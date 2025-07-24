@@ -17,9 +17,6 @@
   {{-- Productos más vendidos --}}
   @include('partials.home-best-sellers')
 
-   {{-- Categorías destacadas --}}
-  @include('partials.home-categories')
-
 
   @include('partials.home-testimonials')
   
