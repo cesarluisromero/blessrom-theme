@@ -256,7 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
         slidesPerView: 1,
         slidesPerGroup: 1,
       },
-      640: {
+      640: {  
         slidesPerView: 3,
         slidesPerGroup: 3,
       },
@@ -268,11 +268,27 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   new Swiper('.category-swiper', {
-    slidesPerView: 1,
+    slidesPerView: 4,
+    slidesPerGroup: 4,
     loop: true,
+    spaceBetween: 10,
     navigation: {
       nextEl: '.category-swiper-button-next',
       prevEl: '.category-swiper-button-prev',
+    },
+    breakpoints: {
+      0: {
+        slidesPerView: 1,
+        slidesPerGroup: 1,
+      },
+      640: {  
+        slidesPerView: 3,
+        slidesPerGroup: 3,
+      },
+      1024: {
+        slidesPerView: 4,
+        slidesPerGroup: 4,
+      },
     },
   });
 });
