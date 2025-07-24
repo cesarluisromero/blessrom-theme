@@ -5,7 +5,7 @@
 
 {{-- Slider solo para móvil (hasta sm) --}}
 <section class="block md:hidden w-full">
-  {!! do_shortcode('[smartslider3 slider="4"]') !!}
+  {!! do_shortcode('[smartslider3 slider="6"]') !!}
 </section>
 
 
