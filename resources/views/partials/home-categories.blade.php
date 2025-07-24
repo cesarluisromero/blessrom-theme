@@ -37,7 +37,7 @@
     </div>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
       {{-- Slider productos --}}
-        @include('home-slider-products')
+        @include('partials.home-slider-products')
     </div>
   </div>
 </section>
