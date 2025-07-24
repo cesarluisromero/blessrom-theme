@@ -31,8 +31,7 @@ function get_random_product_image_from_category($category_id) {
   <div class="container mx-auto px-4">
     <div class="swiper">
       <div class="swiper-wrapper">
-        @foreach($categories as $cat)
-          @if(in_array(strtolower($cat->name), ['chavo', 'faldas', 'short', 'mujeres']))
+        @foreach($categories as $cat)          
             @php 
               $image = get_random_product_image_from_category($cat->term_id);
               $cat_link = get_term_link($cat);            
@@ -44,8 +43,7 @@ function get_random_product_image_from_category($category_id) {
                 <p class="text-sm text-gray-500 mb-3">{{ $cat->description ?: 'Productos destacados' }}</p>
                 <span class="inline-block bg-[#FFB816] text-white text-lg font-semibold px-6 py-2 rounded-full hover:bg-yellow-500 transition">Ver más</span>
               </a>
-            </div>
-          @endif
+            </div>          
         @endforeach
       </div>
 
