@@ -19,7 +19,7 @@
     class="w-full h-full object-cover"
   />        
           </div>
-          <h3 class="text-lg font-semibold mb-2">{{ $producto->get_name() }}</h3>
+          <h3 class="text-lg font-semibold mb-2 font-serif">{{ $producto->get_name() }}</h3>
           <p class="text-black font-bold text-sm">{!! $producto->get_price_html() !!}</p>
           <span class="mt-2 inline-block bg-[#FFB816] text-white text-sm font-semibold py-2 px-4 rounded hover:bg-yellow-500 transition">
             Ver producto
