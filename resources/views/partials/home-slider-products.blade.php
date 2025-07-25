@@ -9,7 +9,7 @@
             <div class="swiper-slide">
               <a href="{{ get_permalink($product->get_id()) }}" class="block">
               {!! $product->get_image('medium', ['class' => 'mx-auto']) !!}
-              <p class="text-center mt-4 mb-6 text-sm">{{ $product->get_name() }}</p>
+              <p class="text-4xl text-center mt-4 mb-6 font-serif">{{ $product->get_name() }}</p>
               </a>
             </div>
           @endforeach
