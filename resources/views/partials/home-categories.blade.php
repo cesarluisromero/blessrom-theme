@@ -34,10 +34,11 @@ function get_random_product_image_from_category($category_id) {
         @foreach($categories as $cat)          
             @php 
               $image = get_random_product_image_from_category($cat->term_id);
-              $cat_link = get_term_link($cat);            
+              $cat_link = get_term_link($cat);  
+              $cat_slug = basename(untrailingslashit($cat_link));          
             @endphp
             <div class="swiper-slide">
-              <a href="{{ $cat_link . '?min_price=5&max_price=500&categorias%5B%5D=' . urlencode($cat->name) }}" class="bg-white rounded-2xl shadow-md hover:shadow-lg transition duration-300 p-10 flex flex-col items-center text-center">
+              <a href="{{ $cat_link . '?min_price=5&max_price=500&categorias%5B%5D=' . $cat_slug }}" class="bg-white rounded-2xl shadow-md hover:shadow-lg transition duration-300 p-10 flex flex-col items-center text-center">
                 <img src="{{ $image }}" alt="{{ $cat->name }}" class="rounded-xl w-64 h-64 object-contain mb-4 transition-transform duration-300 hover:scale-105" />
                 <h3 class="text-4xl font-semibold text-gray-700 mb-1 font-serif">{{ $cat->name }}</h3>
                 <p class="text-sm text-gray-500 mb-3">{{ $cat->description ?: 'Productos destacados' }}</p>
