@@ -258,9 +258,9 @@ document.addEventListener('DOMContentLoaded', () => {
     breakpoints: {
       0: {
         slidesPerView: 1,
-        slidesPerGroup: 1,
+        slidesPerGroup: 1, 
       },
-      640: {  
+      640: {   
         slidesPerView: 3,
         slidesPerGroup: 3,
       },
@@ -300,6 +300,10 @@ document.addEventListener('DOMContentLoaded', () => {
       1024: {
         slidesPerView: 4,
         slidesPerGroup: 4, 
+        navigation: {
+          nextEl: '.category-swiper-button-next',
+          prevEl: '.category-swiper-button-prev',
+        },
       },
     },
   });
