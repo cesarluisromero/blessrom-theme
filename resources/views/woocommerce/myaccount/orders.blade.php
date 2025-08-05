@@ -43,7 +43,7 @@
                                     >
                                 @else
                                     <td
-                                        class="px-4 py-3 font-medium text-gray-900 woocommerce-orders-table__cell woocommerce-orders-table__cell-{{ esc_attr($column_id) }}"
+                                        class="px-4 py-3 font-medium text-amber-600 woocommerce-orders-table__cell woocommerce-orders-table__cell-{{ esc_attr($column_id) }}"
                                         data-title="{{ esc_attr($column_name) }}"
                                     >
                                 @endif
