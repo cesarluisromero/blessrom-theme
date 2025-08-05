@@ -11,7 +11,7 @@ do_action( 'woocommerce_before_account_orders', $has_orders ); ?>
 	<table class="woocommerce-orders-table woocommerce-MyAccount-orders shop_table shop_table_responsive my_account_orders account-orders-table">
 		<thead>
 			<tr>
-                <a>ddsds</a>
+                
 				<?php foreach ( wc_get_account_orders_columns() as $column_id => $column_name ) : ?>
 					<th scope="col" class="woocommerce-orders-table__header woocommerce-orders-table__header-<?php echo esc_attr( $column_id ); ?>"><span class="nobr"><?php echo esc_html( $column_name ); ?></span></th>
 				<?php endforeach; ?>
