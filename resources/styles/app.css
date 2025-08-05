@@ -31,3 +31,17 @@ a {
   }
 }
 
+@layer components {
+  .swiper-horizontal > .swiper-scrollbar {
+    @apply h-1.5 bg-transparent rounded-full pointer-events-none;
+    position: absolute;
+    left: 4px; right: 4px; bottom: 4px;
+  }
+  .swiper-scrollbar-drag {
+    @apply bg-blue-500/80 rounded-full shadow-md pointer-events-auto;
+    transition: background-color 0.2s, box-shadow 0.2s;
+  }
+  .swiper-scrollbar-drag:hover {
+    @apply bg-blue-600;
+  }
+}

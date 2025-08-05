@@ -251,6 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
     scrollbar: {
       el: '.swiper-scrollbar',
       draggable: true,
+      hide: true,
     },
     autoplay: {
       delay: 3000, // ⏱ Tiempo entre slides en milisegundos (3000 = 3 segundos)
