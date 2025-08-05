@@ -276,10 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
     slidesPerGroup: 4,
     loop: true,
     spaceBetween: 10,
-    navigation: { 
-      nextEl: '.category-swiper-button-next',
-      prevEl: '.category-swiper-button-prev',
-    },
+    
     autoplay: {
       delay: 3000, // ⏱ Tiempo entre slides en milisegundos (3000 = 3 segundos)
       disableOnInteraction: false // sigue después de hacer clic o tocar
