@@ -12,7 +12,7 @@
                     @foreach ( wc_get_account_orders_columns() as $column_id => $column_name )
                         <th
                             scope="col"
-                            class="woocommerce-orders-table__header woocommerce-orders-table__header-{{ esc_attr($column_id) }}"
+                            class="px-4 py-3 text-left woocommerce-orders-table__header woocommerce-orders-table__header-{{ esc_attr($column_id) }}"
                         >
                             <span class="nobr">{{ esc_html($column_name) }}</span>
                         </th>
