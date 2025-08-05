@@ -19,7 +19,7 @@
                     @endforeach
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="text-sm text-gray-700 divide-y divide-gray-200">
                 @foreach ($customer_orders->orders as $customer_order)
                     @php
                         $order      = wc_get_order($customer_order);
