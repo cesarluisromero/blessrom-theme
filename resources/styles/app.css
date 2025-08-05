@@ -25,5 +25,9 @@ a {
   text-decoration: none !important;
 }
 
-
+@layer utilities {
+  .hide-swiper-button-on-mobile {
+    @apply hidden md:flex;
+  }
+}
 
