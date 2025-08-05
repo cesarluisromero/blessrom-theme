@@ -6,8 +6,8 @@
     @endphp
 
     @if ($has_orders)
-        <table class="woocommerce-orders-table woocommerce-MyAccount-orders shop_table shop_table_responsive my_account_orders account-orders-table">
-            <thead>
+        <table class="w-full table-auto border border-gray-200 rounded-lg overflow-hidden woocommerce-orders-table woocommerce-MyAccount-orders shop_table shop_table_responsive my_account_orders account-orders-table">
+            <thead class="bg-gray-100 text-sm font-semibold text-gray-600 uppercase">
                 <tr>
                     @foreach ( wc_get_account_orders_columns() as $column_id => $column_name )
                         <th
