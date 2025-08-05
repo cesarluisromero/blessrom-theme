@@ -37,13 +37,13 @@
                                 {{-- celda th/td según la columna --}}
                                 @if ($is_order_number)
                                     <th
-                                        class="woocommerce-orders-table__cell woocommerce-orders-table__cell-{{ esc_attr($column_id) }}"
+                                        class="px-4 py-3 font-medium text-blue-600 woocommerce-orders-table__cell woocommerce-orders-table__cell-{{ esc_attr($column_id) }}"
                                         data-title="{{ esc_attr($column_name) }}"
                                         scope="row"
                                     >
                                 @else
                                     <td
-                                        class="woocommerce-orders-table__cell woocommerce-orders-table__cell-{{ esc_attr($column_id) }}"
+                                        class="px-4 py-3 font-medium text-blue-600 woocommerce-orders-table__cell woocommerce-orders-table__cell-{{ esc_attr($column_id) }}"
                                         data-title="{{ esc_attr($column_name) }}"
                                     >
                                 @endif
