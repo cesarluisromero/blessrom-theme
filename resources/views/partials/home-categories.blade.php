@@ -50,7 +50,9 @@ function get_random_product_image_from_category($category_id) {
 
       {{-- Flechas de navegación --}}
       
-      
+      <div class="swiper-button-prev category-swiper-button-prev hidden md:flex text-blue-500 absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center bg-white rounded-full shadow-md"></div>
+      <div class="swiper-button-next category-swiper-button-next hidden md:flex text-blue-500 absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center bg-white rounded-full shadow-md"></div>
+    
       <div class="swiper-pagination block md:hidden mt-4"></div>
     </div>
   </div>
