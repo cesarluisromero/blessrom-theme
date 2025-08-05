@@ -279,6 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
     navigation: { 
       nextEl: '.category-swiper-button-next',
       prevEl: '.category-swiper-button-prev',
+      enabled: true,
     },
     autoplay: {
       delay: 3000, // ⏱ Tiempo entre slides en milisegundos (3000 = 3 segundos)
@@ -287,11 +288,14 @@ document.addEventListener('DOMContentLoaded', () => {
     pagination: {
       el: '.category-swiper-pagination',
       clickable: true,
+      enabled: false,
     },
     breakpoints: {
       0: { 
         slidesPerView: 1,
         slidesPerGroup: 1,
+        navigation: { enabled: false },
+        pagination:  { enabled: true  },
       },
       640: {   
         slidesPerView: 3,
