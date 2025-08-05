@@ -56,6 +56,9 @@ function get_random_product_image_from_category($category_id) {
      
 
       <div class="swiper-pagination category-swiper-pagination block md:hidden mt-4"></div>
+
+      <div class="bg-red-500 block md:hidden">Visible solo en móviles</div>
+      <div class="bg-green-500 hidden md:block">Visible solo en desktop</div>
     </div>
   </div>
 </section>
