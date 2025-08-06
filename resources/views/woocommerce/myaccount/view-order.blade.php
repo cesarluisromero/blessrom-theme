@@ -2,7 +2,9 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto p-6 sm:p-8 bg-white shadow-xl rounded-3xl">
-     @include('woocommerce.myaccount.status-order')
+    <section class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 text-sm text-slate-600 mb-10">
+        @include('woocommerce.myaccount.status-order')
+    </section>
     {{-- CABECERA --------------------------------------------------------------- --}}
     <header class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-800">
