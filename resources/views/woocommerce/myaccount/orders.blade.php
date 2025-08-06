@@ -10,9 +10,26 @@
         @endphp
 
         @if ($has_orders)
-            <div class="w-full overflow-x-auto">
-                <table class="min-w-full table-auto border border-gray-200 rounded-lg overflow-hidden woocommerce-orders-table woocommerce-MyAccount-orders shop_table shop_table_responsive my_account_orders account-orders-table">
-                    <thead class="bg-blue-800 text-sm font-semibold text-amber-50 uppercase">
+            <div
+                x-data="{ scrolled: false }"          {{-- opcional: Alpine para ocultar el hint --}}
+                @scroll.window="
+                    // si el usuario hace scroll horizontal, oculta el hint
+                    if ($el.scrollLeft > 0) scrolled = true
+                "
+                class="relative w-full overflow-x-auto"
+            >             
+                <div
+                    x-show="!scrolled"               {{-- con Alpine; quítalo si no usas JS --}}
+                    class="pointer-events-none absolute right-0 top-0 h-full w-16
+                        bg-gradient-to-l from-white to-transparent
+                        flex items-center justify-end pr-2"
+                >
+                    <span class="text-xs text-gray-400 whitespace-nowrap">
+                        Desliza →
+                    </span>
+                </div>                                  
+                <table class="min-w-[800px] table-auto border border-gray-200 rounded-lg overflow-hidden woocommerce-orders-table woocommerce-MyAccount-orders shop_table shop_table_responsive my_account_orders account-orders-table">
+                    <thead class="bg-gray-700 text-sm font-semibold text-amber-50 uppercase">
                         <tr>
                             @foreach ( wc_get_account_orders_columns() as $column_id => $column_name )
                                 <th
@@ -31,7 +48,7 @@
                                 $item_count = $order->get_item_count() - $order->get_item_count_refunded();
                             @endphp
 
-                            <tr class="odd:bg-white even:bg-blue-300 woocommerce-orders-table__row woocommerce-orders-table__row--status-{{ esc_attr($order->get_status()) }} order">
+                            <tr class="odd:bg-white even:bg-gray-500 woocommerce-orders-table__row woocommerce-orders-table__row--status-{{ esc_attr($order->get_status()) }} order">
                                 @foreach (wc_get_account_orders_columns() as $column_id => $column_name)
                                     @php $is_order_number = $column_id === 'order-number'; @endphp
 
