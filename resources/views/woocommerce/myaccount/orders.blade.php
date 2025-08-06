@@ -11,7 +11,7 @@
 
         @if ($has_orders)
             <table class="w-full table-auto border border-gray-200 rounded-lg overflow-hidden woocommerce-orders-table woocommerce-MyAccount-orders shop_table shop_table_responsive my_account_orders account-orders-table">
-                <thead class="bg-gray-100 text-sm font-semibold text-gray-600 uppercase">
+                <thead class="bg-blue-800 text-sm font-semibold text-amber-50 uppercase">
                     <tr>
                         @foreach ( wc_get_account_orders_columns() as $column_id => $column_name )
                             <th
@@ -30,7 +30,7 @@
                             $item_count = $order->get_item_count() - $order->get_item_count_refunded();
                         @endphp
 
-                        <tr class="odd:bg-white even:bg-gray-500 woocommerce-orders-table__row woocommerce-orders-table__row--status-{{ esc_attr($order->get_status()) }} order">
+                        <tr class="odd:bg-white even:bg-gray-50 woocommerce-orders-table__row woocommerce-orders-table__row--status-{{ esc_attr($order->get_status()) }} order">
                             @foreach (wc_get_account_orders_columns() as $column_id => $column_name)
                                 @php $is_order_number = $column_id === 'order-number'; @endphp
 
