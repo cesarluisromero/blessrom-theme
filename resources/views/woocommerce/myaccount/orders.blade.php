@@ -30,20 +30,21 @@
                             $item_count = $order->get_item_count() - $order->get_item_count_refunded();
                         @endphp
 
-                        <tr class="woocommerce-orders-table__row woocommerce-orders-table__row--status-{{ esc_attr($order->get_status()) }} order">
+                        <tr class="odd:bg-white even:bg-gray-500 woocommerce-orders-table__row woocommerce-orders-table__row--status-{{ esc_attr($order->get_status()) }} order">
                             @foreach (wc_get_account_orders_columns() as $column_id => $column_name)
                                 @php $is_order_number = $column_id === 'order-number'; @endphp
 
                                 {{-- celda th/td según la columna --}}
                                 @if ($is_order_number)
                                     <th
-                                        class="px-4 py-3 font-medium text-gray-900 woocommerce-orders-table__cell woocommerce-orders-table__cell-{{ esc_attr($column_id) }}"
+                                        class="px-4 py-3 font-medium text-blue-950 woocommerce-orders-table__cell woocommerce-orders-table__cell-{{ esc_attr($column_id) }}"
                                         data-title="{{ esc_attr($column_name) }}"
                                         scope="row"
                                     >
                                 @else
+
                                     <td
-                                        class="px-4 py-3 font-medium text-amber-600 woocommerce-orders-table__cell woocommerce-orders-table__cell-{{ esc_attr($column_id) }}"
+                                        class="px-4 py-3 font-medium text-black woocommerce-orders-table__cell woocommerce-orders-table__cell-{{ esc_attr($column_id) }}"
                                         data-title="{{ esc_attr($column_name) }}"
                                     >
                                 @endif
