@@ -3,6 +3,7 @@
 @section('content')
     {{-- Headline --}}
     <p class="mb-6 text-gray-700">
+        <a>Prueba</a>
         {!! sprintf(
             /* translators: 1: order number 2: date 3: status */
             __('Order %1$s was placed on %2$s and is currently %3$s.', 'woocommerce'),
