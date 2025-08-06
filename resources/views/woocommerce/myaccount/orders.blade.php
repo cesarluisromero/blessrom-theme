@@ -18,7 +18,14 @@
                 "
                 class="relative w-full overflow-x-auto"
             >             
-                                               
+                <div
+                    x-show="!scrolled"               {{-- con Alpine; quítalo si no usas JS --}}
+                    class="pointer-events-none absolute right-0 top-0 h-full w-16
+                        bg-gradient-to-l from-white to-transparent
+                        flex items-center justify-end pr-2"
+                >
+                    
+                </div>                                  
                 <table class="min-w-[800px] table-auto border border-gray-200 rounded-lg overflow-hidden woocommerce-orders-table woocommerce-MyAccount-orders shop_table shop_table_responsive my_account_orders account-orders-table">
                     <thead class="bg-gray-700 text-sm font-semibold text-amber-50 uppercase">
                         <tr>
