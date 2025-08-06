@@ -24,7 +24,9 @@
                         bg-gradient-to-l from-white to-transparent
                         flex items-center justify-end pr-2"
                 >
-                    
+                    <span class="text-xs text-gray-400 whitespace-nowrap">
+                        Desliza →
+                    </span>
                 </div>                                  
                 <table class="min-w-[800px] table-auto border border-gray-200 rounded-lg overflow-hidden woocommerce-orders-table woocommerce-MyAccount-orders shop_table shop_table_responsive my_account_orders account-orders-table">
                     <thead class="bg-gray-700 text-sm font-semibold text-amber-50 uppercase">
