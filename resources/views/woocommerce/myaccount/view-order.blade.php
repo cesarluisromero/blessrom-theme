@@ -8,7 +8,7 @@
         
             {!! sprintf(
                 /* translators: 1: order number 2: date 3: status */
-                __('Order %1$s was placed on %2$s and is currently %3$s.', 'woocommerce'),
+                __('Orden %1$s fue creado el %2$s y su estado es %3$s.', 'woocommerce'),
                 '<mark class="order-number font-semibold">#' . $order->get_order_number() . '</mark>',
                 '<mark class="order-date">' . wc_format_datetime($order->get_date_created()) . '</mark>',
                 '<mark class="order-status">' . wc_get_order_status_name($order->get_status()) . '</mark>'
@@ -23,8 +23,8 @@
 
             <ol class="woocommerce-OrderUpdates commentlist notes space-y-4">
                 @foreach ($notes as $note)
-                    <li class="woocommerce-OrderUpdate comment note bg-gray-50 p-4 rounded-lg">
-                        <p class="woocommerce-OrderUpdate-meta text-xs text-gray-500 mb-2">
+                    <li class="woocommerce-OrderUpdate comment note flex justify-between border-b py-2">
+                        <p class="woocommerce-OrderUpdate-meta font-semibold text-sm text-gray-600">
                             {{ date_i18n(__('l jS \\o\\f F Y, h:ia', 'woocommerce'), strtotime($note->comment_date)) }}
                         </p>
 
