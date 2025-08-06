@@ -7,7 +7,9 @@
     
     {{-- CABECERA --------------------------------------------------------------- --}}
     <header class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+        <div>
         @include('woocommerce.myaccount.status-order')
+        </div>
         <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-800">
             {{ __('Detalles del pedido', 'woocommerce') }}
         </h1>
