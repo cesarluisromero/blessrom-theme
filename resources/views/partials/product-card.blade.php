@@ -61,7 +61,7 @@
         <button class="w-full rounded-xl px-4 py-2.5 text-sm font-semibold bg-slate-200 text-slate-500 cursor-not-allowed">Agotado</button>
       @elseif($is_variable)
         <a href="{{ esc_url($permalink) }}" class="w-full inline-flex items-center justify-center rounded-xl px-4 py-2.5 text-sm font-semibold bg-slate-900 text-white hover:bg-slate-800">
-          Ver opciones
+          Ver Producto
         </a>
       @else
         {{-- Para simples usamos el botón nativo (respeta inventario/stock/backorders) --}}
