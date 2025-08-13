@@ -41,11 +41,54 @@
             @include('partials.single-product-columna3')
         </div>
     </div>
-    {{-- 🧩 Productos relacionados --}}
+    {{-- === Productos relacionados (custom grid) === --}}
+@php
+    // Obtener hasta 8 productos relacionados al actual
+    $related_ids = wc_get_related_products($product->get_id(), 8);
+
+    // Si quieres forzar aleatorio cada carga, usa 'orderby' => 'rand'
+    // Si prefieres respetar el orden de $related_ids, usa 'orderby' => 'post__in'
+    $related_q = new WP_Query([
+        'post_type'           => 'product',
+        'post__in'            => $related_ids,
+        'posts_per_page'      => 8,
+        'ignore_sticky_posts' => 1,
+        'orderby'             => 'rand',
+        'post_status'         => 'publish',
+        'tax_query'           => [
+            // Asegura solo productos visibles (por si usas catálogos ocultos)
+            [
+                'taxonomy' => 'product_visibility',
+                'field'    => 'name',
+                'terms'    => ['exclude-from-catalog'],
+                'operator' => 'NOT IN',
+            ],
+        ],
+    ]);
+@endphp
+
+@if ($related_q->have_posts())
     <section class="max-w-6xl mx-auto px-2 md:px-4 lg:px-6 mt-12">
-        <h2 class="text-xl md:text-2xl font-semibold mb-6">Productos relacionados</h2>
-        @php woocommerce_output_related_products(); @endphp
+        <h2 class="text-xl md:text-2xl font-semibold mb-6">También te puede interesar</h2>
+
+        <ul class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            @while ($related_q->have_posts()) 
+                @php $related_q->the_post(); @endphp
+
+                <li class="bg-white rounded-2xl shadow hover:shadow-lg transition p-3">
+                    {{-- Usa tu card personalizada si la tienes --}}
+                    {{-- @include('partials.product-card', ['product' => wc_get_product(get_the_ID())]) --}}
+
+                    {{-- O usa la card nativa de WooCommerce (compatible con tus estilos) --}}
+                    @php wc_get_template_part('content', 'product'); @endphp
+                </li>
+            @endwhile
+        </ul>
     </section>
+    @php wp_reset_postdata(); @endphp
+@endif
+{{-- === /Productos relacionados === --}}
+
 
     {{-- 🔄 WooCommerce también necesita esto para finalizar su contenido --}}
    @php do_action('woocommerce_after_main_content'); @endphp
