@@ -29,6 +29,7 @@
                                     name="cart[{{ $cart_item_key }}][qty]"
                                     value="{{ $cart_item['quantity'] }}"
                                     min="1"
+                                    onkeydown="return false;" 
                                     max="{{ $product->get_stock_quantity() }}"
                                     class="w-20 border border-gray-300 text-sm rounded px-2 py-1 mt-1"
                                 />
