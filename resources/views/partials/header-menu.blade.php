@@ -1,5 +1,5 @@
 {{-- Encabezado MÓVIL --}}
-<div class="lg:hidden w-full bg-[#165DFF] text-white px-4 py-2">
+<div class="lg:hidden w-full bg-[#101828] text-white px-4 py-2">
   <div class="flex justify-between items-center">
       @include('partials.mobile-boton-hamburguesa')
       @include('partials.logo-blessrom')
