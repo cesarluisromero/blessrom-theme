@@ -41,6 +41,11 @@
             @include('partials.single-product-columna3')
         </div>
     </div>
+    {{-- 🧩 Productos relacionados --}}
+    <section class="max-w-6xl mx-auto px-2 md:px-4 lg:px-6 mt-12">
+        <h2 class="text-xl md:text-2xl font-semibold mb-6">Productos relacionados</h2>
+        @php woocommerce_output_related_products(); @endphp
+    </section>
 
     {{-- 🔄 WooCommerce también necesita esto para finalizar su contenido --}}
    @php do_action('woocommerce_after_main_content'); @endphp
