@@ -146,7 +146,7 @@ foreach ($attributes as $attribute_name => $options) {
                     x-model="quantity"
                     :max="maxQty"
                     min="1"
-                          
+                    onkeydown="return false;"     
                 >
             </div>
             <div class="w-full">
