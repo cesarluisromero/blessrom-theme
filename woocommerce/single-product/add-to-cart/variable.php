@@ -51,20 +51,37 @@ foreach ($attributes as $attribute_name => $options) {
 }
 
 // Mapa dinámico slug => hex a partir de términos usados en este producto
-$all_color_terms = get_terms([
-    'taxonomy'   => 'pa_color',
-    'hide_empty' => false,
-]);
+$variation_color_slugs = [];
+
+foreach ($filtered_variations as $v) {
+    if (!empty($v['attributes']['attribute_pa_color'])) {
+        $slug = sanitize_title($v['attributes']['attribute_pa_color']);
+        $variation_color_slugs[$slug] = true;
+    }
+}
 
 $color_map = [];
+foreach (array_keys($variation_color_slugs) as $slug) {
+    // Busca el término por SLUG exacto que usa la variación
+    $term = get_term_by('slug', $slug, 'pa_color');
+    if ($term && !is_wp_error($term)) {
+        $hex = get_term_meta($term->term_id, 'color_hex', true);
 
-foreach ($all_color_terms as $t) {
-    $hex = get_term_meta($t->term_id, 'color_hex', true);
-    if (!$hex && function_exists('get_field')) {
-        $hex = get_field('color_hex', 'pa_color_' . $t->term_id);
+        // Fallback ACF (opcional)
+        if (!$hex && function_exists('get_field')) {
+            $hex = get_field('color_hex', 'pa_color_' . $term->term_id);
+        }
+
+        // Fallbacks finales
+        if (!$hex) { $hex = '#cccccc'; }
+
+        $color_map[$slug] = $hex;
+    } else {
+        // Si por cualquier motivo no se encontró el término, evita romper el UI
+        $color_map[$slug] = '#cccccc';
     }
-    $color_map[$t->slug] = $hex ?: null; // null: sin color definido
 }
+
 ?>
 
 
