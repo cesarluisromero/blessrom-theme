@@ -60,7 +60,7 @@
       @if(!$in_stock)
         <button class="w-full rounded-xl px-4 py-2.5 text-sm font-semibold bg-slate-200 text-slate-500 cursor-not-allowed">Agotado</button>
       @elseif($is_variable)
-        <a href="{{ esc_url($permalink) }}" class="w-full inline-flex items-center justify-center rounded-xl px-4 py-2.5 text-sm font-semibold bg-slate-900 text-white hover:bg-slate-800">
+        <a href="{{ esc_url($permalink) }}" class="w-full inline-flex items-center justify-center rounded-xl px-4 py-2.5 text-sm font-semibold bg-yellow-400 text-white hover:bg-yellow-500">
           Ver Producto
         </a>
       @else
@@ -68,7 +68,7 @@
         <form class="cart" action="{{ esc_url( $product->add_to_cart_url() ) }}" method="post" enctype="multipart/form-data">
           <input type="hidden" name="add-to-cart" value="{{ esc_attr( $product->get_id() ) }}">
           <button type="submit"
-            class="w-full rounded-xl px-4 py-2.5 text-sm font-semibold bg-slate-900 text-white hover:bg-slate-800">
+            class="w-full rounded-xl px-4 py-2.5 text-sm font-semibold bg-yellow-400 text-white hover:bg-yellow-500">
             Agregar al carrito
           </button>
         </form>

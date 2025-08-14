@@ -156,7 +156,7 @@ foreach ($attributes as $attribute_name => $options) {
                             type="button"
                             @click="validateBeforeSubmit($refs.form)"
                             :disabled="maxQty === 0"
-                            :class="maxQty === 0 ? 'opacity-50 cursor-not-allowed bg-gray-400 hover:bg-gray-400' : 'bg-blue-600 hover:bg-blue-700'"
+                            :class="maxQty === 0 ? 'opacity-50 cursor-not-allowed bg-gray-400 hover:bg-gray-400' : 'bg-yellow-400 hover:bg-yellow-500'"
                             class="inline-flex items-center justify-center px-6 py-3 text-white rounded text-sm font-medium shadow transition duration-300 ease-in-out w-full sm:w-auto"
                         >
                             <img src="<?php echo get_template_directory_uri(); ?>/resources/images/cart-icon.png" alt="Carrito" class="w-5 h-5 mr-2">
@@ -169,7 +169,7 @@ foreach ($attributes as $attribute_name => $options) {
                             type="submit"
                             @click.prevent="addToCartAjax($refs.form)"
                             :disabled="maxQty === 0"
-                            :class="maxQty === 0 ? 'opacity-50 cursor-not-allowed bg-gray-400 hover:bg-gray-400' : 'bg-blue-600 hover:bg-blue-700'"
+                            :class="maxQty === 0 ? 'opacity-50 cursor-not-allowed bg-gray-400 hover:bg-gray-400' : 'bg-yellow-400 hover:bg-yellow-500'"
                             class="inline-flex items-center justify-center px-6 py-3 text-white rounded text-sm font-medium shadow transition duration-300 ease-in-out w-full sm:w-auto">
                             <img src="<?php echo get_template_directory_uri(); ?>/resources/images/cart-icon.png" alt="Carrito" class="w-5 h-5 mr-2">
                             Agregar al carrito
