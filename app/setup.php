@@ -234,8 +234,9 @@ function blessrom_save_pa_color_meta($term_id, $tt_id) {
 
   update_term_meta($term_id, 'color_hex', $hex);
 }
-add_action('created_pa_color', 'blessrom_save_pa_color_meta', 10, 2);
-add_action('edited_pa_color',  'blessrom_save_pa_color_meta', 10, 2);
+add_action('created_pa_color', 'App\\blessrom_save_pa_color_meta', 10, 2);
+add_action('edited_pa_color',  'App\\blessrom_save_pa_color_meta', 10, 2);
+
 
 
 // Encolar color picker solo en pantallas de taxonomías
