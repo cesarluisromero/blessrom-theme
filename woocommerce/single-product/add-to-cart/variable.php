@@ -67,6 +67,9 @@ foreach ($color_terms as $t) {
 }
 ?>
 
+
+
+
 <form
     x-ref="form"
     x-data="alpineCart()"
@@ -112,7 +115,14 @@ foreach ($color_terms as $t) {
         <label class="block text-sm font-semibold mb-2 text-gray-800">
             <?php echo wc_attribute_label('pa_color'); ?>
         </label>
-        <div class="flex flex-wrap gap-2" x-data='{ colorMap: @json($color_map) }'>
+        <div class="flex flex-wrap gap-2" x-data="{ colorMap: {
+            'azul': '#165DFF', 'rojo': '#FF0000', 'verde': '#00AA00',
+            'negro': '#000000', 'blanco': '#FFFFFF', 'gris': '#888888',
+            'amarillo': '#FFFF00', 'rosado': '#FFC0CB', 'camell': '#cfa781',
+            'marron': '#7B3F00', 'verde-oli': '#556B2F', 'gris-claro': '#ccc',
+            'celeste': '#6194CD', 'beige-dorado':'#C7AA81', 'mandarina':'#C47A41',
+            'perla': '#C6B688','verde-claro-2': '#5C6D50',
+        } }">
             <template x-for="color in validColors()" :key="color">
                 <button
                     type="button"
