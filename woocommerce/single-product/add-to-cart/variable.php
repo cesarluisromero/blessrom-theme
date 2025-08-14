@@ -49,6 +49,23 @@ foreach ($attributes as $attribute_name => $options) {
         $alpine_data["selected_{$slug}"] = count($options) === 1 ? esc_attr($options[0]) : '';
     }
 }
+
+// Mapa dinámico slug => hex a partir de términos usados en este producto
+$color_terms = wc_get_product_terms($product->get_id(), 'pa_color', ['fields' => 'all']);
+$color_map = [];
+
+foreach ($color_terms as $t) {
+    // 1) Leer del term meta estándar
+    $hex = get_term_meta($t->term_id, 'color_hex', true);
+
+    // 2) (Opcional) Fallback si usas ACF:
+    if (!$hex && function_exists('get_field')) {
+        $hex = get_field('color_hex', 'pa_color_' . $t->term_id);
+    }
+
+    $color_map[$t->slug] = $hex ?: '#cccccc';
+}
+
 ?>
 
 
@@ -99,14 +116,7 @@ foreach ($attributes as $attribute_name => $options) {
         <label class="block text-sm font-semibold mb-2 text-gray-800">
             <?php echo wc_attribute_label('pa_color'); ?>
         </label>
-        <div class="flex flex-wrap gap-2" x-data="{ colorMap: {
-            'azul': '#165DFF', 'rojo': '#FF0000', 'verde': '#00AA00',
-            'negro': '#000000', 'blanco': '#FFFFFF', 'gris': '#888888',
-            'amarillo': '#FFFF00', 'rosado': '#FFC0CB', 'camell': '#cfa781',
-            'marron': '#7B3F00', 'verde-oli': '#556B2F', 'gris-claro': '#ccc',
-            'celeste': '#6194CD', 'beige-dorado':'#C7AA81', 'mandarina':'#C47A41',
-            'perla': '#C6B688','verde-claro-2': '#5C6D50',
-        } }">
+        <div class="flex flex-wrap gap-2" x-data='{ colorMap: @json($color_map) }'>
             <template x-for="color in validColors()" :key="color">
                 <button
                     type="button"
