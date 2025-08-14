@@ -38,7 +38,7 @@
   @input.debounce.300ms="search"
   @keydown.enter.prevent="window.location.href = `${window.location.origin}/blessrom/?s=${encodeURIComponent(query)}`"
 />
-    <button class="bg-[#1F3153] hover:bg-yellow-500 text-white px-4 flex items-center justify-center transition" @click.prevent>
+    <button class="bg-yellow-400 hover:bg-yellow-500 text-white px-4 flex items-center justify-center transition" @click.prevent>
       <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
       </svg>
