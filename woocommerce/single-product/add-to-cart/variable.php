@@ -81,11 +81,12 @@ foreach (array_keys($variation_color_slugs) as $slug) {
         $color_map[$slug] = '#cccccc';
     }
 }
-
+// (Opcional) Depura lo que estás enviando al front:
+echo "\n<!-- color_map ". esc_html( wp_json_encode($color_map) ) ." -->\n";
 ?>
 
 
-
+// (Opcional) Depura lo que estás enviando al front:
 
 <form
     x-ref="form"
