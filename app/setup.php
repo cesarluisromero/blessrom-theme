@@ -192,6 +192,60 @@ add_filter('template_include', function ($template) {
 }, 99);
 
 
+// Campo color en pa_color (crear)
+add_action('pa_color_add_form_fields', function () {
+  ?>
+  <div class="form-field term-color-wrap">
+    <label for="color_hex">Color (hex)</label>
+    <input type="text" name="color_hex" id="color_hex" value="#cccccc" class="color-picker" data-default-color="#cccccc" />
+    <p class="description">Elige el color para este término (p. ej. #165DFF).</p>
+  </div>
+  <script>
+    jQuery(function($){ $('.color-picker').wpColorPicker(); });
+  </script>
+  <?php
+});
+
+// Campo color en pa_color (editar)
+add_action('pa_color_edit_form_fields', function ($term) {
+  $value = get_term_meta($term->term_id, 'color_hex', true) ?: '#cccccc';
+  ?>
+  <tr class="form-field term-color-wrap">
+    <th scope="row"><label for="color_hex">Color (hex)</label></th>
+    <td>
+      <input type="text" name="color_hex" id="color_hex" value="<?php echo esc_attr($value); ?>" class="color-picker" data-default-color="#cccccc" />
+      <p class="description">Elige el color para este término (p. ej. #165DFF).</p>
+    </td>
+  </tr>
+  <script>
+    jQuery(function($){ $('.color-picker').wpColorPicker(); });
+  </script>
+  <?php
+});
+
+// Guardar meta
+function blessrom_save_pa_color_meta($term_id){
+  if (isset($_POST['color_hex'])) {
+    $hex = sanitize_hex_color($_POST['color_hex']);
+    if (!$hex) { $hex = '#cccccc'; }
+    update_term_meta($term_id, 'color_hex', $hex);
+  }
+}
+add_action('created_pa_color', 'blessrom_save_pa_color_meta');
+add_action('edited_pa_color',  'blessrom_save_pa_color_meta');
+
+// Encolar color picker solo en pantallas de taxonomías
+add_action('admin_enqueue_scripts', function ($hook) {
+  if (in_array($hook, ['edit-tags.php','term.php'], true)) {
+    $screen = get_current_screen();
+    if ($screen && $screen->taxonomy === 'pa_color') {
+      wp_enqueue_style('wp-color-picker');
+      wp_enqueue_script('wp-color-picker');
+    }
+  }
+});
+
+
 
 
 
