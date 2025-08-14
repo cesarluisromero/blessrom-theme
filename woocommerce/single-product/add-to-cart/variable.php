@@ -51,19 +51,19 @@ foreach ($attributes as $attribute_name => $options) {
 }
 
 // Mapa dinámico slug => hex a partir de términos usados en este producto
-$color_terms = wc_get_product_terms($product->get_id(), 'pa_color', ['fields' => 'all']);
+$all_color_terms = get_terms([
+    'taxonomy'   => 'pa_color',
+    'hide_empty' => false,
+]);
+
 $color_map = [];
 
-foreach ($color_terms as $t) {
-    // 1) Leer del term meta estándar
+foreach ($all_color_terms as $t) {
     $hex = get_term_meta($t->term_id, 'color_hex', true);
-
-    // 2) (Opcional) Fallback si usas ACF:
     if (!$hex && function_exists('get_field')) {
         $hex = get_field('color_hex', 'pa_color_' . $t->term_id);
     }
-
-    $color_map[$t->slug] = $hex ?: '#cccccc';
+    $color_map[$t->slug] = $hex ?: null; // null: sin color definido
 }
 ?>
 
