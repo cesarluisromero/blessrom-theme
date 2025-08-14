@@ -133,7 +133,7 @@ echo "\n<!-- color_map ". esc_html( wp_json_encode($color_map) ) ." -->\n";
         <label class="block text-sm font-semibold mb-2 text-gray-800">
             <?php echo wc_attribute_label('pa_color'); ?>
         </label>
-        <div class="flex flex-wrap gap-2" x-data='{ colorMap: @json($color_map) }'>
+        <div class="flex flex-wrap gap-2" x-data='{ colorMap: @json($color_map) }' x-init="console.log('colorMap', colorMap)">
             <template x-for="color in validColors()" :key="color">
                 <button
                     type="button"
