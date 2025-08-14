@@ -115,34 +115,26 @@ foreach ($color_terms as $t) {
         <label class="block text-sm font-semibold mb-2 text-gray-800">
             <?php echo wc_attribute_label('pa_color'); ?>
         </label>
-        <div class="flex flex-wrap gap-2" x-data="{ colorMap: {
-            'azul': '#165DFF', 'rojo': '#FF0000', 'verde': '#00AA00',
-            'negro': '#000000', 'blanco': '#FFFFFF', 'gris': '#888888',
-            'amarillo': '#FFFF00', 'rosado': '#FFC0CB', 'camell': '#cfa781',
-            'marron': '#7B3F00', 'verde-oli': '#556B2F', 'gris-claro': '#ccc',
-            'celeste': '#6194CD', 'beige-dorado':'#C7AA81', 'mandarina':'#C47A41',
-            'perla': '#C6B688','verde-claro-2': '#5C6D50',
-        } }">
+        <div class="flex flex-wrap gap-2"
+            x-data='{ "colorMap": <?= wp_json_encode($color_map, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?> }'
+            x-init="console.log('colorMap:', colorMap)">
             <template x-for="color in validColors()" :key="color">
                 <button
-                    type="button"
-                    @click="
-                                selected_pa_color = color; 
-                                quantity = 1; 
-                                errorMessage = ''; 
-                                updateMaxQty();
-                                if ($store.product?.colorImages?.[color]) {
-                                    $store.product.currentImage = $store.product.colorImages[color];
-                                    if ($store.product.slideToImage) {
-                                        $store.product.slideToImage($store.product.colorImages[color]);
-                                    }
-                                }
-                            "
-                    :class="selected_pa_color === color
-                        ? 'ring-2 ring-blue-500 border-blue-500 text-white'
-                        : 'bg-white text-gray-800 border-gray-300'"
-                    class="transition text-sm border rounded px-3 py-1 duration-150 ease-in-out w-8 h-8 rounded-full"
-                    :style="'background-color:' + (colorMap[color] ?? '#ccc')"
+                type="button"
+                @click="
+                    selected_pa_color = color;
+                    quantity = 1;
+                    errorMessage = '';
+                    updateMaxQty();
+                    if ($store.product?.colorImages?.[color]) {
+                    $store.product.currentImage = $store.product.colorImages[color];
+                    if ($store.product.slideToImage) $store.product.slideToImage($store.product.colorImages[color]);
+                    }
+                "
+                class="transition text-sm border rounded duration-150 ease-in-out w-8 h-8 rounded-full"
+                :class="selected_pa_color === color ? 'ring-2 ring-blue-500 border-blue-500' : 'border-gray-300'"
+                :style="`background-color: ${colorMap[color] ?? '#ccc'}`"
+                :title="`${color} → ${colorMap[color] ?? '#ccc'}`"
                 ></button>
             </template>
         </div>
