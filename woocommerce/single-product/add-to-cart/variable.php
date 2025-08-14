@@ -134,23 +134,8 @@ echo "\n<!-- color_map ". esc_html( wp_json_encode($color_map) ) ." -->\n";
             <?php echo wc_attribute_label('pa_color'); ?>
         </label>
         <div class="flex flex-wrap gap-2"
-                x-data="{
-                colorMap: @json($color_map),
-                // normaliza el slug recibido desde las variaciones
-                hexFor(c){
-                    const k = String(c).toLowerCase().trim().replace(/\s+/g,'-');
-                    return this.colorMap[k] ?? '#ccc';
-                },
-                // borde más visible si el color es muy claro (ej. blanco)
-                borderFor(c){
-                    const hx = this.hexFor(c).replace('#','');
-                    if (hx.length !== 6) return 'border-gray-300';
-                    const r = parseInt(hx.slice(0,2),16), g = parseInt(hx.slice(2,4),16), b = parseInt(hx.slice(4,6),16);
-                    const lum = (0.2126*r + 0.7152*g + 0.0722*b)/255;
-                    return lum > 0.85 ? 'border-gray-400' : 'border-gray-300';
-                }
-                }"
-                x-init="console.log('colorMap', colorMap)">
+            x-data="alpineColors(@json($color_map))"
+            x-init="console.log('colorMap:', colorMap)">
             <template x-for="color in validColors()" :key="color">
                 <button
                 type="button"
@@ -165,12 +150,13 @@ echo "\n<!-- color_map ". esc_html( wp_json_encode($color_map) ) ." -->\n";
                     }
                 "
                 class="transition text-sm border rounded duration-150 ease-in-out w-8 h-8 rounded-full"
-                :class="(selected_pa_color === color ? 'ring-2 ring-blue-500 border-blue-500' : borderFor(color))"
+                :class="selected_pa_color === color ? 'ring-2 ring-blue-500 border-blue-500' : borderFor(color)"
                 :style="'background-color:' + hexFor(color)"
                 :title="color + ' → ' + hexFor(color)"
                 ></button>
             </template>
         </div>
+
 
         <input type="hidden" name="attribute_pa_color" :value="selected_pa_color" required>
     </div>
@@ -242,3 +228,28 @@ echo "\n<!-- color_map ". esc_html( wp_json_encode($color_map) ) ." -->\n";
     </div>
     
 </form>
+@push('scripts')
+<script>
+  // Devuelve el objeto x-data para alpine
+  function alpineColors(map){
+    return {
+      colorMap: map || {},
+
+      hexFor(c){
+        const k = String(c||'').toLowerCase().trim().replace(/\s+/g,'-');
+        return this.colorMap[k] || '#ccc';
+      },
+
+      borderFor(c){
+        const hx = this.hexFor(c).replace('#','');
+        if (hx.length !== 6) return 'border-gray-300';
+        const r = parseInt(hx.slice(0,2),16);
+        const g = parseInt(hx.slice(2,4),16);
+        const b = parseInt(hx.slice(4,6),16);
+        const lum = (0.2126*r + 0.7152*g + 0.0722*b)/255;
+        return lum > 0.85 ? 'border-gray-400' : 'border-gray-300';
+      }
+    }
+  }
+</script>
+@endpush
