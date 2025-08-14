@@ -191,6 +191,85 @@ add_filter('template_include', function ($template) {
     return $template;
 }, 99);
 
+// Formulario "Añadir nuevo Color"
+add_action('pa_color_add_form_fields', function () {
+  ?>
+  <div class="form-field term-color-wrap">
+    <label for="color_hex">Color (hex)</label>
+    <input type="text" name="color_hex" id="color_hex" value="#cccccc" class="color-picker" data-default-color="#cccccc" />
+    <p class="description">Elige el color para este término (por ej. #165DFF).</p>
+  </div>
+  <?php
+});
+
+// Formulario "Editar Color"
+add_action('pa_color_edit_form_fields', function ($term) {
+  $value = get_term_meta($term->term_id, 'color_hex', true) ?: '#cccccc';
+  ?>
+  <tr class="form-field term-color-wrap">
+    <th scope="row"><label for="color_hex">Color (hex)</label></th>
+    <td>
+      <input type="text" name="color_hex" id="color_hex" value="<?php echo esc_attr($value); ?>" class="color-picker" data-default-color="#cccccc" />
+      <p class="description">Elige el color para este término (por ej. #165DFF).</p>
+    </td>
+  </tr>
+  <?php
+});
+
+
+// Guardar meta
+// Guardar/actualizar el meta color_hex en pa_color
+function blessrom_save_pa_color_meta($term_id, $tt_id) {
+  if (!isset($_POST['color_hex'])) return;
+
+  $hex = $_POST['color_hex'];
+
+  // Sanear con fallback por si algo falla
+  if (function_exists('sanitize_hex_color')) {
+    $hex = sanitize_hex_color($hex);
+  }
+  if (!$hex) { // si no es válido, usa un gris por defecto
+    $hex = '#cccccc';
+  }
+
+  update_term_meta($term_id, 'color_hex', $hex);
+}
+add_action('created_pa_color', 'blessrom_save_pa_color_meta', 10, 2);
+add_action('edited_pa_color',  'blessrom_save_pa_color_meta', 10, 2);
+
+
+// Encolar color picker solo en pantallas de taxonomías
+// Cargar wp-color-picker solo en la pantalla de términos de pa_color
+add_action('admin_enqueue_scripts', function () {
+  $screen = get_current_screen();
+  if (!$screen) return;
+
+  // Pantallas donde se gestionan términos
+  if (in_array($screen->base, ['edit-tags', 'term'], true) && $screen->taxonomy === 'pa_color') {
+    wp_enqueue_style('wp-color-picker');
+    wp_enqueue_script('wp-color-picker');
+
+    // Inicializar el picker y re-inicializar tras añadir por AJAX (action=add-tag)
+    $init = <<<JS
+    jQuery(function($){
+      function initPickers(){
+        $('.color-picker').each(function(){
+          if (!$(this).hasClass('wp-color-picker')) {
+            $(this).wpColorPicker();
+          }
+        });
+      }
+      initPickers();
+      $(document).ajaxComplete(function(event, xhr, settings){
+        if (settings && typeof settings.data === 'string' && settings.data.indexOf('action=add-tag') !== -1) {
+          initPickers();
+        }
+      });
+    });
+    JS;
+    wp_add_inline_script('wp-color-picker', $init);
+  }
+});
 
 
 
