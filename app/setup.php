@@ -272,11 +272,17 @@ add_action('admin_enqueue_scripts', function () {
   }
 });
 
-// Cambiar el copy del aviso de login en checkout
-add_filter('woocommerce_checkout_login_message', function ($msg) {
-  $login_url = wc_get_page_permalink('myaccount') . '?redirect_to=' . urlencode(wc_get_checkout_url());
-  return '¿Tienes cuenta en Blessrom? <a class="underline" href="' . esc_url($login_url) . '">Inicia sesión</a> o <a class="underline" href="' . esc_url(wc_get_page_permalink('myaccount')) . '">créala aquí</a>.';
+// Quitar el formulario/aviso de login nativo en checkout
+add_action('init', function () {
+  remove_action('woocommerce_before_checkout_form', 'woocommerce_checkout_login_form', 10);
 });
+
+// Poner tu propio componente donde quieras (mismo hook o en tu Blade)
+add_action('woocommerce_before_checkout_form', function () {
+  if (is_user_logged_in()) return;
+  echo \Roots\view('woocommerce.checkout.partials.custom-login-banner')->render();
+}, 10);
+
 
 
 
