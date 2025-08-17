@@ -272,16 +272,37 @@ add_action('admin_enqueue_scripts', function () {
   }
 });
 
-// Quitar el formulario/aviso de login nativo en checkout
+// Evita que Woo imprima notices por su cuenta en checkout
 add_action('init', function () {
-  remove_action('woocommerce_before_checkout_form', 'woocommerce_checkout_login_form', 10);
+  remove_action('woocommerce_before_checkout_form', 'woocommerce_output_all_notices', 10);
 });
 
-// Poner tu propio componente donde quieras (mismo hook o en tu Blade)
+// Imprime notices con tu propio diseño (excepto los de “success” si quieres)
 add_action('woocommerce_before_checkout_form', function () {
-  if (is_user_logged_in()) return;
-  echo \Roots\view('woocommerce.checkout.partials.custom-login-banner')->render();
-}, 10);
+  $notices = wc_get_notices();
+  if (empty($notices)) return;
+
+  echo '<div class="max-w-6xl mx-auto mb-4 space-y-3">';
+
+  foreach (['error','notice','success'] as $type) {
+    if (empty($notices[$type])) continue;
+
+    // Si no quieres 'success' en checkout, salta esta línea:
+    if ($type === 'success') continue;
+
+    foreach ($notices[$type] as $notice) {
+      $text = wp_kses_post($notice['notice']);
+      $cls  = [
+        'error'   => 'bg-red-50 text-red-800 border-red-200',
+        'notice'  => 'bg-amber-50 text-amber-900 border-amber-200',
+        'success' => 'bg-emerald-50 text-emerald-900 border-emerald-200',
+      ][$type];
+      echo '<div class="rounded-lg border p-3 '.$cls.'">'.$text.'</div>';
+    }
+  }
+
+  echo '</div>';
+}, 11);
 
 
 
