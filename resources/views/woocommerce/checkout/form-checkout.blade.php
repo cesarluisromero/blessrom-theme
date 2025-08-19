@@ -67,6 +67,14 @@
                                         >
                                             Inicia sesión para completar tu compra
                                         </a>
+                                         <button
+                                            type="submit"
+                                            id="place_order_guest"
+                                            name="woocommerce_checkout_place_order"
+                                            class="button alt w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl text-sm transition-all duration-200"
+                                        >
+                                            Pagar como invitado
+                                        </button>
                                     @endif 
                                 </div>                                       
                         </div>
