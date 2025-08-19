@@ -61,20 +61,22 @@
                                         </button>
                                     @else
                                         {{-- Botón falso que redirige al login si no está logueado --}}
-                                        <a
-                                            href="{{ esc_url( wc_get_page_permalink('myaccount') . '?redirect_to=' . urlencode(wc_get_checkout_url()) ) }}"
-                                            class="w-full block bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-xl text-sm text-center transition-all duration-200"
-                                        >
-                                            Inicia sesión para completar tu compra
-                                        </a>
-                                         <button
-                                            type="submit"
-                                            id="place_order_guest"
-                                            name="woocommerce_checkout_place_order"
-                                            class="button alt w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl text-sm transition-all duration-200"
-                                        >
-                                            Pagar como invitado
-                                        </button>
+                                        <div class="flex flex-col space-y-3">
+                                            <a
+                                                href="{{ esc_url( wc_get_page_permalink('myaccount') . '?redirect_to=' . urlencode(wc_get_checkout_url()) ) }}"
+                                                class="w-full block bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-xl text-sm text-center transition-all duration-200"
+                                            >
+                                                Inicia sesión para completar tu compra
+                                            </a>
+                                            <button
+                                                type="submit"
+                                                id="place_order_guest"
+                                                name="woocommerce_checkout_place_order"
+                                                class="button alt w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl text-sm transition-all duration-200"
+                                            >
+                                                Pagar como invitado
+                                            </button>
+                                        </div>
                                     @endif 
                                 </div>                                       
                         </div>
