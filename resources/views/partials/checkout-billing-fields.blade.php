@@ -19,6 +19,17 @@
             value="{{ $checkout->get_value('billing_last_name') }}" required>
     </div>
 
+    {{-- DNI / RUC --}}
+    <div>
+        <label for="billing_document" class="block text-sm font-medium text-gray-700 mb-1"></label>
+        {!! woocommerce_form_field(
+                'billing_document',
+                $checkout->get_checkout_fields()['billing']['billing_document'],
+                $checkout->get_value('billing_document')
+            ) !!}
+    </div>
+
+
     {{-- País / Región --}}
     <div>
         <label for="billing_country" class="block text-sm font-medium text-gray-700 mb-1"></label>

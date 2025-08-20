@@ -1,4 +1,3 @@
-{{-- resources/views/woocommerce/checkout/form-checkout.blade.php --}}
 @extends('layouts.app')
 @section('content')
 

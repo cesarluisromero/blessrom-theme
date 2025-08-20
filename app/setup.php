@@ -289,6 +289,24 @@ add_action('wp', function () {
 remove_action( 'woocommerce_before_checkout_form', 'woocommerce_checkout_login_form', 10 );
 
 
+add_filter('woocommerce_checkout_fields', function ($fields) {
+    $fields['billing']['billing_document'] = [
+        'type'        => 'text',
+        'label'       => 'DNI / RUC',
+        'required'    => true,
+        'priority'    => 65,                // orden entre tus campos
+        'class'       => ['form-row-wide'],
+        'autocomplete'=> 'off',
+        'input_class' => ['h-12','text-base'], // tailwind utilidades si usas
+        'custom_attributes' => [
+            'inputmode'  => 'numeric',
+            'pattern'    => '[0-9]*',
+            'maxlength'  => '11',
+            'placeholder'=> '8 dígitos (DNI) o 11 (RUC)',
+        ],
+    ];
+    return $fields;
+});
 
 
 
