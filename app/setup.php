@@ -308,6 +308,16 @@ add_filter('woocommerce_checkout_fields', function ($fields) {
     return $fields;
 });
 
+add_filter('woocommerce_billing_fields', function ($fields) {
+    $fields['billing_document'] = $fields['billing_document'] ?? [
+        'type'        => 'text',
+        'label'       => 'DNI / RUC',
+        'required'    => true,
+        'priority'    => 65,
+    ];
+    return $fields;
+});
+
 
 
 
