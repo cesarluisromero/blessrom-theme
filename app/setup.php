@@ -289,37 +289,6 @@ add_action('wp', function () {
 remove_action( 'woocommerce_before_checkout_form', 'woocommerce_checkout_login_form', 10 );
 
 
-// Mostrar miniatura del producto en el checkout (tabla de Resumen)
-add_filter('woocommerce_cart_item_name', function ($name, $cart_item, $cart_item_key) {
-    if (!is_checkout() || is_wc_endpoint_url('order-received')) {
-        return $name; // solo en checkout, no en "pedido recibido"
-    }
-
-    $product = $cart_item['data'] ?? null;
-    if (!$product || !is_a($product, 'WC_Product')) {
-        return $name;
-    }
-
-    // Miniatura (usa el tamaño de WooCommerce)
-    $thumb_html = $product->get_image('woocommerce_thumbnail', [
-        'class' => 'w-12 h-12 md:w-16 md:h-16 rounded object-cover shrink-0'
-    ]);
-
-    // Enlace opcional al producto
-    $link = $product->is_visible() ? get_permalink($product->get_id()) : '';
-    if ($link) {
-        $thumb_html = '<a href="'.esc_url($link).'" class="block">'.$thumb_html.'</a>';
-    }
-
-    // Wrapper responsivo: imagen + texto
-    $wrapped = '
-    <div class="flex items-start gap-3">
-        '.$thumb_html.'
-        <div class="min-w-0">'.$name.'</div>
-    </div>';
-
-    return $wrapped;
-}, 10, 3);
 
 
 
