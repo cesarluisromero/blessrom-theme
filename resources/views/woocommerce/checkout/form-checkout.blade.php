@@ -3,7 +3,7 @@
 @section('content')
 
     @php if (!defined('ABSPATH')) exit; @endphp
-    @include('partials.checkout-login-warning')
+    
     @php  
         if (function_exists('WC') && WC()->checkout()) {
             do_action('woocommerce_before_checkout_form', WC()->checkout());
