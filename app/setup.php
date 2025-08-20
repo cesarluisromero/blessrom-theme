@@ -285,6 +285,9 @@ add_action('wp', function () {
   }
 }, 1);
 
+// Elimina el formulario de login del checkout
+remove_action( 'woocommerce_before_checkout_form', 'woocommerce_checkout_login_form', 10 );
+
 
 
 
