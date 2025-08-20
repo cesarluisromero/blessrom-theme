@@ -13,25 +13,45 @@
         <tbody class="divide-y divide-gray-200">
             @foreach (WC()->cart->get_cart() as $cart_item_key => $cart_item)
                 @php
-                    $product = $cart_item['data'];
+                    /** @var WC_Product $product */
+                    $product  = $cart_item['data'];
+                    $qty      = $cart_item['quantity'];
+                    // Miniatura (ocúltala en XS si quieres con "hidden sm:block")
+                    $thumb    = $product->get_image('woocommerce_thumbnail', [
+                        'class' => 'w-12 h-12 md:w-16 md:h-16 rounded object-cover shrink-0'
+                    ]);
+                    $link     = $product->is_visible() ? get_permalink($product->get_id()) : '';
                 @endphp
+
                 <tr>
                     <td class="py-3">
-                        <div class="font-medium">{!! $product->get_name() !!}</div>
-                        <div class="text-xs text-gray-500">
-                            @if ($product->is_type('variation') && isset($cart_item['variation']))
-                                @foreach ($cart_item['variation'] as $key => $value)
-                                    {!! wc_attribute_label(str_replace('attribute_', '', $key)) !!}: {!! $value !!} <br>
-                                @endforeach
-                            @endif
-                            × {{ $cart_item['quantity'] }}
+                        <div class="flex items-start gap-3">
+                            {!! $link ? '<a href="'.esc_url($link).'" class="block">'.$thumb.'</a>' : $thumb !!}
+                            <div class="min-w-0">
+                                <div class="font-medium">
+                                    {!! $link
+                                        ? '<a href="'.esc_url($link).'">'.esc_html($product->get_name()).'</a>'
+                                        : esc_html($product->get_name()) !!}
+                                </div>
+
+                                {{-- Atributos y cantidad --}}
+                                <div class="text-xs text-gray-500">
+                                    @if ($product->is_type('variation') && !empty($cart_item['variation']))
+                                        @foreach ($cart_item['variation'] as $key => $value)
+                                            {!! wc_attribute_label(str_replace('attribute_', '', $key)) !!}: {!! esc_html(wc_clean(wp_unslash($value))) !!} <br>
+                                        @endforeach
+                                    @endif
+                                    × {{ $qty }}
+                                </div>
+                            </div>
                         </div>
                     </td>
                     <td class="py-3 text-right">
-                        {!! WC()->cart->get_product_subtotal($product, $cart_item['quantity']) !!}
+                        {!! WC()->cart->get_product_subtotal($product, $qty) !!}
                     </td>
                 </tr>
             @endforeach
+
         </tbody>
         <tfoot class="border-t border-gray-300 text-sm">
             <tr>
