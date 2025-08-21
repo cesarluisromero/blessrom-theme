@@ -115,34 +115,31 @@ foreach ($color_terms as $t) {
         <label class="block text-sm font-semibold mb-2 text-gray-800">
             <?php echo wc_attribute_label('pa_color'); ?>
         </label>
-
-        <!-- Inyecta el mapa en el MISMO componente -->
         <div class="flex flex-wrap gap-2"
-            x-init="colorMap = <?= wp_json_encode($color_map, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>">
-
+            x-data='{ "colorMap": <?= wp_json_encode($color_map, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?> }'
+            x-init="console.log('colorMap:', colorMap)">
             <template x-for="color in validColors()" :key="color">
-            <button type="button"
-                @click="
-                selected_pa_color = color;
-                quantity = 1;
-                errorMessage = '';
-                updateMaxQty();
-                if ($store.product?.colorImages?.[color]) {
+                <button
+                type="button"
+                @click=" 
+                    selected_pa_color = color;
+                    quantity = 1;
+                    errorMessage = '';
+                    updateMaxQty();
+                    if ($store.product?.colorImages?.[color]) {
                     $store.product.currentImage = $store.product.colorImages[color];
                     if ($store.product.slideToImage) $store.product.slideToImage($store.product.colorImages[color]);
-                }
+                    }
                 "
                 class="transition text-sm border rounded duration-150 ease-in-out w-8 h-8 rounded-full"
                 :class="selected_pa_color === color ? 'ring-2 ring-blue-500 border-blue-500' : 'border-gray-300'"
                 :style="`background-color: ${colorMap[color] ?? '#ccc'}`"
-                :title="`${color} → ${colorMap[color] ?? '#ccc'}`">
-            </button>
+                :title="`${color} → ${colorMap[color] ?? '#ccc'}`"
+                ></button>
             </template>
         </div>
-
         <input type="hidden" name="attribute_pa_color" :value="selected_pa_color" required>
     </div>
-
 
     <div class="single_variation_wrap mt-6">
         <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
