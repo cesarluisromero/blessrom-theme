@@ -329,57 +329,5 @@ document.addEventListener('DOMContentLoaded', function () {
   
 
 
-window.productGallery = function () {
-  return {
-    swiper: null,
-    indexById: {},
-    indexByUrl: {},
-    init() {
-      // Instancia Swiper en ESTE carrusel (root del x-data)
-      this.swiper = new Swiper(this.$root, {
-        loop: true,
-        pagination: {
-          el: this.$root.querySelector('.swiper-pagination'),
-          clickable: true,
-        },
-      });
-
-      // Mapea imágenes a índices
-      const imgs = this.$root.querySelectorAll('.swiper-slide img');
-      imgs.forEach((img, i) => {
-        const id = img.getAttribute('data-id');
-        if (id) this.indexById[String(id)] = i;
-        try {
-          const abs = new URL(img.src, location.origin).href;
-          this.indexByUrl[abs] = i;
-        } catch (e) {}
-      });
-
-      // Expón el método al store para que lo use variable.php
-      const store = Alpine.store('product');
-      store.slideToImage = (imageIdOrUrl) => {
-        let idx = -1;
-
-        // Si te pasan un ID numérico (recomendado)
-        if (imageIdOrUrl !== null && imageIdOrUrl !== undefined) {
-          const str = String(imageIdOrUrl);
-          if (/^[0-9]+$/.test(str)) {
-            idx = this.indexById[str] ?? -1;
-          }
-        }
-
-        // Si te pasan una URL
-        if (idx < 0 && typeof imageIdOrUrl === 'string') {
-          try {
-            const abs = new URL(imageIdOrUrl, location.origin).href;
-            idx = this.indexByUrl[abs] ?? -1;
-          } catch (e) {}
-        }
-
-        if (idx >= 0) this.swiper.slideTo(idx);
-      };
-    }
-  }
-}
 
 
