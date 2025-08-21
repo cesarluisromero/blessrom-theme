@@ -319,6 +319,17 @@ add_filter('woocommerce_billing_fields', function ($fields) {
 });
 
 
+add_filter('woocommerce_checkout_fields', function ($fields) {
+  if (isset($fields['billing']['billing_document'])) {
+    $fields['billing']['billing_document']['label']       = 'Documento *';
+    $fields['billing']['billing_document']['class']       = ['mb-4'];
+    $fields['billing']['billing_document']['label_class'] = ['block text-sm font-medium text-gray-700 mb-1'];
+    $fields['billing']['billing_document']['input_class'] = ['form-input w-full rounded-md border-gray-300 shadow-sm h-12 text-base focus:ring-blue-500 focus:border-blue-500'];
+  }
+  return $fields;
+});
+
+
 
 
 
