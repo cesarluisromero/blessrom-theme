@@ -398,40 +398,6 @@ window.productGallery = function () {
   }
 }
 
-// Pequeño debounce
-function debounce(fn, t = 150) {
-  let id; return (...args) => { clearTimeout(id); id = setTimeout(() => fn(...args), t); };
-}
-
-function bindSlideTarget() {
-  const store = Alpine.store('product');
-  if (!store) return;
-
-  const isDesktop = window.matchMedia('(min-width: 1024px)').matches;
-
-  if (isDesktop) {
-    // 🖥️ Desktop: apuntar a la imagen principal
-    store.slideToImage = (url) => { if (url) store.currentImage = url; };
-    return;
-  }
-
-  // 📱 Móvil: buscar el componente Alpine del swiper móvil y moverlo
-  const mobileEl = document.querySelector('.product-swiper-movil.swiper');
-  const comp = mobileEl && mobileEl.__x && mobileEl.__x.$data;
-
-  if (comp && typeof comp.slideToUrl === 'function') {
-    store.slideToImage = (url) => comp.slideToUrl(url);
-  } else {
-    // Fallback seguro
-    store.slideToImage = (url) => { if (url) store.currentImage = url; };
-  }
-}
-
-// Enlaces de ciclo de vida
-document.addEventListener('DOMContentLoaded', bindSlideTarget);
-document.addEventListener('alpine:initialized', bindSlideTarget);
-window.addEventListener('resize', debounce(bindSlideTarget, 200));
-document.addEventListener('visibilitychange', () => { if (!document.hidden) bindSlideTarget(); });
 
 
 
