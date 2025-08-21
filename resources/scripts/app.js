@@ -322,64 +322,17 @@ document.addEventListener('DOMContentLoaded', function () {
     easing: 'ease-in-out',
   });
 });
-
-
-document.addEventListener('alpine:init', () => {
-  // No sobreescribas si ya existe en desktop
-  if (!Alpine.store('product')) {
-    Alpine.store('product', {
-      colorImages: window.BLESSROM_COLOR_IMAGE_MAP || {},
-      currentImage: null,
-      slideToImage: () => {}, // se redefine desde productGallery()
-    });
-  } else {
-    // Asegura que el mapa esté disponible en móvil
-    if (window.BLESSROM_COLOR_IMAGE_MAP) {
-      Alpine.store('product').colorImages = window.BLESSROM_COLOR_IMAGE_MAP;
-    }
-  }
-});
   
 
-function productGallery() {
-  return {
-    swiper: null,
-    indexById: {},
-    indexByUrl: {},
-    init() {
-      this.swiper = new Swiper(this.$root, {
-        pagination: {
-          el: this.$root.querySelector('.swiper-pagination'),
-          clickable: true,
-        },
-      });
-
-      const imgs = this.$root.querySelectorAll('.swiper-slide img');
-      imgs.forEach((img, i) => {
-        const id = img.getAttribute('data-id');
-        if (id) this.indexById[String(id)] = i;
-        try {
-          const abs = new URL(img.src, location.origin).href;
-          this.indexByUrl[abs] = i;
-        } catch (e) {}
-      });
-
-      const store = Alpine.store('product');
-      store.slideToImage = (imageIdOrUrl) => {
-        let idx = -1;
-        if (/^[0-9]+$/.test(imageIdOrUrl)) {
-          idx = this.indexById[String(imageIdOrUrl)] ?? -1;
+window.productGallery = function () {
+    return {
+        init() {
+    new Swiper('.product-swiper-movil', {
+                pagination: { el: '.swiper-pagination' },
+      loop: true,
+    });
         }
-        if (idx < 0) {
-          try {
-            const abs = new URL(imageIdOrUrl, location.origin).href;
-            idx = this.indexByUrl[abs] ?? -1;
-          } catch (e) {}
-        }
-        if (idx >= 0) this.swiper.slideTo(idx);
-      };
     }
-  }
 }
 
 
