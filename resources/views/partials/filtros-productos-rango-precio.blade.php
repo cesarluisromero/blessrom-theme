@@ -7,8 +7,8 @@
 <div>
     <h3 class="font-semibold mb-1">Precio</h3>
     <div class="text-sm text-gray-600 mb-1">
-        <span id="price-min-label">S/{{ $min }}</span> –
-        <span id="price-max-label">S/{{ $max }}</span>
+        <span id="price-min-label">${{ $min }}</span> –
+        <span id="price-max-label">${{ $max }}</span>
     </div>
     <div id="price-slider" class="mb-2 h-[8px]"></div>
     <input type="hidden" name="min_price" id="min_price" value="{{ $min }}">
@@ -52,8 +52,8 @@
           const [minVal, maxVal] = values.map(v => Math.round(v));
           minInput.value = minVal;
           maxInput.value = maxVal;
-          minLabel.innerText = `$${minVal}`;
-          maxLabel.innerText = `$${maxVal}`;
+          minLabel.innerText = `S/${minVal}`;
+          maxLabel.innerText = `S/${maxVal}`;
         });
       });
     </script>
