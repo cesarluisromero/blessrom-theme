@@ -346,57 +346,6 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
   
-window.productGallery = function () {
-  return {
-    swiper: null,
-    indexById: {},
-    indexByUrl: {},
-    init() {
-      // Instancia Swiper en ESTE carrusel
-      this.swiper = new Swiper(this.$root, {
-        loop: true,
-        pagination: {
-          el: this.$root.querySelector('.swiper-pagination'),
-          clickable: true,
-        },
-      });
-
-      // Indexar los slides por data-id y por URL
-      const imgs = this.$root.querySelectorAll('.swiper-slide img');
-      imgs.forEach((img, i) => {
-        const id = img.getAttribute('data-id');
-        if (id) this.indexById[String(id)] = i;
-        try {
-          const abs = new URL(img.src, location.origin).href;
-          this.indexByUrl[abs] = i;
-        } catch (e) {}
-      });
-
-      // Asegurar que el store tenga el mapa (si se inyectó antes)
-      const store = Alpine.store('product') || Alpine.store('product', { colorImages: {}, currentImage: null });
-      if (window.BLESSROM_COLOR_IMAGE_MAP && Object.keys(window.BLESSROM_COLOR_IMAGE_MAP).length) {
-        store.colorImages = { ...(store.colorImages || {}), ...window.BLESSROM_COLOR_IMAGE_MAP };
-      }
-
-      // Exponer un mover-por-URL para móvil sin romper desktop
-      this.slideToUrl = (url) => {
-        if (!url) return;
-        const targetUrl = String(url).split('?')[0];
-        const slides = this.swiper.slides;
-        for (let i = 0; i < slides.length; i++) {
-          const img = slides[i].querySelector('img');
-          if (img && img.src.split('?')[0] === targetUrl) {
-            this.swiper.slideToLoop(i);   // ✅ con loop usa slideToLoop
-            return;
-          }
-        }
-      };
-
-      // No asignamos aquí store.slideToImage para no pisar desktop.
-      // Lo hará el "binder" del punto 3 según el ancho actual.
-    }
-  }
-}
 
 
 
