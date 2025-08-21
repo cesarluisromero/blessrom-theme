@@ -1,19 +1,23 @@
 @php
-  // Construye color -> image_id a partir de $available_variations
+  // Construir color -> image_id desde variaciones
   $color_image_map = [];
   if (!empty($available_variations)) {
     foreach ($available_variations as $v) {
       $color = $v['attributes']['attribute_pa_color'] ?? null;
-      $imgId = $v['image_id'] ?? null; // Woo suele traer esto
-      if ($color && $imgId) {
-        $color_image_map[$color] = $imgId; // Puedes guardar ID (recomendado) o URL
-      }
+      $imgId = $v['image_id'] ?? ($v['image']['id'] ?? null);
+      if ($color && $imgId) $color_image_map[$color] = (int) $imgId;
     }
   }
+
+  // Asegurar que TODAS las imágenes de variación estén en el slider
+  $variation_img_ids = array_values(array_unique(array_filter(array_map(function($v){
+    return $v['image_id'] ?? ($v['image']['id'] ?? null);
+  }, $available_variations ?? []))));
+
+  $ids = array_values(array_unique(array_merge([$main_image], $attachment_ids, $variation_img_ids)));
 @endphp
 
 <script>
-  // Disponible para app.js
   window.BLESSROM_COLOR_IMAGE_MAP = {!! json_encode($color_image_map, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES) !!};
 </script>
 

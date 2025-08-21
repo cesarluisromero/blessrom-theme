@@ -350,7 +350,7 @@ window.productGallery = function () {
     indexById: {},
     indexByUrl: {},
     init() {
-      // Instancia Swiper en ESTE carrusel (root del x-data)
+      // Instancia Swiper en ESTE carrusel (no por selector global)
       this.swiper = new Swiper(this.$root, {
         loop: true,
         pagination: {
@@ -359,7 +359,7 @@ window.productGallery = function () {
         },
       });
 
-      // Mapea imágenes a índices
+      // Indexar los slides por data-id y por URL
       const imgs = this.$root.querySelectorAll('.swiper-slide img');
       imgs.forEach((img, i) => {
         const id = img.getAttribute('data-id');
@@ -370,20 +370,23 @@ window.productGallery = function () {
         } catch (e) {}
       });
 
-      // Expón el método al store para que lo use variable.php
-      const store = Alpine.store('product');
+      // Asegurar que el store tenga el mapa (por si el inline carga después)
+      const store = Alpine.store('product') || Alpine.store('product', { colorImages: {}, currentImage: null });
+      if (window.BLESSROM_COLOR_IMAGE_MAP && Object.keys(window.BLESSROM_COLOR_IMAGE_MAP).length) {
+        store.colorImages = { ...(store.colorImages || {}), ...window.BLESSROM_COLOR_IMAGE_MAP };
+      }
+
+      // Exponer slideToImage sin pisar desktop
       store.slideToImage = (imageIdOrUrl) => {
         let idx = -1;
 
-        // Si te pasan un ID numérico (recomendado)
+        // Por ID numérico (recomendado)
         if (imageIdOrUrl !== null && imageIdOrUrl !== undefined) {
-          const str = String(imageIdOrUrl);
-          if (/^[0-9]+$/.test(str)) {
-            idx = this.indexById[str] ?? -1;
-          }
+          const s = String(imageIdOrUrl);
+          if (/^[0-9]+$/.test(s)) idx = this.indexById[s] ?? -1;
         }
 
-        // Si te pasan una URL
+        // Por URL absoluta
         if (idx < 0 && typeof imageIdOrUrl === 'string') {
           try {
             const abs = new URL(imageIdOrUrl, location.origin).href;
@@ -396,6 +399,7 @@ window.productGallery = function () {
     }
   }
 }
+
 
 
 
