@@ -21,12 +21,8 @@
 
     {{-- DNI / RUC --}}
     <div>
-        <label for="billing_last_name" class="block text-sm font-medium text-gray-700 mb-1"></label>
-        {!! woocommerce_form_field(
-                'billing_document',
-                $checkout->get_checkout_fields()['billing']['billing_document'],
-                $checkout->get_value('billing_document')
-            ) !!}
+        <label for="billing_document" class="block text-sm font-medium text-gray-700 mb-1"></label>
+        {!! woocommerce_form_field('billing_document',$checkout->get_checkout_fields()['billing']['billing_document'],$checkout->get_value('billing_document')) !!}
     </div>
 
 
