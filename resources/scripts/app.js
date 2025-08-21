@@ -1,5 +1,22 @@
 import '../styles/app.css';
 import Alpine from 'alpinejs';
+
+document.addEventListener('alpine:init', () => {
+  // Crea o actualiza el store 'product'
+  const initialMap = window.BLESSROM_COLOR_IMAGE_MAP || {};
+  if (!Alpine.store('product')) {
+    Alpine.store('product', {
+      colorImages: initialMap,   // color -> imageId o URL
+      currentImage: null,
+      slideToImage: () => {},    // lo redefine productGallery()
+    });
+  } else {
+    // Si ya existía (por desktop), asegúrate de que el mapa esté también en móvil
+    Alpine.store('product').colorImages = initialMap;
+  }
+});
+
+
 import Swiper from 'swiper/bundle';
 import 'swiper/css/bundle';
 import AOS from 'aos';
