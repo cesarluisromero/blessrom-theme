@@ -1,6 +1,14 @@
 import '../styles/app.css';
 import Alpine from 'alpinejs';
 
+
+
+
+import Swiper from 'swiper/bundle';
+import 'swiper/css/bundle';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+
 document.addEventListener('alpine:init', () => {
   // Crea o actualiza el store 'product'
   const initialMap = window.BLESSROM_COLOR_IMAGE_MAP || {};
@@ -15,12 +23,6 @@ document.addEventListener('alpine:init', () => {
     Alpine.store('product').colorImages = initialMap;
   }
 });
-
-
-import Swiper from 'swiper/bundle';
-import 'swiper/css/bundle';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 
 function alpineCart() {
     return {
