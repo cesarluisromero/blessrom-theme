@@ -1,3 +1,21 @@
+@php
+  // Construye color -> image_id a partir de $available_variations
+  $color_image_map = [];
+  if (!empty($available_variations)) {
+    foreach ($available_variations as $v) {
+      $color = $v['attributes']['attribute_pa_color'] ?? null;
+      $imgId = $v['image_id'] ?? null; // Woo suele traer esto
+      if ($color && $imgId) {
+        $color_image_map[$color] = $imgId; // Puedes guardar ID (recomendado) o URL
+      }
+    }
+  }
+@endphp
+
+<script>
+  // Disponible para app.js
+  window.BLESSROM_COLOR_IMAGE_MAP = {!! json_encode($color_image_map, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES) !!};
+</script>
 
 <div class="text-center text-lg font-semibold text-gray-800 lg:hidden mb-6">
         {{ $product->get_name() }}
