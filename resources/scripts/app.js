@@ -315,24 +315,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   
   
-  document.addEventListener('DOMContentLoaded', function () {
-    AOS.init({
-      once: true,
-      duration: 800,
-      easing: 'ease-in-out',
-    });
+document.addEventListener('DOMContentLoaded', function () {
+  AOS.init({
+    once: true,
+    duration: 800,
+    easing: 'ease-in-out',
   });
+});
   
 
-window.productGallery = function () {
-    return {
-        init() {
-    new Swiper('.product-swiper', {
-                pagination: { el: '.swiper-pagination' },
-      loop: true,
-    });
-        }
-    }
-}
 
 

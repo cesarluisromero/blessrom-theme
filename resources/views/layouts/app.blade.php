@@ -91,7 +91,7 @@
               if (minLabel) minLabel.innerText = `S/${min}`;
               if (maxLabel) maxLabel.innerText = `S/${max}`;
           });
-        }
+        }  
       });
     </script>   
     

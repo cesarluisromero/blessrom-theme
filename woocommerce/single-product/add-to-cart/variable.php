@@ -121,7 +121,7 @@ foreach ($color_terms as $t) {
             <template x-for="color in validColors()" :key="color">
                 <button
                 type="button"
-                @click="
+                @click=" 
                     selected_pa_color = color;
                     quantity = 1;
                     errorMessage = '';

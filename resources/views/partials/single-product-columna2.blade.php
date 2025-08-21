@@ -6,7 +6,7 @@
     {{-- Atributos personalizados: talla, color --}}
     <div class="mt-4">
         {!! woocommerce_template_single_add_to_cart() !!}
-    </div>
+    </div>  
     
 
 </div>

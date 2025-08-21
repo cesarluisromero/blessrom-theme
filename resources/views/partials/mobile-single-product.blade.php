@@ -11,7 +11,7 @@
                 <img src="{{ wp_get_attachment_image_url($id, 'large') }}" class="w-full h-auto object-contain lg:hidden mb-6">
             </div>
         @endforeach
-    </div>
+    </div> 
     
     <div class="swiper-pagination absolute bottom-1 inset-x-0 flex justify-center"></div>   
 </div>
