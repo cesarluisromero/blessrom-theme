@@ -1,28 +1,30 @@
 import '../styles/app.css';
 import Alpine from 'alpinejs';
-
-
-
-
 import Swiper from 'swiper/bundle';
 import 'swiper/css/bundle';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
 document.addEventListener('alpine:init', () => {
-  // Crea o actualiza el store 'product'
-  const initialMap = window.BLESSROM_COLOR_IMAGE_MAP || {};
+  const map = window.BLESSROM_COLOR_IMAGE_MAP; // puede ser undefined
+
   if (!Alpine.store('product')) {
     Alpine.store('product', {
-      colorImages: initialMap,   // color -> imageId o URL
+      colorImages: (map && Object.keys(map).length) ? map : {},
       currentImage: null,
-      slideToImage: () => {},    // lo redefine productGallery()
+      // 🔸 OJO: no definimos slideToImage aquí para no pisar desktop
     });
   } else {
-    // Si ya existía (por desktop), asegúrate de que el mapa esté también en móvil
-    Alpine.store('product').colorImages = initialMap;
+    // Solo fusionar si el mapa existe (no vacíes el que ya usa desktop)
+    if (map && Object.keys(map).length) {
+      Alpine.store('product').colorImages = {
+        ...(Alpine.store('product').colorImages || {}),
+        ...map
+      };
+    }
   }
 });
+
 
 function alpineCart() {
     return {
