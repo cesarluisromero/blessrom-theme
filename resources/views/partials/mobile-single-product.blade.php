@@ -43,14 +43,14 @@
         {{ $product->get_name() }}
 </div>
 <div x-data="productGallery()" class="product-swiper-movil swiper block lg:hidden mb-6">
-  <div class="swiper-wrapper">
-    @foreach ($all_img_urls as $url)
-      <div class="swiper-slide">
-        <img src="{{ $url }}" class="w-full h-auto object-contain lg:hidden mb-6">
-      </div>
-    @endforeach
-  </div>
-  <div class="swiper-pagination absolute bottom-1 inset-x-0 flex justify-center"></div>
+    <div class="swiper-wrapper">
+        @foreach ($all_img_urls as $url)
+        <div class="swiper-slide">
+            <img src="{{ $url }}" class="w-full h-auto object-contain lg:hidden mb-6">
+        </div>
+        @endforeach
+    </div>
+    <div class="swiper-pagination absolute bottom-1 inset-x-0 flex justify-center"></div>
 </div>
 <div class="px-4 py-4 space-y-3 lg:hidden mb-6">
     {{-- Precio --}}

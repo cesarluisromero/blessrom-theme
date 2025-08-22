@@ -206,11 +206,10 @@ function alpineCart() {
 };
 
 window.productGallery = function () {
-  console.log('Móvil activo')
+  console.log('Móvil activo');
   return {
     swiper: null,
-    indexById: {},
-    indexByUrl: {},
+
     init() {
       // Instancia Swiper en ESTE carrusel (no por selector global)
       this.swiper = new Swiper(this.$root, {
@@ -221,46 +220,66 @@ window.productGallery = function () {
         },
       });
 
-      // Indexar los slides por data-id y por URL
-      const imgs = this.$root.querySelectorAll('.swiper-slide img');
-      imgs.forEach((img, i) => {
-        const id = img.getAttribute('data-id');
-        if (id) this.indexById[String(id)] = i;
+      // --- helpers para normalizar URLs (evitar fallos por ?resize=..., CDN, etc.)
+      const normalizarUrlImagen = (url) => {
+        if (!url) return '';
         try {
-          const abs = new URL(img.src, location.origin).href;
-          this.indexByUrl[abs] = i;
-        } catch (e) {}
-      });
-
-      // Asegurar que el store tenga el mapa (por si el inline carga después)
-      const store = Alpine.store('product') || Alpine.store('product', { colorImages: {}, currentImage: null });
-      if (window.BLESSROM_COLOR_IMAGE_MAP && Object.keys(window.BLESSROM_COLOR_IMAGE_MAP).length) {
-        store.colorImages = { ...(store.colorImages || {}), ...window.BLESSROM_COLOR_IMAGE_MAP };
-      }
-
-      // Exponer slideToImage sin pisar desktop
-      store.slideToImage = (imageIdOrUrl) => {
-        let idx = -1;
-
-        // Por ID numérico (recomendado)
-        if (imageIdOrUrl !== null && imageIdOrUrl !== undefined) {
-          const s = String(imageIdOrUrl);
-          if (/^[0-9]+$/.test(s)) idx = this.indexById[s] ?? -1;
+          // quitar fragmento y query
+          let base = url.split('#')[0].split('?')[0];
+          // quedarnos solo con la parte desde /uploads/ si existe
+          const idx = base.indexOf('/uploads/');
+          if (idx !== -1) base = base.substring(idx);
+          return base;
+        } catch (e) {
+          return url;
         }
-
-        // Por URL absoluta
-        if (idx < 0 && typeof imageIdOrUrl === 'string') {
-          try {
-            const abs = new URL(imageIdOrUrl, location.origin).href;
-            idx = this.indexByUrl[abs] ?? -1;
-          } catch (e) {}
-        }
-
-        if (idx >= 0) this.swiper.slideTo(idx);
       };
-    }
-  }
-}
+
+      // Asegurar que el store exista
+      const store =
+        Alpine.store('product') ||
+        Alpine.store('product', { colorImages: {}, currentImage: null });
+
+      // 👉 redefinimos slideToImage usando comparación robusta de URLs
+      store.slideToImage = (targetUrl) => {
+        if (!this.swiper || !targetUrl) return;
+        const objetivo = normalizarUrlImagen(targetUrl);
+
+        let foundIndex = -1;
+        const slides = this.swiper.slides; // incluye clones por loop
+
+        for (let i = 0; i < slides.length; i++) {
+          const img = slides[i].querySelector('img');
+          if (!img) continue;
+
+          // currentSrc cubre <img srcset>; si no, cae a src
+          const src = img.currentSrc || img.src;
+          const actual = normalizarUrlImagen(src);
+
+          // igualdad directa o coincidencia como sufijo (más tolerante)
+          if (
+            actual === objetivo ||
+            actual.endsWith(objetivo) ||
+            objetivo.endsWith(actual)
+          ) {
+            foundIndex = i;
+            break;
+          }
+        }
+
+        if (foundIndex >= 0) {
+          // al tener loop:true, slideTo sobre el índice absoluto funciona
+          this.swiper.slideTo(foundIndex);
+          // mantener también el estado de imagen por si desktop lo usa
+          store.currentImage = targetUrl;
+        } else {
+          console.warn('Imagen no encontrada en el slider para URL:', targetUrl);
+        }
+      };
+    },
+  };
+};
+
 
 window.alpineCart = alpineCart;
 window.Alpine = Alpine;
