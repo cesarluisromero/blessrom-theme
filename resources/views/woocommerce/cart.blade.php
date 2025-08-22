@@ -87,7 +87,7 @@
                         Actualizar carrito
                     </button>
 
-                    <a href="http://192.168.18.29/blessrom/tienda/"
+                    <a href="https://blessrom.com/tienda/"
                     class="block text-center bg-[#FDC700] text-gray-900 py-3 rounded font-semibold hover:brightness-90 transition mt-2">
                     ← Seguir comprando
                     </a>
