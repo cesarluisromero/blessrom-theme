@@ -40,6 +40,7 @@ function alpineCart() {
             this.availableVariations = JSON.parse(this.$root.dataset.product_variations || '[]');
             this.cartQuantities = JSON.parse(this.$root.dataset.cart_quantities || '{}');
             this.$watch('selected_pa_color', color => {
+              console.log('🟢 Color seleccionado:', color);
               // Cuando cambia el color seleccionado
               const talla = this.selected_pa_talla;
               if (!color || !talla) return; // esperar a que ambos estén seleccionados
