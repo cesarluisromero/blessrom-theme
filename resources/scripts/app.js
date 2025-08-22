@@ -261,6 +261,8 @@ window.productGallery = function () {
 
           // currentSrc cubre <img srcset>; si no, cae a src
           const src = img.currentSrc || img.src;
+          console.log('img.currentSrc es:', img.currentSrc);
+          console.log('img.src es:', img.src);
           console.log('src es:', src);
           const actual = normalizarUrlImagen(src);
           console.log('actual es:', actual);
