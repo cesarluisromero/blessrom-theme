@@ -193,6 +193,63 @@ function alpineCart() {
     }
 };
 
+window.productGallery = function () {
+  console.log('Móvil activo')
+  return {
+    swiper: null,
+    indexById: {},
+    indexByUrl: {},
+    init() {
+      // Instancia Swiper en ESTE carrusel (no por selector global)
+      this.swiper = new Swiper(this.$root, {
+        loop: true,
+        pagination: {
+          el: this.$root.querySelector('.swiper-pagination'),
+          clickable: true,
+        },
+      });
+
+      // Indexar los slides por data-id y por URL
+      const imgs = this.$root.querySelectorAll('.swiper-slide img');
+      imgs.forEach((img, i) => {
+        const id = img.getAttribute('data-id');
+        if (id) this.indexById[String(id)] = i;
+        try {
+          const abs = new URL(img.src, location.origin).href;
+          this.indexByUrl[abs] = i;
+        } catch (e) {}
+      });
+
+      // Asegurar que el store tenga el mapa (por si el inline carga después)
+      const store = Alpine.store('product') || Alpine.store('product', { colorImages: {}, currentImage: null });
+      if (window.BLESSROM_COLOR_IMAGE_MAP && Object.keys(window.BLESSROM_COLOR_IMAGE_MAP).length) {
+        store.colorImages = { ...(store.colorImages || {}), ...window.BLESSROM_COLOR_IMAGE_MAP };
+      }
+
+      // Exponer slideToImage sin pisar desktop
+      store.slideToImage = (imageIdOrUrl) => {
+        let idx = -1;
+
+        // Por ID numérico (recomendado)
+        if (imageIdOrUrl !== null && imageIdOrUrl !== undefined) {
+          const s = String(imageIdOrUrl);
+          if (/^[0-9]+$/.test(s)) idx = this.indexById[s] ?? -1;
+        }
+
+        // Por URL absoluta
+        if (idx < 0 && typeof imageIdOrUrl === 'string') {
+          try {
+            const abs = new URL(imageIdOrUrl, location.origin).href;
+            idx = this.indexByUrl[abs] ?? -1;
+          } catch (e) {}
+        }
+
+        if (idx >= 0) this.swiper.slideTo(idx);
+      };
+    }
+  }
+}
+
 window.alpineCart = alpineCart;
 window.Alpine = Alpine;
 Alpine.start();
@@ -344,62 +401,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
   
-window.productGallery = function () {
-  console.log('Móvil activo')
-  return {
-    swiper: null,
-    indexById: {},
-    indexByUrl: {},
-    init() {
-      // Instancia Swiper en ESTE carrusel (no por selector global)
-      this.swiper = new Swiper(this.$root, {
-        loop: true,
-        pagination: {
-          el: this.$root.querySelector('.swiper-pagination'),
-          clickable: true,
-        },
-      });
 
-      // Indexar los slides por data-id y por URL
-      const imgs = this.$root.querySelectorAll('.swiper-slide img');
-      imgs.forEach((img, i) => {
-        const id = img.getAttribute('data-id');
-        if (id) this.indexById[String(id)] = i;
-        try {
-          const abs = new URL(img.src, location.origin).href;
-          this.indexByUrl[abs] = i;
-        } catch (e) {}
-      });
-
-      // Asegurar que el store tenga el mapa (por si el inline carga después)
-      const store = Alpine.store('product') || Alpine.store('product', { colorImages: {}, currentImage: null });
-      if (window.BLESSROM_COLOR_IMAGE_MAP && Object.keys(window.BLESSROM_COLOR_IMAGE_MAP).length) {
-        store.colorImages = { ...(store.colorImages || {}), ...window.BLESSROM_COLOR_IMAGE_MAP };
-      }
-
-      // Exponer slideToImage sin pisar desktop
-      store.slideToImage = (imageIdOrUrl) => {
-        let idx = -1;
-
-        // Por ID numérico (recomendado)
-        if (imageIdOrUrl !== null && imageIdOrUrl !== undefined) {
-          const s = String(imageIdOrUrl);
-          if (/^[0-9]+$/.test(s)) idx = this.indexById[s] ?? -1;
-        }
-
-        // Por URL absoluta
-        if (idx < 0 && typeof imageIdOrUrl === 'string') {
-          try {
-            const abs = new URL(imageIdOrUrl, location.origin).href;
-            idx = this.indexByUrl[abs] ?? -1;
-          } catch (e) {}
-        }
-
-        if (idx >= 0) this.swiper.slideTo(idx);
-      };
-    }
-  }
-}
 
 
 
