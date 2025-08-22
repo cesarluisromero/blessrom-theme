@@ -223,20 +223,16 @@ window.productGallery = function () {
 
       // --- helpers para normalizar URLs (evitar fallos por ?resize=..., CDN, etc.)
       const normalizarUrlImagen = (url) => {
-        console.log('la url de entrada es:', url);
-        if (!url) return '';
-        try {
-          // quitar fragmento y query
-          let base = url.split('#')[0].split('?')[0];
-          // quedarnos solo con la parte desde /uploads/ si existe
-          const idx = base.indexOf('/uploads/');
-          if (idx !== -1) base = base.substring(idx);
-          console.log('la url de salida es:', base);
-          return base;
-        } catch (e) {
-          return url;
-        }
-      };
+          if (!url) return '';
+          try {
+            let base = url.split('#')[0].split('?')[0];
+            const idx = base.indexOf('/uploads/');
+            if (idx !== -1) base = base.substring(idx);
+            base = decodeURIComponent(base).toLowerCase();
+            base = base.replace(/\.(jpe?g|png|webp|avif)$/i, '');
+            return base;
+          } catch (e) { return url; }
+        };
       
       // Asegurar que el store exista
       const store =
@@ -245,49 +241,53 @@ window.productGallery = function () {
         console.log('Store es:', store);
       // 👉 redefinimos slideToImage usando comparación robusta de URLs
       store.slideToImage = (targetUrl) => {
-        console.log('targetUrl es:', targetUrl);
         if (!this.swiper || !targetUrl) return;
-        const objetivo = normalizarUrlImagen(targetUrl);
-        console.log('objetivo es:', objetivo);
 
+        const objetivo = normalizarUrlImagen(targetUrl);
         let foundIndex = -1;
-        const slides = this.swiper.slides; // incluye clones por loop
-        console.log('slides es:', slides);
+        const slides = this.swiper.slides; // incluye clones por loop:true
+
+        // 1) Buscar si ya existe esa imagen en alguna slide
         for (let i = 0; i < slides.length; i++) {
           const img = slides[i].querySelector('img');
-          console.log('entrando al For:', i);
-          console.log('img es:', img);
           if (!img) continue;
-
-          // currentSrc cubre <img srcset>; si no, cae a src
-          const src = img.currentSrc || img.src;
-          console.log('img.currentSrc es:', img.currentSrc);
-          console.log('img.src es:', img.src);
-          console.log('src es:', src);
-          const actual = normalizarUrlImagen(src);
-          console.log('actual es:', actual);
-          // igualdad directa o coincidencia como sufijo (más tolerante)
-          if (
-            actual === objetivo ||
-            actual.endsWith(objetivo) ||
-            objetivo.endsWith(actual)
-          ) {
-            console.log('entro al if: actual === objetivo ');
+          const raw = img.currentSrc || img.src || '';
+          const actual = normalizarUrlImagen(raw);
+          if (actual === objetivo || actual.endsWith(objetivo) || objetivo.endsWith(actual)) {
             foundIndex = i;
             break;
           }
         }
 
         if (foundIndex >= 0) {
-          // al tener loop:true, slideTo sobre el índice absoluto funciona
-          console.log('entro al if: foundIndex >= 0 ',this.swiper.slideTo(foundIndex));
+          // 2) Si existe, mover el slider a esa slide
           this.swiper.slideTo(foundIndex);
-          // mantener también el estado de imagen por si desktop lo usa
-          store.currentImage = targetUrl;
-          console.log('store.currentImage = targetUrl',store.currentImage);
         } else {
-          console.warn('Imagen no encontrada en el slider para URL:', targetUrl);
+          // 3) Si NO existe, fallback: reemplazar la imagen del slide ACTIVO
+          const active = this.swiper.slides[this.swiper.activeIndex];
+          const img = active && active.querySelector('img');
+
+          // (opcional) Pre-cargar para evitar parpadeo
+          const pre = new Image();
+          pre.onload = () => {
+            if (img) {
+              img.src = targetUrl;
+              this.swiper.update(); // refresca tamaños/observadores
+            } else {
+              // o añadir una nueva slide al final y moverse a ella
+              this.swiper.addSlide(
+                this.swiper.slides.length,
+                `<div class="swiper-slide"><img src="${targetUrl}" class="w-full h-auto object-contain lg:hidden mb-6"></div>`
+              );
+              this.swiper.update();
+              this.swiper.slideTo(this.swiper.slides.length - 1);
+            }
+          };
+          pre.src = targetUrl;
         }
+
+        // Mantén el estado global sincronizado (útil para desktop)
+        Alpine.store('product').currentImage = targetUrl;
       };
     },
   };
