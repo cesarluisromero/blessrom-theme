@@ -5,7 +5,25 @@ import 'swiper/css/bundle';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
+document.addEventListener('alpine:init', () => {
+  const map = window.BLESSROM_COLOR_IMAGE_MAP; // puede ser undefined
 
+  if (!Alpine.store('product')) {
+    Alpine.store('product', {
+      colorImages: (map && Object.keys(map).length) ? map : {},
+      currentImage: null,
+      // 🔸 OJO: no definimos slideToImage aquí para no pisar desktop
+    });
+  } else {
+    // Solo fusionar si el mapa existe (no vacíes el que ya usa desktop)
+    if (map && Object.keys(map).length) {
+      Alpine.store('product').colorImages = {
+        ...(Alpine.store('product').colorImages || {}),
+        ...map
+      };
+    }
+  }
+});
 
 
 function alpineCart() {
@@ -175,26 +193,6 @@ function alpineCart() {
     }
 };
 
-document.addEventListener('alpine:init', () => {
-  const map = window.BLESSROM_COLOR_IMAGE_MAP; // puede ser undefined
-
-  if (!Alpine.store('product')) {
-    Alpine.store('product', {
-      colorImages: (map && Object.keys(map).length) ? map : {},
-      currentImage: null,
-      // 🔸 OJO: no definimos slideToImage aquí para no pisar desktop
-    });
-  } else {
-    // Solo fusionar si el mapa existe (no vacíes el que ya usa desktop)
-    if (map && Object.keys(map).length) {
-      Alpine.store('product').colorImages = {
-        ...(Alpine.store('product').colorImages || {}),
-        ...map
-      };
-    }
-  }
-});
-
 window.alpineCart = alpineCart;
 window.Alpine = Alpine;
 Alpine.start();
@@ -345,14 +343,15 @@ document.addEventListener('DOMContentLoaded', function () {
     easing: 'ease-in-out',
   });
 });
-
+  
 window.productGallery = function () {
+  console.log('Móvil activo')
   return {
     swiper: null,
     indexById: {},
     indexByUrl: {},
     init() {
-      // Instancia Swiper en ESTE carrusel
+      // Instancia Swiper en ESTE carrusel (no por selector global)
       this.swiper = new Swiper(this.$root, {
         loop: true,
         pagination: {
@@ -372,68 +371,35 @@ window.productGallery = function () {
         } catch (e) {}
       });
 
-      // Asegurar que el store tenga el mapa (si se inyectó antes)
+      // Asegurar que el store tenga el mapa (por si el inline carga después)
       const store = Alpine.store('product') || Alpine.store('product', { colorImages: {}, currentImage: null });
       if (window.BLESSROM_COLOR_IMAGE_MAP && Object.keys(window.BLESSROM_COLOR_IMAGE_MAP).length) {
         store.colorImages = { ...(store.colorImages || {}), ...window.BLESSROM_COLOR_IMAGE_MAP };
       }
 
-      // Exponer un mover-por-URL para móvil sin romper desktop
-      this.slideToUrl = (url) => {
-        if (!url) return;
-        const targetUrl = String(url).split('?')[0];
-        const slides = this.swiper.slides;
-        for (let i = 0; i < slides.length; i++) {
-          const img = slides[i].querySelector('img');
-          if (img && img.src.split('?')[0] === targetUrl) {
-            this.swiper.slideToLoop(i);   // ✅ con loop usa slideToLoop
-            return;
-          }
-        }
-      };
+      // Exponer slideToImage sin pisar desktop
+      store.slideToImage = (imageIdOrUrl) => {
+        let idx = -1;
 
-      // No asignamos aquí store.slideToImage para no pisar desktop.
-      // Lo hará el "binder" del punto 3 según el ancho actual.
+        // Por ID numérico (recomendado)
+        if (imageIdOrUrl !== null && imageIdOrUrl !== undefined) {
+          const s = String(imageIdOrUrl);
+          if (/^[0-9]+$/.test(s)) idx = this.indexById[s] ?? -1;
+        }
+
+        // Por URL absoluta
+        if (idx < 0 && typeof imageIdOrUrl === 'string') {
+          try {
+            const abs = new URL(imageIdOrUrl, location.origin).href;
+            idx = this.indexByUrl[abs] ?? -1;
+          } catch (e) {}
+        }
+
+        if (idx >= 0) this.swiper.slideTo(idx);
+      };
     }
   }
 }
-
-// Pequeño debounce
-function debounce(fn, t = 150) {
-  let id; return (...args) => { clearTimeout(id); id = setTimeout(() => fn(...args), t); };
-}
-
-function bindSlideTarget() {
-  const store = Alpine.store('product');
-  if (!store) return;
-
-  const isDesktop = window.matchMedia('(min-width: 1024px)').matches;
-
-  if (isDesktop) {
-    // 🖥️ Desktop: apuntar a la imagen principal
-    store.slideToImage = (url) => { if (url) store.currentImage = url; };
-    return;
-  }
-
-  // 📱 Móvil: buscar el componente Alpine del swiper móvil y moverlo
-  const mobileEl = document.querySelector('.product-swiper-movil.swiper');
-  const comp = mobileEl && mobileEl.__x && mobileEl.__x.$data;
-
-  if (comp && typeof comp.slideToUrl === 'function') {
-    store.slideToImage = (url) => comp.slideToUrl(url);
-  } else {
-    // Fallback seguro
-    store.slideToImage = (url) => { if (url) store.currentImage = url; };
-  }
-}
-
-// Enlaces de ciclo de vida
-document.addEventListener('DOMContentLoaded', bindSlideTarget);
-document.addEventListener('alpine:initialized', bindSlideTarget);
-window.addEventListener('resize', debounce(bindSlideTarget, 200));
-document.addEventListener('visibilitychange', () => { if (!document.hidden) bindSlideTarget(); });
-
-
 
 
 
