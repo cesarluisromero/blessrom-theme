@@ -231,12 +231,13 @@ window.productGallery = function () {
           // quedarnos solo con la parte desde /uploads/ si existe
           const idx = base.indexOf('/uploads/');
           if (idx !== -1) base = base.substring(idx);
+          console.log('la url de salida es:', base);
           return base;
         } catch (e) {
           return url;
         }
       };
-      console.log('la url de salida es:', base);
+      
       // Asegurar que el store exista
       const store =
         Alpine.store('product') ||
