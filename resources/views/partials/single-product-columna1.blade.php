@@ -3,7 +3,7 @@
 <div class="grid grid-cols-[20%_80%] gap-0 items-start bg-white ml-4">
   
     {{-- Miniaturas --}}
-    <div class="hidden md:flex flex-col space-y-1">
+    <div class="hidden lg:flex flex-col space-y-1">
         @if ($main_image)
             <img src="{{ wp_get_attachment_image_url($main_image, 'thumbnail') }}" 
                 class="w-16 h-16 object-cover cursor-pointer border border-white rounded bg-[#E1E6E4] hover:border-blue-500" 
