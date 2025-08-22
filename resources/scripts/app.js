@@ -212,6 +212,7 @@ window.productGallery = function () {
 
     init() {
       // Instancia Swiper en ESTE carrusel (no por selector global)
+      console.log('Móvil ESTE carrusel');
       this.swiper = new Swiper(this.$root, {
         loop: true,
         pagination: {
@@ -222,6 +223,7 @@ window.productGallery = function () {
 
       // --- helpers para normalizar URLs (evitar fallos por ?resize=..., CDN, etc.)
       const normalizarUrlImagen = (url) => {
+        console.log('la url de entrada es:', url);
         if (!url) return '';
         try {
           // quitar fragmento y query
@@ -234,34 +236,40 @@ window.productGallery = function () {
           return url;
         }
       };
-
+      console.log('la url de salida es:', base);
       // Asegurar que el store exista
       const store =
         Alpine.store('product') ||
         Alpine.store('product', { colorImages: {}, currentImage: null });
-
+        console.log('Store es:', store);
       // 👉 redefinimos slideToImage usando comparación robusta de URLs
       store.slideToImage = (targetUrl) => {
+        console.log('targetUrl es:', targetUrl);
         if (!this.swiper || !targetUrl) return;
         const objetivo = normalizarUrlImagen(targetUrl);
+        console.log('objetivo es:', objetivo);
 
         let foundIndex = -1;
         const slides = this.swiper.slides; // incluye clones por loop
-
+        console.log('slides es:', slides);
         for (let i = 0; i < slides.length; i++) {
           const img = slides[i].querySelector('img');
+          console.log('entrando al For:', i);
+          console.log('img es:', img);
           if (!img) continue;
 
           // currentSrc cubre <img srcset>; si no, cae a src
           const src = img.currentSrc || img.src;
+          console.log('src es:', src);
           const actual = normalizarUrlImagen(src);
-
+          console.log('actual es:', actual);
           // igualdad directa o coincidencia como sufijo (más tolerante)
           if (
             actual === objetivo ||
             actual.endsWith(objetivo) ||
             objetivo.endsWith(actual)
           ) {
+            console.log('entro al if: actual === objetivo ');
             foundIndex = i;
             break;
           }
@@ -269,9 +277,11 @@ window.productGallery = function () {
 
         if (foundIndex >= 0) {
           // al tener loop:true, slideTo sobre el índice absoluto funciona
+          console.log('entro al if: foundIndex >= 0 ',this.swiper.slideTo(foundIndex));
           this.swiper.slideTo(foundIndex);
           // mantener también el estado de imagen por si desktop lo usa
           store.currentImage = targetUrl;
+          console.log('store.currentImage = targetUrl',store.currentImage);
         } else {
           console.warn('Imagen no encontrada en el slider para URL:', targetUrl);
         }
