@@ -25,7 +25,6 @@ document.addEventListener('alpine:init', () => {
   }
 });
 
-
 function alpineCart() {
     return {
         selected_pa_talla: '',
@@ -40,6 +39,19 @@ function alpineCart() {
         init() {
             this.availableVariations = JSON.parse(this.$root.dataset.product_variations || '[]');
             this.cartQuantities = JSON.parse(this.$root.dataset.cart_quantities || '{}');
+            this.$watch('selected_pa_color', color => {
+              // Cuando cambia el color seleccionado
+              const talla = this.selected_pa_talla;
+              if (!color || !talla) return; // esperar a que ambos estén seleccionados
+              const variation = this.availableVariations.find(v =>
+                  v.attributes['attribute_pa_talla'] === talla &&
+                  v.attributes['attribute_pa_color'] === color
+              );
+              if (variation) {
+                  const url = Alpine.store('product')?.colorImages?.[color];
+                  if (url) Alpine.store('product').slideToImage(url);
+              }
+          });
         },
 
         selectedVariationId() {
@@ -78,16 +90,7 @@ function alpineCart() {
 
                 this.$refs.variationId.value = vid;
                 this.$refs.maxQty.value = this.maxQty;
-                 // 🔸 Nuevo código: cambiar imagen principal según el color seleccionado
-                const colorSlug = match.attributes['attribute_pa_color'] || null;
-                if (colorSlug) {
-                    // Obtener la URL de imagen correspondiente a este color de la store global
-                    const targetUrl = Alpine.store('product')?.colorImages?.[colorSlug];
-                    if (targetUrl) {
-                        Alpine.store('product').slideToImage(targetUrl);
-                    }
-                }
-
+                
             } else {
                 this.maxQty = 10;
                 this.quantity = 1;
@@ -198,7 +201,6 @@ function alpineCart() {
           }
 
         }
-
     }
 };
 
