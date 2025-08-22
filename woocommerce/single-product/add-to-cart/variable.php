@@ -72,7 +72,7 @@ foreach ($color_terms as $t) {
 
 <form
     x-ref="form"
-    x-data="alpineCart()"
+    x-data="alpineCart"
     x-init="setTimeout(() => updateMaxQty(), 50)"
     class="variations_form cart"
     action="<?php echo esc_url( apply_filters( 'woocommerce_add_to_cart_form_action', $product->get_permalink() ) ); ?>"
