@@ -78,6 +78,15 @@ function alpineCart() {
 
                 this.$refs.variationId.value = vid;
                 this.$refs.maxQty.value = this.maxQty;
+                 // 🔸 Nuevo código: cambiar imagen principal según el color seleccionado
+                const colorSlug = match.attributes['attribute_pa_color'] || null;
+                if (colorSlug) {
+                    // Obtener la URL de imagen correspondiente a este color de la store global
+                    const targetUrl = Alpine.store('product')?.colorImages?.[colorSlug];
+                    if (targetUrl) {
+                        Alpine.store('product').slideToImage(targetUrl);
+                    }
+                }
 
             } else {
                 this.maxQty = 10;
