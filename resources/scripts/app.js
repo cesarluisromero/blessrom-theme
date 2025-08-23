@@ -5,25 +5,7 @@ import 'swiper/css/bundle';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
-document.addEventListener('alpine:init', () => {
-  const map = window.BLESSROM_COLOR_IMAGE_MAP; // puede ser undefined
 
-  if (!Alpine.store('product')) {
-    Alpine.store('product', {
-      colorImages: (map && Object.keys(map).length) ? map : {},
-      currentImage: null,
-      // 🔸 OJO: no definimos slideToImage aquí para no pisar desktop
-    });
-  } else {
-    // Solo fusionar si el mapa existe (no vacíes el que ya usa desktop)
-    if (map && Object.keys(map).length) {
-      Alpine.store('product').colorImages = {
-        ...(Alpine.store('product').colorImages || {}),
-        ...map
-      };
-    }
-  }
-});
 
 function alpineCart() {
     return {
