@@ -205,7 +205,93 @@ function alpineCart() {
     }
 };
 
+window.productGallery = function () {
+  console.log('Móvil activo');
+  return {
+    swiper: null,
 
+    init() {
+      // Instancia Swiper en ESTE carrusel (no por selector global)
+      console.log('Móvil ESTE carrusel');
+      this.swiper = new Swiper(this.$root, {
+        loop: true,
+        pagination: {
+          el: this.$root.querySelector('.swiper-pagination'),
+          clickable: true,
+        },
+      });
+
+      // --- helpers para normalizar URLs (evitar fallos por ?resize=..., CDN, etc.)
+      const normalizarUrlImagen = (url) => {
+          if (!url) return '';
+          try {
+            let base = url.split('#')[0].split('?')[0];
+            const idx = base.indexOf('/uploads/');
+            if (idx !== -1) base = base.substring(idx);
+            base = decodeURIComponent(base).toLowerCase();
+            base = base.replace(/\.(jpe?g|png|webp|avif)$/i, '');
+            return base;
+          } catch (e) { return url; }
+        };
+      
+      // Asegurar que el store exista
+      const store =
+        Alpine.store('product') ||
+        Alpine.store('product', { colorImages: {}, currentImage: null });
+        console.log('Store es:', store);
+      // 👉 redefinimos slideToImage usando comparación robusta de URLs
+      store.slideToImage = (targetUrl) => {
+        if (!this.swiper || !targetUrl) return;
+
+        const objetivo = normalizarUrlImagen(targetUrl);
+        let foundIndex = -1;
+        const slides = this.swiper.slides; // incluye clones por loop:true
+
+        // 1) Buscar si ya existe esa imagen en alguna slide
+        for (let i = 0; i < slides.length; i++) {
+          const img = slides[i].querySelector('img');
+          if (!img) continue;
+          const raw = img.currentSrc || img.src || '';
+          const actual = normalizarUrlImagen(raw);
+          if (actual === objetivo || actual.endsWith(objetivo) || objetivo.endsWith(actual)) {
+            foundIndex = i;
+            break;
+          }
+        }
+
+        if (foundIndex >= 0) {
+          // 2) Si existe, mover el slider a esa slide
+          this.swiper.slideTo(foundIndex);
+        } else {
+          // 3) Si NO existe, fallback: reemplazar la imagen del slide ACTIVO
+          const active = this.swiper.slides[this.swiper.activeIndex];
+          const img = active && active.querySelector('img');
+
+          // (opcional) Pre-cargar para evitar parpadeo
+          const pre = new Image();
+          pre.onload = () => {
+            if (img) {
+              img.src = targetUrl;
+              this.swiper.update(); // refresca tamaños/observadores
+            } else {
+              // o añadir una nueva slide al final y moverse a ella
+              this.swiper.addSlide(
+                this.swiper.slides.length,
+                `<div class="swiper-slide"><img src="${targetUrl}" class="w-full h-auto object-contain lg:hidden mb-6"></div>`
+              );
+              this.swiper.update();
+              this.swiper.slideTo(this.swiper.slides.length - 1);
+            }
+          };
+          pre.src = targetUrl;
+        }
+
+        // Mantén el estado global sincronizado (útil para desktop)
+        Alpine.store('product').currentImage = targetUrl;
+      };
+    },
+  };
+};
 
 
 window.alpineCart = alpineCart;
