@@ -1,4 +1,5 @@
 {{-- Columna 1: Imágenes --}}
+
 <div class="grid grid-cols-[20%_80%] gap-0 items-start bg-white ml-4">
   
     {{-- Miniaturas --}}
@@ -6,16 +7,17 @@
         @if ($main_image)
             <img src="{{ wp_get_attachment_image_url($main_image, 'thumbnail') }}" 
                 class="w-16 h-16 object-cover cursor-pointer border border-white rounded bg-[#E1E6E4] hover:border-blue-500" 
-                @click="currentImage = '{{ wp_get_attachment_image_url($main_image, 'large') }}'">
+                @click="$store.product.currentImage = '{{ wp_get_attachment_image_url($main_image, 'large') }}'">
         @endif
         @foreach ($attachment_ids as $id)
             <img src="{{ wp_get_attachment_image_url($id, 'thumbnail') }}" 
                 class="w-16 h-16 object-cover cursor-pointer border border-white rounded bg-[#E1E6E4] hover:border-blue-500" 
-                @click="currentImage = '{{ wp_get_attachment_image_url($id, 'large') }}'">
+                @click="$store.product.currentImage = '{{ wp_get_attachment_image_url($id, 'large') }}'">
         @endforeach
     </div>
 
     {{-- Imagen principal --}}
+    
     <div 
         x-data="{
             zoomX: 0,
@@ -36,7 +38,7 @@
     >
         {{-- Imagen principal --}}
         <img 
-            :src="currentImage" 
+            :src="$store.product.currentImage" 
             class="w-full h-auto object-contain border border-white rounded bg-[#E1E6E4]" 
             alt="Imagen principal"
             @mousemove="updateZoom"
@@ -53,7 +55,7 @@
             style="width: 700px; height: 550px;"
         >
             <img 
-                :src="currentImage" 
+                :src="$store.product.currentImage" 
                 :style="'transform: scale(1.5) translate(' + zoomX + 'px, ' + zoomY + 'px);'"
                 class="w-full h-auto object-contain"
                 alt="Zoom imagen"
@@ -61,3 +63,4 @@
         </div>
     </div>
 </div>
+{{-- Fin de Columna 1 --}}
