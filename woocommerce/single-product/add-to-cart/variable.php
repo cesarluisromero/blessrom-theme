@@ -272,6 +272,10 @@ foreach ($available_variations as $v) {
             <h3 class="text-base font-semibold mb-2">Tabla de medidas (cm)</h3>
 
             <div class="overflow-x-auto">
+                <div class="text-xs text-gray-500 mb-2" x-data="{get st(){return $root.closest('form')?.__x?.$data||{}}}">
+                    talla=<span x-text="st.selected_pa_talla"></span>,
+                    color=<span x-text="st.selected_pa_color"></span>
+                </div>
                 <table class="w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
                     <thead class="bg-gray-50">
                         <tr>
