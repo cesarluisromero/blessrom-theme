@@ -284,6 +284,9 @@ foreach ($available_variations as $v) {
                         </tr>
 
                         <?php foreach ($talla_order as $slug) :
+                            echo '<pre style="background:#f8fafc;padding:8px;border:1px dashed #ccc">';
+                            echo esc_html(print_r(['slug'=>$slug, 'row'=>$row], true));
+                            echo '</pre>';
                             if (!isset($measures_by_talla[$slug])) continue;
                             $row    = $measures_by_talla[$slug];
                             $nombre = $talla_display[$slug] ?? $slug;
@@ -292,9 +295,7 @@ foreach ($available_variations as $v) {
                             $largo  = $row['largo'] !== '' ? esc_html($row['largo']) : '-';
                         ?>
 
-                                echo '<pre style="background:#f8fafc;padding:8px;border:1px dashed #ccc">';
-                                echo esc_html(print_r(['slug'=>$slug, 'row'=>$row], true));
-                                echo '</pre>';
+                               
                             <!-- Muestra la fila SOLO si hay talla seleccionada = esta y además hay color -->
                             <tr x-show="st?.selected_pa_talla === '<?= esc_js($slug) ?>' && !!st?.selected_pa_color"
                                 :class="st?.selected_pa_talla === '<?= esc_js($slug) ?>' ? 'bg-blue-50' : ''">
