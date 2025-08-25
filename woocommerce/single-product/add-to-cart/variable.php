@@ -126,11 +126,6 @@ foreach ($available_variations as $v) {
 
 ?>
 
-
-
-
-
-
 <form
     x-ref="form"
     x-data="alpineCart()"
