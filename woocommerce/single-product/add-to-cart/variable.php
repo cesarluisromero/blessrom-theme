@@ -299,7 +299,7 @@ foreach ($available_variations as $v) {
                                 $alto   = $row['alto']  !== '' ? esc_html($row['alto'])  : '-';
                                 $largo  = $row['largo'] !== '' ? esc_html($row['largo']) : '-';
                             ?>
-                            <tr x-show="selected_pa_talla === '<?= esc_js($slug) ?>' && selected_pa_color"
+                            <tr x-show="selected_pa_talla === '<?= esc_js($slug) ?>'"
                                 :class="selected_pa_talla === '<?= esc_js($slug) ?>' ? 'bg-blue-50' : ''">
                             <td class="px-3 py-2 border-t border-gray-200 font-medium text-gray-800"><?= esc_html($nombre) ?></td>
                             <td class="px-3 py-2 border-t border-gray-200"><?= $ancho ?></td>
