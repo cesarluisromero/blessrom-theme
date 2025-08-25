@@ -266,6 +266,10 @@ foreach ($available_variations as $v) {
                 </div>
             </template>
         </div>
+        <div class="text-xs text-gray-500 mb-2" x-data="{get st(){return $root.closest('form')?.__x?.$data||{}}}">
+                    talla=<span x-text="st.selected_pa_talla"></span>,
+                    color=<span x-text="st.selected_pa_color"></span>
+        </div>
     </div>
     <?php if (!empty($measures_by_talla)) : ?>
         <div class="mt-6">
