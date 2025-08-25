@@ -279,7 +279,7 @@ foreach ($available_variations as $v) {
                         <tr>
                             <th class="px-3 py-2 text-left font-medium text-gray-700">Talla</th>
                             <th class="px-3 py-2 text-left font-medium text-gray-700">Ancho</th>
-                            <th class="px-3 py-2 text-left font-medium text-gray-700">Alto</th>
+                            <th class="px-3 py-2 text-left font-medium text-gray-700">Largo</th>
                             
                         </tr>
                     </thead>
@@ -312,9 +312,7 @@ foreach ($available_variations as $v) {
                 </table>
             </div>
 
-            <p class="text-xs text-gray-500 mt-2">
-            Medidas tomadas sobre prenda en cm. Pueden variar ±1–2&nbsp;cm.
-            </p>
+           
         </div>
     <?php endif; ?>
 
