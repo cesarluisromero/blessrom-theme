@@ -68,50 +68,46 @@ foreach ($color_terms as $t) {
 
 
 // === Medidas por talla (desde variaciones) ===
-// Cambia estos nombres si tus campos se llaman distinto en Woo/ACF:
 $KEY_ANCHO = 'ancho_cm';
 $KEY_ALTO  = 'alto_cm';
 $KEY_LARGO = 'largo_cm';
 
-$measures_by_talla = [];   // slug_talla => ['ancho','alto','largo']
-$talla_display     = [];   // slug_talla => 'Nombre legible'
-$talla_order = wc_get_product_terms($product->get_id(), 'pa_talla', ['fields' => 'slugs']);
-$store_unit = get_option('woocommerce_dimension_unit', 'cm');
+$measures_by_talla = [];
+$talla_display     = [];
+$talla_order       = wc_get_product_terms($product->get_id(), 'pa_talla', ['fields' => 'slugs']);
+$store_unit        = get_option('woocommerce_dimension_unit', 'cm');
 
-function br_dim_to_cm($val, $store_unit){
+// 👇 CLOSURE local en vez de function global
+$to_cm = function($val) use ($store_unit) {
     if ($val === '' || $val === null) return '';
-    // wc_get_dimension convierte entre unidades
-    return wc_get_dimension( (float) $val, 'cm', $store_unit );
-}
+    return wc_get_dimension((float)$val, 'cm', $store_unit);
+};
 
 foreach ($available_variations as $v) {
     $talla = $v['attributes']['attribute_pa_talla'] ?? '';
     if (!$talla) continue;
 
-    $vid = (int)($v['variation_id'] ?? 0);
+    $vid     = (int)($v['variation_id'] ?? 0);
     $var_obj = $vid ? wc_get_product($vid) : null;
 
-    // Lee dimensiones nativas de Woo
-    $length = $var_obj ? $var_obj->get_length() : ''; // LARGO
-    $width  = $var_obj ? $var_obj->get_width()  : ''; // ANCHO
-    $height = $var_obj ? $var_obj->get_height() : ''; // ALTO
+    // Dimensiones nativas Woo de la variación
+    $length = $var_obj ? $var_obj->get_length() : '';
+    $width  = $var_obj ? $var_obj->get_width()  : '';
+    $height = $var_obj ? $var_obj->get_height() : '';
 
-    // Convierte a cm si hace falta
     $row = [
-        'ancho' => br_dim_to_cm($width,  $store_unit),
-        'alto'  => br_dim_to_cm($height, $store_unit),
-        'largo' => br_dim_to_cm($length, $store_unit),
+        'ancho' => $to_cm($width),
+        'alto'  => $to_cm($height),
+        'largo' => $to_cm($length),
     ];
 
-    // Fallback ACF si lo usas
+    // Fallback ACF si usas campos personalizados por variación
     if (function_exists('get_field')) {
         if ($row['ancho'] === '' || $row['ancho'] === null) $row['ancho'] = get_field($KEY_ANCHO, $vid);
         if ($row['alto']  === '' || $row['alto']  === null) $row['alto']  = get_field($KEY_ALTO,  $vid);
         if ($row['largo'] === '' || $row['largo'] === null) $row['largo'] = get_field($KEY_LARGO, $vid);
     }
 
-    
-    // Guarda/Completa por talla
     if (!isset($measures_by_talla[$talla])) {
         $measures_by_talla[$talla] = $row;
     } else {
@@ -122,12 +118,12 @@ foreach ($available_variations as $v) {
         }
     }
 
-    // Nombre legible de la talla
     if (!isset($talla_display[$talla])) {
         $term = get_term_by('slug', $talla, 'pa_talla');
         $talla_display[$talla] = $term ? $term->name : $talla;
     }
 }
+
 ?>
 
 
