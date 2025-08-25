@@ -116,14 +116,6 @@ foreach ($available_variations as $v) {
 }
 ?>
 
-
-<script>
-  console.log('talla_order (PHP) ->',
-    <?php echo wp_json_encode($talla_order, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT); ?>
-  );
-</script>
-
-
 <form
     x-ref="form"
     x-data="alpineCart()"
@@ -284,6 +276,11 @@ foreach ($available_variations as $v) {
                         </tr>
 
                         <?php foreach ($talla_order as $slug) :
+
+                         // DEBUG visible
+                            echo '<pre style="background:#f8fafc;padding:8px;border:1px dashed #ccc">';
+                            echo esc_html(print_r(['slug'=>$slug, 'row'=>$row], true));
+                            echo '</pre>';
                             if (!isset($measures_by_talla[$slug])) continue;
                             $row    = $measures_by_talla[$slug];
                             $nombre = $talla_display[$slug] ?? $slug;
