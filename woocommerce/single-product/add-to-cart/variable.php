@@ -122,7 +122,7 @@ foreach ($available_variations as $v) {
 
 <form
     x-ref="form"
-    x-data="alpineCart"
+    x-data="alpineCart()"
     x-init="setTimeout(() => updateMaxQty(), 50)"
     class="variations_form cart"
     action="<?php echo esc_url( apply_filters( 'woocommerce_add_to_cart_form_action', $product->get_permalink() ) ); ?>"
@@ -271,11 +271,11 @@ foreach ($available_variations as $v) {
                         </tr>
                     </thead>
 
-                    <tbody x-data>
-                        <!-- Mensaje cuando aún no se elige talla -->
-                        <tr x-show="!$root.closest('form')?.__x?.$data?.selected_pa_talla">
+                    <tbody x-data="{ st: $root.closest('form')?.__x?.$data }">
+                        <!-- Mensaje hasta que se elija talla Y color -->
+                        <tr x-show="!(st?.selected_pa_talla && st?.selected_pa_color)">
                             <td colspan="4" class="px-3 py-3 text-gray-500 border-t border-gray-200">
-                            Selecciona una talla para ver sus medidas.
+                            Selecciona una talla <strong>y</strong> un color para ver sus medidas.
                             </td>
                         </tr>
 
@@ -287,7 +287,9 @@ foreach ($available_variations as $v) {
                             $alto   = $row['alto']  !== '' ? esc_html($row['alto'])  : '-';
                             $largo  = $row['largo'] !== '' ? esc_html($row['largo']) : '-';
                         ?>
-                            <tr x-show="$root.closest('form')?.__x?.$data?.selected_pa_talla === '<?= esc_js($slug) ?>'">
+                            <!-- Muestra la fila SOLO si hay talla seleccionada = esta y además hay color -->
+                            <tr x-show="st?.selected_pa_talla === '<?= esc_js($slug) ?>' && !!st?.selected_pa_color"
+                                :class="st?.selected_pa_talla === '<?= esc_js($slug) ?>' ? 'bg-blue-50' : ''">
                             <td class="px-3 py-2 border-t border-gray-200 font-medium text-gray-800"><?= esc_html($nombre) ?></td>
                             <td class="px-3 py-2 border-t border-gray-200"><?= $ancho ?></td>
                             <td class="px-3 py-2 border-t border-gray-200"><?= $alto  ?></td>
@@ -295,6 +297,7 @@ foreach ($available_variations as $v) {
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
+
                 </table>
             </div>
 
