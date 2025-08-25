@@ -282,37 +282,38 @@ foreach ($available_variations as $v) {
                         </tr>
                     </thead>
 
-                    <tbody x-data="{ st: $root.closest('form')?.__x?.$data }">
-                        <!-- Mensaje hasta que se elija talla Y color -->
-                        <tr x-show="!(st?.selected_pa_talla && st?.selected_pa_color)">
-                            <td colspan="4" class="px-3 py-3 text-gray-500 border-t border-gray-200">
-                            Selecciona una talla <strong>y</strong> un color para ver sus medidas.
-                            </td>
-                        </tr>
+                    <tbody x-data="{ 
+                        get st(){ 
+                            // estado reactivo del form más cercano
+                            return $root.closest('form')?.__x?.$data || {}; 
+                        } 
+                    }">
 
-                        <?php foreach ($talla_order as $slug) :
-                            echo '<pre style="background:#f8fafc;padding:8px;border:1px dashed #ccc">';
-                            echo esc_html(print_r(['slug'=>$slug, 'row'=>$row], true));
-                            echo '</pre>';
+                    <!-- Mensaje cuando NO hay talla o color -->
+                    <tr x-show="!(st.selected_pa_talla && st.selected_pa_color)">
+                        <td colspan="4" class="px-3 py-3 text-gray-500 border-t border-gray-200">
+                        Selecciona una talla <strong>y</strong> un color para ver sus medidas.
+                        </td>
+                    </tr>
+
+                    <?php foreach ($talla_order as $slug):
                             if (!isset($measures_by_talla[$slug])) continue;
                             $row    = $measures_by_talla[$slug];
                             $nombre = $talla_display[$slug] ?? $slug;
                             $ancho  = $row['ancho'] !== '' ? esc_html($row['ancho']) : '-';
                             $alto   = $row['alto']  !== '' ? esc_html($row['alto'])  : '-';
                             $largo  = $row['largo'] !== '' ? esc_html($row['largo']) : '-';
-                        ?>
+                    ?>
+                        <tr x-show="st.selected_pa_talla === '<?= esc_js($slug) ?>' && st.selected_pa_color"
+                            :class="st.selected_pa_talla === '<?= esc_js($slug) ?>' ? 'bg-blue-50' : ''">
+                        <td class="px-3 py-2 border-t border-gray-200 font-medium text-gray-800"><?= esc_html($nombre) ?></td>
+                        <td class="px-3 py-2 border-t border-gray-200"><?= $ancho ?></td>
+                        <td class="px-3 py-2 border-t border-gray-200"><?= $alto  ?></td>
+                        <td class="px-3 py-2 border-t border-gray-200"><?= $largo ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
 
-                               
-                            <!-- Muestra la fila SOLO si hay talla seleccionada = esta y además hay color -->
-                            <tr x-show="st?.selected_pa_talla === '<?= esc_js($slug) ?>' && !!st?.selected_pa_color"
-                                :class="st?.selected_pa_talla === '<?= esc_js($slug) ?>' ? 'bg-blue-50' : ''">
-                            <td class="px-3 py-2 border-t border-gray-200 font-medium text-gray-800"><?= esc_html($nombre) ?></td>
-                            <td class="px-3 py-2 border-t border-gray-200"><?= $ancho ?></td>
-                            <td class="px-3 py-2 border-t border-gray-200"><?= $alto  ?></td>
-                            <td class="px-3 py-2 border-t border-gray-200"><?= $largo ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
 
                 </table>
             </div>
