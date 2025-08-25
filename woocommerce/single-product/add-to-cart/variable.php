@@ -285,7 +285,7 @@ foreach ($available_variations as $v) {
                     </thead>
 
                     <tbody >
-                        <tr x-show="!(selected_pa_talla">
+                        <tr x-show="!(selected_pa_talla)">
                             <td colspan="4" class="px-3 py-3 text-gray-500 border-t border-gray-200">
                             Selecciona una talla para ver sus medidas.
                             </td>
