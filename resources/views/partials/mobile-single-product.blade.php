@@ -63,7 +63,7 @@
         {!! woocommerce_template_single_add_to_cart() !!}
     </div>
 </div> 
-<div class="bg-white rounded-2xl shadow-md p-6 max-w-md space-y-4 border border-gray-100">
+<div class="bg-white rounded-2xl shadow-md lg:hidden p-6 max-w-md space-y-4 border border-gray-100">
     <div class="flex items-center justify-center gap-2 text-yellow-500 text-2xl">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
              stroke="currentColor">
