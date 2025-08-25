@@ -117,7 +117,11 @@ foreach ($available_variations as $v) {
 ?>
 
 
-
+<script>
+  console.log('talla_order (PHP) ->',
+    <?php echo wp_json_encode($talla_order, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT); ?>
+  );
+</script>
 
 
 <form
