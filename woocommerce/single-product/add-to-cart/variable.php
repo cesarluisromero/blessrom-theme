@@ -126,6 +126,11 @@ foreach ($available_variations as $v) {
 
 ?>
 
+
+
+
+
+
 <form
     x-ref="form"
     x-data="alpineCart()"
@@ -274,8 +279,8 @@ foreach ($available_variations as $v) {
                         <tr>
                             <th class="px-3 py-2 text-left font-medium text-gray-700">Talla</th>
                             <th class="px-3 py-2 text-left font-medium text-gray-700">Ancho</th>
+                            <th class="px-3 py-2 text-left font-medium text-gray-700">Alto</th>
                             <th class="px-3 py-2 text-left font-medium text-gray-700">Largo</th>
-                            
                         </tr>
                     </thead>
 
@@ -292,14 +297,14 @@ foreach ($available_variations as $v) {
                                 $nombre = $talla_display[$slug] ?? $slug;
                                 $ancho  = $row['ancho'] !== '' ? esc_html($row['ancho']) : '-';
                                 $alto   = $row['alto']  !== '' ? esc_html($row['alto'])  : '-';
-                                
+                                $largo  = $row['largo'] !== '' ? esc_html($row['largo']) : '-';
                             ?>
                             <tr x-show="selected_pa_talla === '<?= esc_js($slug) ?>'"
                                 :class="selected_pa_talla === '<?= esc_js($slug) ?>' ? 'bg-blue-50' : ''">
                             <td class="px-3 py-2 border-t border-gray-200 font-medium text-gray-800"><?= esc_html($nombre) ?></td>
                             <td class="px-3 py-2 border-t border-gray-200"><?= $ancho ?></td>
                             <td class="px-3 py-2 border-t border-gray-200"><?= $alto  ?></td>
-                            
+                            <td class="px-3 py-2 border-t border-gray-200"><?= $largo ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -307,7 +312,9 @@ foreach ($available_variations as $v) {
                 </table>
             </div>
 
-           
+            <p class="text-xs text-gray-500 mt-2">
+            Medidas tomadas sobre prenda en cm. Pueden variar ±1–2&nbsp;cm.
+            </p>
         </div>
     <?php endif; ?>
 
