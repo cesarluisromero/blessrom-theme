@@ -66,6 +66,59 @@ foreach ($color_terms as $t) {
     $color_map[$t->slug] = $hex ?: '#cccccc';
 }
 ?>
+<?php
+// === Construir mapa de medidas por talla (a partir de las variaciones) ===
+// Ajusta estos nombres si tus campos tienen otras keys en Woo/ACF:
+$KEY_ANCHO = 'ancho_cm';
+$KEY_ALTO  = 'alto_cm';
+$KEY_LARGO = 'largo_cm';
+
+$measures_by_talla = [];       // slug_talla => ['ancho'=>..., 'alto'=>..., 'largo'=>...]
+$talla_display     = [];       // slug_talla => 'Nombre legible'
+
+// Para respetar el orden de tallas definido en el producto:
+$talla_order = array_map('strval', $attributes['pa_talla'] ?? []);
+
+foreach ($available_variations as $v) {
+    $talla_slug = $v['attributes']['attribute_pa_talla'] ?? '';
+    if (!$talla_slug) continue;
+
+    $vid = $v['variation_id'] ?? 0;
+
+    // Lee meta de la variación (Woo)
+    $ancho = get_post_meta($vid, $KEY_ANCHO, true);
+    $alto  = get_post_meta($vid, $KEY_ALTO,  true);
+    $largo = get_post_meta($vid, $KEY_LARGO, true);
+
+    // Fallback ACF (si lo usas)
+    if (function_exists('get_field')) {
+        if ($ancho === '' || $ancho === null) $ancho = get_field($KEY_ANCHO, $vid);
+        if ($alto  === '' || $alto  === null) $alto  = get_field($KEY_ALTO,  $vid);
+        if ($largo === '' || $largo === null) $largo = get_field($KEY_LARGO, $vid);
+    }
+
+    // Si ya tenemos esa talla, completa huecos con valores no vacíos
+    if (!isset($measures_by_talla[$talla_slug])) {
+        $measures_by_talla[$talla_slug] = [
+            'ancho' => $ancho,
+            'alto'  => $alto,
+            'largo' => $largo,
+        ];
+    } else {
+        foreach (['ancho' => $ancho, 'alto' => $alto, 'largo' => $largo] as $k => $val) {
+            if (($measures_by_talla[$talla_slug][$k] ?? '') === '' && $val !== '' && $val !== null) {
+                $measures_by_talla[$talla_slug][$k] = $val;
+            }
+        }
+    }
+
+    // Nombre legible de la talla
+    if (!isset($talla_display[$talla_slug])) {
+        $term = get_term_by('slug', $talla_slug, 'pa_talla');
+        $talla_display[$talla_slug] = $term ? $term->name : $talla_slug;
+    }
+}
+?>
 
 
 
@@ -206,5 +259,54 @@ foreach ($color_terms as $t) {
             </template>
         </div>
     </div>
-    
+    <?php if (!empty($measures_by_talla)): ?>
+        <div class="mt-6">
+            <h3 class="text-base font-semibold mb-2">Tabla de medidas (cm)</h3>
+
+            <div class="overflow-x-auto">
+            <table class="w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
+                <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-3 py-2 text-left font-medium text-gray-700">Talla</th>
+                    <th class="px-3 py-2 text-left font-medium text-gray-700">Ancho</th>
+                    <th class="px-3 py-2 text-left font-medium text-gray-700">Alto</th>
+                    <th class="px-3 py-2 text-left font-medium text-gray-700">Largo</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php
+                // Recorre en el orden de tallas del producto
+                foreach ($talla_order as $slug) {
+                    if (!isset($measures_by_talla[$slug])) continue;
+                    $row = $measures_by_talla[$slug];
+                    $nombre = $talla_display[$slug] ?? $slug;
+
+                    // Sanitiza para impresión
+                    $ancho = $row['ancho'] !== '' ? esc_html($row['ancho']) : '-';
+                    $alto  = $row['alto']  !== '' ? esc_html($row['alto'])  : '-';
+                    $largo = $row['largo'] !== '' ? esc_html($row['largo']) : '-';
+                ?>
+                    <tr
+                    x-data
+                    :class="$root.closest('form')?.__x?.$data?.selected_pa_talla === '<?= esc_js($slug) ?>'
+                            ? 'bg-blue-50'
+                            : 'bg-white'">
+                    <td class="px-3 py-2 border-t border-gray-200 font-medium text-gray-800">
+                        <?= esc_html($nombre) ?>
+                    </td>
+                    <td class="px-3 py-2 border-t border-gray-200"><?= $ancho ?></td>
+                    <td class="px-3 py-2 border-t border-gray-200"><?= $alto  ?></td>
+                    <td class="px-3 py-2 border-t border-gray-200"><?= $largo ?></td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+            </div>
+
+            <p class="text-xs text-gray-500 mt-2">
+            Medidas tomadas sobre prenda en cm. Pueden variar ±1–2&nbsp;cm.
+            </p>
+        </div>
+    <?php endif; ?>
+
 </form>
