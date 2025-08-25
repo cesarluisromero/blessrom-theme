@@ -67,42 +67,48 @@ foreach ($color_terms as $t) {
 }
 ?>
 <?php
-// === Medidas por talla (desde variaciones) ===
-// Cambia estos nombres si tus campos se llaman distinto en Woo/ACF:
-$KEY_ANCHO = 'ancho_cm';
-$KEY_ALTO  = 'alto_cm';
-$KEY_LARGO = 'largo_cm';
-
+// === Medidas por talla (desde variaciones Woo) ===
 $measures_by_talla = [];   // slug_talla => ['ancho','alto','largo']
-$talla_display     = [];   // slug_talla => 'Nombre legible'
-$talla_order       = array_map('strval', $attributes['pa_talla'] ?? []);
+$talla_display     = [];
+
+// Orden/lista de tallas presentes en el producto
+$talla_order = wc_get_product_terms($product->get_id(), 'pa_talla', ['fields' => 'slugs']);
+
+// Unidad configurada en Woo (cm, m, in, yd)
+$store_unit = get_option('woocommerce_dimension_unit', 'cm');
+
+// Helper para convertir a cm
+function br_dim_to_cm($val, $store_unit){
+    if ($val === '' || $val === null) return '';
+    // wc_get_dimension convierte entre unidades
+    return wc_get_dimension( (float) $val, 'cm', $store_unit );
+}
 
 foreach ($available_variations as $v) {
     $talla = $v['attributes']['attribute_pa_talla'] ?? '';
     if (!$talla) continue;
 
-    $vid = (int)($v['variation_id'] ?? 0);
+    $vid = (int) ($v['variation_id'] ?? 0);
+    $var_obj = $vid ? wc_get_product($vid) : null;
 
-    // Lee meta de la variación
+    // Lee dimensiones nativas de Woo
+    $length = $var_obj ? $var_obj->get_length() : ''; // LARGO
+    $width  = $var_obj ? $var_obj->get_width()  : ''; // ANCHO
+    $height = $var_obj ? $var_obj->get_height() : ''; // ALTO
+
+    // Convierte a cm si hace falta
     $row = [
-        'ancho' => get_post_meta($vid, $KEY_ANCHO, true),
-        'alto'  => get_post_meta($vid, $KEY_ALTO,  true),
-        'largo' => get_post_meta($vid, $KEY_LARGO, true),
+        'ancho' => br_dim_to_cm($width,  $store_unit),
+        'alto'  => br_dim_to_cm($height, $store_unit),
+        'largo' => br_dim_to_cm($length, $store_unit),
     ];
-
-    // Fallback ACF si lo usas
-    if (function_exists('get_field')) {
-        if ($row['ancho'] === '' || $row['ancho'] === null) $row['ancho'] = get_field($KEY_ANCHO, $vid);
-        if ($row['alto']  === '' || $row['alto']  === null) $row['alto']  = get_field($KEY_ALTO,  $vid);
-        if ($row['largo'] === '' || $row['largo'] === null) $row['largo'] = get_field($KEY_LARGO, $vid);
-    }
 
     // Guarda/Completa por talla
     if (!isset($measures_by_talla[$talla])) {
         $measures_by_talla[$talla] = $row;
     } else {
         foreach ($row as $k => $val) {
-            if (($measures_by_talla[$talla][$k] ?? '') === '' && $val !== '' && $val !== null) {
+            if (($measures_by_talla[$talla][$k] ?? '') === '' && $val !== '') {
                 $measures_by_talla[$talla][$k] = $val;
             }
         }
@@ -114,14 +120,14 @@ foreach ($available_variations as $v) {
         $talla_display[$talla] = $term ? $term->name : $talla;
     }
 }
+
+// (Opcional) DEBUG rápido en consola
 ?>
-
-
 <script>
-  console.log('talla_order (PHP) ->',
-    <?php echo wp_json_encode($talla_order, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT); ?>
-  );
+  console.log('talla_order', <?= wp_json_encode($talla_order) ?>);
+  console.log('measures_by_talla', <?= wp_json_encode($measures_by_talla) ?>);
 </script>
+
 
 
 <form
