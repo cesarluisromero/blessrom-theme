@@ -123,7 +123,7 @@ function alpineCart() {
                 return;
             }
 
-            if (!this.selected_pa_color && this.availableVariations >1) {
+            if (!this.selected_pa_color) {
                 console.log('maxima variaciones de este producto es:',this.availableVariations);
                 this.errorMessage = "Por favor, selecciona un color.";
                 return;
