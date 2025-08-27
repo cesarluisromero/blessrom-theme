@@ -329,6 +329,118 @@ add_filter('woocommerce_checkout_fields', function ($fields) {
   return $fields;
 });
 
+/**
+ * Envío: ocultar en carrito y mostrar en checkout solo tras escribir "distrito".
+ * Pegar en app/setup.php (Sage) — sin abrir/cerrar PHP extra.
+ */
+
+// 1) CARRITO: no calcular ni mostrar envío
+add_filter('woocommerce_cart_ready_to_calc_shipping', function ($show_shipping) {
+    if (is_cart()) return false;
+    return $show_shipping;
+}, 99);
+
+add_filter('woocommerce_cart_needs_shipping', function ($needs) {
+    if (is_cart()) return false;
+    return $needs;
+}, 99);
+
+add_filter('woocommerce_cart_totals_shipping_html', function ($html) {
+    if (is_cart()) return ''; // borra la fila "Envío" en carrito
+    // En checkout: oculta mientras no haya distrito
+    if (is_checkout()) {
+        $flag = WC()->session ? WC()->session->get('distrito_filled') : null;
+        if ($flag !== '1') return '';
+    }
+    return $html;
+}, 20);
+
+add_filter('woocommerce_no_shipping_available_html', function ($html) {
+    if (is_cart()) return '';
+    if (is_checkout()) {
+        $flag = WC()->session ? WC()->session->get('distrito_filled') : null;
+        if ($flag !== '1') return '';
+    }
+    return $html;
+}, 20);
+
+add_filter('woocommerce_cart_no_shipping_available_html', function ($html) {
+    if (is_cart()) return '';
+    if (is_checkout()) {
+        $flag = WC()->session ? WC()->session->get('distrito_filled') : null;
+        if ($flag !== '1') return '';
+    }
+    return $html;
+}, 20);
+
+// 2) CHECKOUT: bloquear métodos hasta que haya "distrito" (flag en sesión vía AJAX)
+add_action('wp_ajax_set_distrito_flag', function () {
+    $distrito = isset($_POST['distrito']) ? trim((string) $_POST['distrito']) : '';
+    if (WC()->session) {
+        WC()->session->set('distrito_filled', $distrito !== '' ? '1' : '0');
+    }
+    wp_die();
+});
+add_action('wp_ajax_nopriv_set_distrito_flag', function () {
+    $distrito = isset($_POST['distrito']) ? trim((string) $_POST['distrito']) : '';
+    if (WC()->session) {
+        WC()->session->set('distrito_filled', $distrito !== '' ? '1' : '0');
+    }
+    wp_die();
+});
+
+add_filter('woocommerce_package_rates', function ($rates, $package) {
+    if (is_checkout() && !is_cart()) {
+        $flag = WC()->session ? WC()->session->get('distrito_filled') : null;
+        if ($flag !== '1') return []; // oculta todas las tarifas hasta que escriba distrito
+    }
+    return $rates;
+}, 100, 2);
+
+// 3) JS en footer (sin cerrar/abrir PHP): muestra envío tras escribir distrito
+add_action('wp_footer', function () {
+    if (!is_checkout() || is_wc_endpoint_url('order-received')) return;
+
+    $ajax_url = esc_url(admin_url('admin-ajax.php'));
+    $script = <<<HTML
+<script>
+(function($){
+  // Campo de distrito: prueba #shipping_distrito; si no existe, usa #shipping_city
+  var \$distritoField = $('#shipping_city');
+  if (!\$distritoField.length) { \$distritoField = $('#shipping_city'); }
+  if (!\$distritoField.length) { return; }
+
+  var \$shippingSection = $('.woocommerce-shipping-totals.shipping');
+  var ajaxUrl = (window.wc_checkout_params && window.wc_checkout_params.ajax_url) || '{$ajax_url}';
+
+  function updateFlag(val){
+    $.post(ajaxUrl, { action: 'set_distrito_flag', distrito: val || '' }, function(){
+      $('body').trigger('update_checkout'); // recalcula métodos y totales
+    });
+  }
+
+  // Estado inicial
+  var initial = (\$distritoField.val() || '').trim();
+  if (initial === '') { \$shippingSection.hide(); updateFlag(''); }
+  else { updateFlag(initial); \$shippingSection.show(); }
+
+  // Al escribir/cambiar el distrito (con debounce)
+  var debounce=null;
+  \$distritoField.on('input change', function(){
+    clearTimeout(debounce);
+    var v = (\$(this).val() || '').trim();
+    debounce = setTimeout(function(){
+      if (v === '') { \$shippingSection.hide(); updateFlag(''); }
+      else { updateFlag(v); \$shippingSection.slideDown('fast'); }
+    }, 300);
+  });
+})(jQuery);
+</script>
+HTML;
+
+    echo $script;
+}, 20);
+
 
 
 
