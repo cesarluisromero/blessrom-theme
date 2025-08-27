@@ -338,6 +338,50 @@ function ocultar_envio_en_carrito($needs_shipping) {
     return $needs_shipping;
 }
 
+/**
+ * Quitar completamente el envío del CARRITO (no se calcula ni se suma al total).
+ * Funciona con plantillas personalizadas y con Woo Blocks.
+ */
+add_action('template_redirect', function () {
+    if (!is_cart()) return;
+
+    // 1) No calcular envío en carrito (clásico)
+    add_filter('woocommerce_cart_ready_to_calc_shipping', '__return_false', 9999);
+    // 2) Indicar que el carrito NO necesita envío (oculta/evita sumarlo)
+    add_filter('woocommerce_cart_needs_shipping', '__return_false', 9999);
+    // 3) Vaciar paquetes de envío en carrito (clave para Woo Blocks y totales)
+    add_filter('woocommerce_cart_shipping_packages', function ($packages) {
+        return []; // sin paquetes => no hay métodos ni costo de envío
+    }, 9999);
+
+    // 4) (Cinturón y tirantes) Si algo intentara devolver tarifas, vaciarlas igual
+    add_filter('woocommerce_package_rates', function ($rates, $package) {
+        return [];
+    }, 9999, 2);
+
+    // 5) Limpia método de envío elegido en sesión (por si quedó guardado de antes)
+    if (WC()->session) {
+        WC()->session->set('chosen_shipping_methods', []);
+        // Borra cualquier caché de shipping por paquete
+        foreach ((array) WC()->session->get('shipping_for_package', []) as $idx => $data) {
+            WC()->session->__unset('shipping_for_package_' . $idx);
+        }
+    }
+
+    // 6) Fallback: si aún así WC calculó un total con envío, descuéntalo
+    // (normalmente NO hará falta gracias a los filtros anteriores)
+    add_filter('woocommerce_calculated_total', function ($total, $cart) {
+        $ship  = (float) $cart->get_shipping_total();
+        $stax  = (float) $cart->get_shipping_tax();
+        if ($ship > 0 || $stax > 0) {
+            $total -= ($ship + $stax);
+            if ($total < 0) $total = 0;
+        }
+        return $total;
+    }, 9999, 2);
+}, 9);
+
+
 
 
 
