@@ -70,10 +70,12 @@
 
                     <div class="text-sm text-gray-700">
                         <p class="flex justify-between"><span>Subtotal:</span><span>{!! WC()->cart->get_cart_subtotal() !!}</span></p>
-                        @if( ! is_cart() )
-                            <!-- Mostrar envío solo si NO estamos en el carrito -->
-                            <p class="flex justify-between"><span>Envío:</span><span>{!! WC()->cart->get_cart_shipping_total() !!}</span></p>
-                        @endif
+                        <p class="flex justify-between">
+                            <span>Envío:</span>
+                            <span>
+                                {{ is_cart() ? 'Calculado en la caja' : WC()->cart->get_cart_shipping_total() }}
+                            </span>
+                        </p>
                         @php
                             $raw_total   = (float) WC()->cart->get_total('edit'); // número crudo
                             $ship_amount = (float) WC()->cart->get_shipping_total() + (float) WC()->cart->get_shipping_tax();
