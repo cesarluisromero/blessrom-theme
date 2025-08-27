@@ -33,29 +33,24 @@
     </div>
 
     {{-- Provincia / Departamento --}}
+    {{-- Región / Departamento --}}
+<div>
+  <label for="billing_state" class="block text-sm font-medium text-gray-700 mb-1">Región / Departamento *</label>
+  {!! woocommerce_form_field('billing_state', $checkout->get_checkout_fields()['billing']['billing_state'], $checkout->get_value('billing_state')) !!}
+</div>
+
+{{-- Provincia (nuevo) --}}
     <div>
-        <label for="billing_state" class="block text-sm font-medium text-gray-700 mb-1"> </label>
-        {!! woocommerce_form_field('billing_state', $checkout->get_checkout_fields()['billing']['billing_state'], $checkout->get_value('billing_state')) !!}
+    <label for="billing_province" class="block text-sm font-medium text-gray-700 mb-1">Provincia *</label>
+    {!! woocommerce_form_field('billing_province', $checkout->get_checkout_fields()['billing']['billing_province'], $checkout->get_value('billing_province')) !!}
     </div>
 
-    {{-- Provincia (desde base de datos, dependiente de Región) --}}
+    {{-- Distrito (usar billing_city como select) --}}
     <div>
-        <label for="billing_province" class="block text-sm font-medium text-gray-700 mb-1">Provincia *</label>
-        {!! woocommerce_form_field(
-            'billing_province',
-            $checkout->get_checkout_fields()['billing']['billing_province'],
-            $checkout->get_value('billing_province')
-        ) !!}
+    <label for="billing_city" class="block text-sm font-medium text-gray-700 mb-1">Distrito *</label>
+    {!! woocommerce_form_field('billing_city', $checkout->get_checkout_fields()['billing']['billing_city'], $checkout->get_value('billing_city')) !!}
     </div>
 
-
-    {{-- Ciudad --}}
-    <div>
-        <label for="billing_city" class="block text-sm font-medium text-gray-700 mb-1">Distrito*</label>
-        <input type="text" name="billing_city" id="billing_city"
-            class="form-input w-full rounded-md border-gray-300 shadow-sm h-12 text-base focus:ring-blue-500 focus:border-blue-500"
-            value="{{ $checkout->get_value('billing_city') }}" required>
-    </div>
 
     {{-- Dirección --}}
     <div>
