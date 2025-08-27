@@ -329,65 +329,56 @@ add_filter('woocommerce_checkout_fields', function ($fields) {
   return $fields;
 });
 
-// 1. OCULTAR CÁLCULO/FILA DE ENVÍO EN EL CARRITO
-add_filter('woocommerce_cart_needs_shipping', 'ocultar_envio_en_carrito');
-function ocultar_envio_en_carrito($needs_shipping) {
-    if (is_cart()) {
-        $needs_shipping = false;
-    }
-    return $needs_shipping;
-}
 
 /**
- * Quitar completamente el envío del CARRITO (no se calcula ni se suma al total).
- * Funciona con plantillas personalizadas y con Woo Blocks.
+ * No sumar NI mostrar envío en el CARRITO (funciona con plantillas personalizadas).
+ * Registramos los filtros globalmente y dentro chequeamos is_cart().
  */
-add_action('template_redirect', function () {
-    if (!is_cart()) return;
 
-    // 1) No calcular envío en carrito (clásico)
-    add_filter('woocommerce_cart_ready_to_calc_shipping', '__return_false', 9999);
-    // 2) Indicar que el carrito NO necesita envío (oculta/evita sumarlo)
-    add_filter('woocommerce_cart_needs_shipping', '__return_false', 9999);
-    // 3) Vaciar paquetes de envío en carrito (clave para Woo Blocks y totales)
-    add_filter('woocommerce_cart_shipping_packages', function ($packages) {
-        return []; // sin paquetes => no hay métodos ni costo de envío
-    }, 9999);
+// 1) No calcular envío en carrito
+add_filter('woocommerce_cart_ready_to_calc_shipping', function ($show) {
+    return is_cart() ? false : $show;
+}, PHP_INT_MAX);
 
-    // 4) (Cinturón y tirantes) Si algo intentara devolver tarifas, vaciarlas igual
-    add_filter('woocommerce_package_rates', function ($rates, $package) {
-        return [];
-    }, 9999, 2);
+// 2) Indicar que el carrito NO necesita envío
+add_filter('woocommerce_cart_needs_shipping', function ($needs) {
+    return is_cart() ? false : $needs;
+}, PHP_INT_MAX);
 
-    // 5) Limpia método de envío elegido en sesión (por si quedó guardado de antes)
-    if (WC()->session) {
-        WC()->session->set('chosen_shipping_methods', []);
-        // Borra cualquier caché de shipping por paquete
-        foreach ((array) WC()->session->get('shipping_for_package', []) as $idx => $data) {
-            WC()->session->__unset('shipping_for_package_' . $idx);
-        }
+// 3) Vaciar paquetes de envío en carrito (clave para que no existan métodos)
+add_filter('woocommerce_cart_shipping_packages', function ($packages) {
+    return is_cart() ? [] : $packages;
+}, PHP_INT_MAX);
+
+// 4) Si alguien intentara devolver métodos igualmente, vaciarlos en carrito
+add_filter('woocommerce_package_rates', function ($rates, $package) {
+    return is_cart() ? [] : $rates;
+}, PHP_INT_MAX, 2);
+
+// 5) Fallback: si aun así el total trae envío, descuéntalo en carrito
+add_filter('woocommerce_calculated_total', function ($total, $cart) {
+    if (!is_cart()) return $total;
+    $ship = (float) $cart->get_shipping_total();
+    $stax = (float) $cart->get_shipping_tax();
+    if ($ship > 0 || $stax > 0) {
+        $total -= ($ship + $stax);
+        if ($total < 0) $total = 0;
     }
+    return $total;
+}, PHP_INT_MAX, 2);
 
-    // 6) Fallback: si aún así WC calculó un total con envío, descuéntalo
-    // (normalmente NO hará falta gracias a los filtros anteriores)
-    add_filter('woocommerce_calculated_total', function ($total, $cart) {
-        $ship  = (float) $cart->get_shipping_total();
-        $stax  = (float) $cart->get_shipping_tax();
-        if ($ship > 0 || $stax > 0) {
-            $total -= ($ship + $stax);
-            if ($total < 0) $total = 0;
-        }
-        return $total;
-    }, 9999, 2);
-}, 9);
+// 6) (Opcional visual) Ocultar cualquier resto de fila de envío en carrito
+add_action('wp_head', function () {
+    if (!is_cart()) return;
+    echo '<style>
+      .cart_totals .shipping { display:none !important; }
+      .wc-block-components-totals-item--shipping { display:none !important; }
+    </style>';
+}, PHP_INT_MAX);
 
 
-add_action('template_redirect', function () {
-  if (!is_cart()) return;
-  add_action('wp_footer', function () {
-    echo '<script>console.log("BR: template_redirect llegó a CARRITO");</script>';
-  }, 999);
-}, 1);
+
+
 
 
 
