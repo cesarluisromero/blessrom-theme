@@ -329,76 +329,7 @@ add_filter('woocommerce_checkout_fields', function ($fields) {
   return $fields;
 });
 
-/**
- * Envío gratis si la ciudad de envío es Tarapoto (sin depender de código postal).
- * Mantiene visible "Recogida local".
- */
-add_filter('woocommerce_package_rates', function ($rates, $package) {
-    // Obtén la ciudad (prioriza la de envío)
-    $city = WC()->customer ? WC()->customer->get_shipping_city() : '';
-    if (empty($city) && isset($package['destination']['city'])) {
-        $city = $package['destination']['city'];
-    }
 
-    // Normaliza (minúsculas, sin tildes, espacios)
-    if (!function_exists('br_normalize')) {
-        function br_normalize($s) {
-            $s = remove_accents(strtolower(trim((string)$s)));
-            return preg_replace('/\s+/', ' ', $s);
-        }
-    }
-
-    $city_norm = br_normalize($city);
-
-    // Lista de ciudades con envío gratis (puedes agregar más)
-    $free_cities = array_map('br_normalize', [
-        'Tarapoto',
-        // 'Lima', 'La Banda de Shilcayo', 'Morales', etc.
-    ]);
-
-    // Si la ciudad coincide, forzamos envío gratis
-    if (in_array($city_norm, $free_cities, true)) {
-
-        // 1) Si ya existe un método "Envío gratuito", dejamos solo ese + recogida local
-        $has_free = false;
-        foreach ($rates as $rate_id => $rate) {
-            if ('free_shipping' === $rate->method_id) {
-                $has_free = true;
-            }
-        }
-
-        if ($has_free) {
-            foreach ($rates as $rate_id => $rate) {
-                if ('free_shipping' === $rate->method_id || 'local_pickup' === $rate->method_id) {
-                    // Dejarlo
-                    continue;
-                }
-                unset($rates[$rate_id]);
-            }
-            return $rates;
-        }
-
-        // 2) Si no tienes creado "Envío gratuito" en la zona,
-        //    convertimos las tarifas de pago en gratis y renombramos.
-        foreach ($rates as $rate_id => $rate) {
-            if ('local_pickup' === $rate->method_id) {
-                // Mantén "Recogida local" tal cual
-                continue;
-            }
-            $rates[$rate_id]->cost = 0;
-            // Quitar impuestos sobre el envío
-            if (method_exists($rates[$rate_id], 'set_taxes')) {
-                $rates[$rate_id]->set_taxes([]);
-            } else {
-                $rates[$rate_id]->taxes = [];
-            }
-            // Cambiar etiqueta visible en checkout
-            $rates[$rate_id]->label = __('Envío gratis - Tarapoto', 'theme-textdomain');
-        }
-    }
-
-    return $rates;
-}, 10, 2);
 
 
 
