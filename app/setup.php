@@ -382,6 +382,14 @@ add_action('template_redirect', function () {
 }, 9);
 
 
+add_action('template_redirect', function () {
+  if (!is_cart()) return;
+  add_action('wp_footer', function () {
+    echo '<div style="position:fixed;bottom:12px;left:12px;z-index:99999;background:#111;color:#0f0;padding:8px 10px;border-radius:6px;font:12px/1.2 monospace">
+            BR: template_redirect (carrito)
+          </div>';
+  }, 999);
+}, 1);
 
 
 
