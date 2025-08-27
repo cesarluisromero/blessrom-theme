@@ -74,7 +74,16 @@
                             <!-- Mostrar envío solo si NO estamos en el carrito -->
                             <p class="flex justify-between"><span>Envío:</span><span>{!! WC()->cart->get_cart_shipping_total() !!}</span></p>
                         @endif
-                        <p class="flex justify-between font-bold border-t pt-2"><span>Total:</span><span>{!! WC()->cart->get_total() !!}</span></p>
+                        @php
+                            $raw_total   = (float) WC()->cart->get_total('edit'); // número crudo
+                            $ship_amount = (float) WC()->cart->get_shipping_total() + (float) WC()->cart->get_shipping_tax();
+                            $cart_total_without_shipping = max(0, $raw_total - $ship_amount);
+                        @endphp
+                        <p class="flex justify-between font-bold border-t pt-2">
+                            <span>Total:</span>
+                            <span>{!! wc_price($cart_total_without_shipping) !!}</span>
+                        </p>
+
                     </div>
 
                     <textarea class="w-full p-2 border border-gray-300 rounded text-sm" placeholder="Instrucciones de pedido"></textarea>

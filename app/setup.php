@@ -330,51 +330,6 @@ add_filter('woocommerce_checkout_fields', function ($fields) {
 });
 
 
-/**
- * No sumar NI mostrar envío en el CARRITO (funciona con plantillas personalizadas).
- * Registramos los filtros globalmente y dentro chequeamos is_cart().
- */
-
-// 1) No calcular envío en carrito
-add_filter('woocommerce_cart_ready_to_calc_shipping', function ($show) {
-    return is_cart() ? false : $show;
-}, PHP_INT_MAX);
-
-// 2) Indicar que el carrito NO necesita envío
-add_filter('woocommerce_cart_needs_shipping', function ($needs) {
-    return is_cart() ? false : $needs;
-}, PHP_INT_MAX);
-
-// 3) Vaciar paquetes de envío en carrito (clave para que no existan métodos)
-add_filter('woocommerce_cart_shipping_packages', function ($packages) {
-    return is_cart() ? [] : $packages;
-}, PHP_INT_MAX);
-
-// 4) Si alguien intentara devolver métodos igualmente, vaciarlos en carrito
-add_filter('woocommerce_package_rates', function ($rates, $package) {
-    return is_cart() ? [] : $rates;
-}, PHP_INT_MAX, 2);
-
-// 5) Fallback: si aun así el total trae envío, descuéntalo en carrito
-add_filter('woocommerce_calculated_total', function ($total, $cart) {
-    if (!is_cart()) return $total;
-    $ship = (float) $cart->get_shipping_total();
-    $stax = (float) $cart->get_shipping_tax();
-    if ($ship > 0 || $stax > 0) {
-        $total -= ($ship + $stax);
-        if ($total < 0) $total = 0;
-    }
-    return $total;
-}, PHP_INT_MAX, 2);
-
-// 6) (Opcional visual) Ocultar cualquier resto de fila de envío en carrito
-add_action('wp_head', function () {
-    if (!is_cart()) return;
-    echo '<style>
-      .cart_totals .shipping { display:none !important; }
-      .wc-block-components-totals-item--shipping { display:none !important; }
-    </style>';
-}, PHP_INT_MAX);
 
 
 
