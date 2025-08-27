@@ -38,6 +38,17 @@
         {!! woocommerce_form_field('billing_state', $checkout->get_checkout_fields()['billing']['billing_state'], $checkout->get_value('billing_state')) !!}
     </div>
 
+    {{-- Provincia (desde base de datos, dependiente de Región) --}}
+    <div>
+        <label for="billing_province" class="block text-sm font-medium text-gray-700 mb-1">Provincia *</label>
+        {!! woocommerce_form_field(
+            'billing_province',
+            $checkout->get_checkout_fields()['billing']['billing_province'],
+            $checkout->get_value('billing_province')
+        ) !!}
+    </div>
+
+
     {{-- Ciudad --}}
     <div>
         <label for="billing_city" class="block text-sm font-medium text-gray-700 mb-1">Distrito*</label>

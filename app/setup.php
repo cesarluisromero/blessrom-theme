@@ -330,6 +330,202 @@ add_filter('woocommerce_checkout_fields', function ($fields) {
 });
 
 
+/**
+ * Provincias desde Base de Datos para el checkout (dependientes de Región/Departamento).
+ * - Crea tabla wp_br_provinces en la primera carga.
+ * - Inserta semillas (San Martín, Lima) para prueba.
+ * - AJAX para traer provincias por región.
+ * - Campo billing_province en checkout (select), validación, guardado, emails.
+ */
+
+// =============== 0) CREAR TABLA + SEMILLAS (una sola vez) ===============
+add_action('after_setup_theme', function () {
+    global $wpdb;
+    $opt = 'br_provinces_schema_v1';
+    if (get_option($opt)) return; // ya instalado
+
+    require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+    $table = $wpdb->prefix . 'br_provinces';
+    $charset_collate = $wpdb->get_charset_collate();
+
+    $sql = "CREATE TABLE $table (
+        id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+        country_code VARCHAR(2) NOT NULL DEFAULT 'PE',
+        state_name   VARCHAR(191) NOT NULL,
+        state_slug   VARCHAR(191) NOT NULL,
+        province_name VARCHAR(191) NOT NULL,
+        province_slug VARCHAR(191) NOT NULL,
+        sort INT NOT NULL DEFAULT 0,
+        is_active TINYINT(1) NOT NULL DEFAULT 1,
+        PRIMARY KEY (id),
+        KEY state_slug (state_slug),
+        KEY province_slug (province_slug)
+    ) $charset_collate;";
+
+    dbDelta($sql);
+
+    // Semillas mínimas para probar (San Martín, Lima)
+    $rows = [
+        // San Martín
+        ['PE', 'San Martín', 'san-martin', 'Moyobamba'],
+        ['PE', 'San Martín', 'san-martin', 'Rioja'],
+        ['PE', 'San Martín', 'san-martin', 'Lamas'],
+        ['PE', 'San Martín', 'san-martin', 'San Martín'],
+        ['PE', 'San Martín', 'san-martin', 'Picota'],
+        ['PE', 'San Martín', 'san-martin', 'El Dorado'],
+        ['PE', 'San Martín', 'san-martin', 'Huallaga'],
+        ['PE', 'San Martín', 'san-martin', 'Bellavista'],
+        ['PE', 'San Martín', 'san-martin', 'Mariscal Cáceres'],
+        ['PE', 'San Martín', 'san-martin', 'Tocache'],
+        // Lima (región)
+        ['PE', 'Lima', 'lima', 'Lima'],
+        ['PE', 'Lima', 'lima', 'Barranca'],
+        ['PE', 'Lima', 'lima', 'Cajatambo'],
+        ['PE', 'Lima', 'lima', 'Canta'],
+        ['PE', 'Lima', 'lima', 'Cañete'],
+        ['PE', 'Lima', 'lima', 'Huaral'],
+        ['PE', 'Lima', 'lima', 'Huarochirí'],
+        ['PE', 'Lima', 'lima', 'Huaura'],
+        ['PE', 'Lima', 'lima', 'Oyón'],
+        ['PE', 'Lima', 'lima', 'Yauyos'],
+    ];
+
+    foreach ($rows as $r) {
+        [$cc, $state_name, $state_slug, $prov_name] = $r;
+        $wpdb->insert($table, [
+            'country_code'   => $cc,
+            'state_name'     => $state_name,
+            'state_slug'     => sanitize_title($state_slug),
+            'province_name'  => $prov_name,
+            'province_slug'  => sanitize_title($prov_name),
+            'sort'           => 0,
+            'is_active'      => 1,
+        ]);
+    }
+
+    update_option($opt, time());
+});
+
+// Helper: obtener provincias por región (por slug o nombre)
+function br_get_provinces_by_state($state_text) {
+    global $wpdb;
+    $table = $wpdb->prefix . 'br_provinces';
+    $state_slug = sanitize_title(remove_accents(wp_strip_all_tags((string) $state_text)));
+    $sql = $wpdb->prepare(
+        "SELECT province_name FROM $table WHERE country_code = 'PE' AND state_slug = %s AND is_active = 1 ORDER BY sort ASC, province_name ASC",
+        $state_slug
+    );
+    return $wpdb->get_col($sql);
+}
+
+// =============== 1) CAMPO billing_province en checkout ===============
+add_filter('woocommerce_checkout_fields', function ($fields) {
+    $fields['billing']['billing_province'] = [
+        'type'        => 'select',
+        'label'       => __('Provincia *', 'theme-textdomain'),
+        'required'    => true,
+        'class'       => ['form-row-wide'],
+        'priority'    => 61,
+        'options'     => [
+            '' => __('Seleccione su provincia', 'theme-textdomain'),
+        ],
+    ];
+    return $fields;
+});
+
+// Validación
+add_action('woocommerce_after_checkout_validation', function ($data, $errors) {
+    if (empty($data['billing_province'])) {
+        $errors->add('billing_province', __('Por favor selecciona tu provincia.', 'theme-textdomain'));
+    }
+}, 10, 2);
+
+// Guardar en pedido
+add_action('woocommerce_checkout_create_order', function ($order, $data) {
+    if (!empty($data['billing_province'])) {
+        $order->update_meta_data('_billing_province', sanitize_text_field($data['billing_province']));
+    }
+}, 10, 2);
+
+// (Opcional) Mostrar en emails
+add_filter('woocommerce_email_order_meta_fields', function ($fields, $sent_to_admin, $order) {
+    $prov = $order->get_meta('_billing_province');
+    if (!empty($prov)) {
+        $fields['billing_province'] = [
+            'label' => __('Provincia', 'theme-textdomain'),
+            'value' => $prov,
+        ];
+    }
+    return $fields;
+}, 10, 3);
+
+// =============== 2) AJAX: devolver provincias por región ===============
+add_action('wp_ajax_br_get_provinces', function () {
+    $state_text = isset($_POST['state_text']) ? wp_unslash($_POST['state_text']) : '';
+    $provs = br_get_provinces_by_state($state_text);
+    wp_send_json_success(['provinces' => array_values(array_unique(array_map('wp_strip_all_tags', $provs)))]);
+});
+add_action('wp_ajax_nopriv_br_get_provinces', function () {
+    $state_text = isset($_POST['state_text']) ? wp_unslash($_POST['state_text']) : '';
+    $provs = br_get_provinces_by_state($state_text);
+    wp_send_json_success(['provinces' => array_values(array_unique(array_map('wp_strip_all_tags', $provs)))]);
+});
+
+// =============== 3) JS: poblar provincias según Región (billing_state) ===============
+add_action('wp_footer', function () {
+    if (!is_checkout() || is_wc_endpoint_url('order-received')) return;
+
+    $ajax_url = esc_url(admin_url('admin-ajax.php'));
+    $script = <<<HTML
+<script>
+(function(){
+  if (!document.body.classList.contains('woocommerce-checkout')) return;
+  var $ = window.jQuery || window.$; if(!$) return;
+
+  var \$state    = $('#billing_state');     // Región/Departamento (select)
+  var \$province = $('#billing_province');  // Provincia (select)
+  if (!\$state.length || !\$province.length) return;
+
+  function fillProvinces(stateText) {
+    if (!stateText) {
+      \$province.empty().append(new Option('Seleccione su provincia', '', true, false)).trigger('change');
+      return;
+    }
+    $.post('{$ajax_url}', { action: 'br_get_provinces', state_text: stateText }, function(resp){
+      \$province.empty().append(new Option('Seleccione su provincia', '', true, false));
+      if (resp && resp.success && Array.isArray(resp.data.provinces)) {
+        resp.data.provinces.forEach(function(p){
+          \$province.append(new Option(p, p, false, false));
+        });
+      }
+      // Si el usuario ya tenía seleccionada una provincia y existe, se restaura automáticamente por el navegador.
+      \$province.trigger('change');
+    });
+  }
+
+  function getStateText() {
+    var txt = \$state.find('option:selected').text() || \$state.val() || '';
+    return txt.trim();
+  }
+
+  // Inicial
+  fillProvinces(getStateText());
+
+  // Cambio de región
+  \$state.on('change', function(){ fillProvinces(getStateText()); });
+
+  // Si checkout se actualiza por otros motivos (p.ej. método de pago), reintentar
+  jQuery(document.body).on('updated_checkout', function(){
+    if (!\$province.children('option[value!=""]').length) {
+      fillProvinces(getStateText());
+    }
+  });
+})();
+</script>
+HTML;
+
+    echo $script;
+}, 20);
 
 
 
