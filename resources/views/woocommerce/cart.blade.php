@@ -70,7 +70,10 @@
 
                     <div class="text-sm text-gray-700">
                         <p class="flex justify-between"><span>Subtotal:</span><span>{!! WC()->cart->get_cart_subtotal() !!}</span></p>
-                        <p class="flex justify-between"><span>Envío:</span><span>{!! WC()->cart->get_cart_shipping_total() !!}</span></p>
+                        @if( ! is_cart() )
+                            <!-- Mostrar envío solo si NO estamos en el carrito -->
+                            <p class="flex justify-between"><span>Envío:</span><span>{!! WC()->cart->get_cart_shipping_total() !!}</span></p>
+                        @endif
                         <p class="flex justify-between font-bold border-t pt-2"><span>Total:</span><span>{!! WC()->cart->get_total() !!}</span></p>
                     </div>
 
