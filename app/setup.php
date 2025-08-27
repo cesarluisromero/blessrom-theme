@@ -400,20 +400,7 @@ add_filter('woocommerce_package_rates', function ($rates, $package) {
     return $rates;
 }, 10, 2);
 
-add_action('wp_footer', function () {
-    if (is_checkout()) : ?>
-<script>
-document.addEventListener('change', function(e){
-  if (e.target && (e.target.id === 'shipping_city' || e.target.id === 'billing_city')) {
-    if (typeof jQuery !== 'undefined' && jQuery('body').trigger) {
-      jQuery('body').trigger('update_checkout');
-    }
-  }
-});
-</script>
-<?php
-    endif;
-});
+
 
 
 
