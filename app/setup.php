@@ -329,6 +329,12 @@ add_filter('woocommerce_checkout_fields', function ($fields) {
   return $fields;
 });
 
+// No calcular ni mostrar envíos en el carrito (solo en checkout)
+add_filter('woocommerce_cart_ready_to_calc_shipping', function($show){
+    if (is_cart()) return false; // evita cálculo en la página del carrito
+    return $show;
+}, 10, 1);
+
 
 
 
