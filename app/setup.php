@@ -330,14 +330,14 @@ add_filter('woocommerce_checkout_fields', function ($fields) {
 });
 
 // 1. OCULTAR CÁLCULO/FILA DE ENVÍO EN EL CARRITO
-function disable_shipping_in_cart($show_shipping) {
-    // Si es la página del carrito, deshabilitar cálculo de envío
+add_filter('woocommerce_cart_needs_shipping', 'ocultar_envio_en_carrito');
+function ocultar_envio_en_carrito($needs_shipping) {
     if (is_cart()) {
-        return false;
+        $needs_shipping = false;
     }
-    return $show_shipping;
+    return $needs_shipping;
 }
-add_filter('woocommerce_cart_ready_to_calc_shipping', 'disable_shipping_in_cart', 99);
+
 
 
 
