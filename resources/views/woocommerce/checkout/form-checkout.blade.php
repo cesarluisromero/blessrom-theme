@@ -61,3 +61,4 @@
 </form>
 
 @php do_action('woocommerce_after_checkout_form', $checkout); @endphp
+@endsection
