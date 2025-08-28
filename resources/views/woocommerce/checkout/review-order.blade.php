@@ -18,18 +18,41 @@
 
     @foreach (WC()->cart->get_cart() as $cart_item_key => $cart_item)
       @php
-        $_product = apply_filters('woocommerce_cart_item_product', $cart_item['data'], $cart_item, $cart_item_key);
+        $_product   = apply_filters('woocommerce_cart_item_product', $cart_item['data'], $cart_item, $cart_item_key);
+        $permalink  = apply_filters('woocommerce_cart_item_permalink', $_product && $_product->is_visible() ? $_product->get_permalink($cart_item) : '', $cart_item, $cart_item_key);
       @endphp
 
       @if ($_product && $_product->exists() && $cart_item['quantity'] > 0 && apply_filters('woocommerce_checkout_cart_item_visible', true, $cart_item, $cart_item_key))
-        <tr class="{!! esc_attr(apply_filters('woocommerce_cart_item_class','cart_item',$cart_item,$cart_item_key)) !!} border-b border-slate-100 last:border-0">
+        <tr class="{{ esc_attr(apply_filters('woocommerce_cart_item_class','cart_item',$cart_item,$cart_item_key)) }} border-b border-slate-100 last:border-0">
           <td class="product-name align-top py-3 pr-4 text-slate-800">
-            {!! wp_kses_post(apply_filters('woocommerce_cart_item_name', $_product->get_name(), $cart_item, $cart_item_key)) !!}
-            <strong class="product-quantity ml-1">× {{ $cart_item['quantity'] }}</strong>
+            <div class="flex items-start gap-3">
+              {{-- Miniatura (usa la imagen correcta de variación si aplica) --}}
+              @php
+                $thumb_html = apply_filters(
+                  'woocommerce_cart_item_thumbnail',
+                  $_product->get_image('woocommerce_thumbnail'),
+                  $cart_item,
+                  $cart_item_key
+                );
+              @endphp
 
-            {{-- Metadatos de variaciones / addons --}}
-            <div class="mt-1 text-slate-500">
-              {!! wc_get_formatted_cart_item_data($cart_item) !!}
+              <div class="w-12 h-12 shrink-0 overflow-hidden rounded-lg border border-slate-200">
+                @if ($permalink)
+                  <a href="{{ esc_url($permalink) }}" class="block">{!! $thumb_html !!}</a>
+                @else
+                  {!! $thumb_html !!}
+                @endif
+              </div>
+
+              <div class="min-w-0">
+                {!! wp_kses_post(apply_filters('woocommerce_cart_item_name', $_product->get_name(), $cart_item, $cart_item_key)) !!}
+                <strong class="product-quantity ml-1">× {{ $cart_item['quantity'] }}</strong>
+
+                {{-- Metadatos de variaciones / addons --}}
+                <div class="mt-1 text-slate-500">
+                  {!! wc_get_formatted_cart_item_data($cart_item) !!}
+                </div>
+              </div>
             </div>
           </td>
 
@@ -55,7 +78,7 @@
     </tr>
 
     @foreach (WC()->cart->get_coupons() as $code => $coupon)
-      <tr class="cart-discount coupon-{!! esc_attr(sanitize_title($code)) !!}">
+      <tr class="cart-discount coupon-{{ esc_attr(sanitize_title($code)) }}">
         <th class="py-2">{!! wc_cart_totals_coupon_label($coupon) !!}</th>
         <td class="py-2 text-right tabular-nums">{!! wc_cart_totals_coupon_html($coupon) !!}</td>
       </tr>
@@ -63,7 +86,6 @@
 
     @if (WC()->cart->needs_shipping() && WC()->cart->show_shipping())
       @php do_action('woocommerce_review_order_before_shipping'); @endphp
-      {{-- WooCommerce imprime aquí sus propias filas <tr class="shipping"> --}}
       @php wc_cart_totals_shipping_html(); @endphp
       @php do_action('woocommerce_review_order_after_shipping'); @endphp
     @endif
@@ -78,7 +100,7 @@
     @if (wc_tax_enabled() && ! WC()->cart->display_prices_including_tax())
       @if ('itemized' === get_option('woocommerce_tax_total_display'))
         @foreach (WC()->cart->get_tax_totals() as $code => $tax)
-          <tr class="tax-rate tax-rate-{!! esc_attr(sanitize_title($code)) !!}">
+          <tr class="tax-rate tax-rate-{{ esc_attr(sanitize_title($code)) }}">
             <th class="py-2">{{ esc_html($tax->label) }}</th>
             <td class="py-2 text-right tabular-nums">{!! wp_kses_post($tax->formatted_amount) !!}</td>
           </tr>
