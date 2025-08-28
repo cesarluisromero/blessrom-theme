@@ -45,3 +45,21 @@ a {
     @apply bg-blue-600;
   }
 }
+/* Estilo select2 similar a inputs con Tailwind */
+.select2-container .select2-selection--single {
+  border-radius: 0.75rem;       /* rounded-xl */
+  border: 1px solid #cbd5e1;    /* border-slate-300 */
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  padding: 0 0.75rem;
+  background-color: #fff;
+}
+.select2-container .select2-selection--single .select2-selection__rendered {
+  line-height: 42px;
+  padding-left: 0;
+}
+.select2-container .select2-selection--single .select2-selection__arrow {
+  height: 42px;
+  right: 0.5rem;
+}

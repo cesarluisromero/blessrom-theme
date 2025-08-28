@@ -4,12 +4,12 @@
     "src": "editor.deps.json"
   },
   "resources/scripts/app.js": {
-    "file": "assets/app-Bo0gO9vg.js",
+    "file": "assets/app-Bw-GY433.js",
     "name": "app",
     "src": "resources/scripts/app.js",
     "isEntry": true,
     "css": [
-      "assets/app-Bk-gV6Wo.css"
+      "assets/app-xwzUkyAI.css"
     ]
   },
   "resources/scripts/editor.js": {
@@ -19,7 +19,7 @@
     "isEntry": true
   },
   "resources/styles/app.css": {
-    "file": "assets/app-Dt41Knla.css",
+    "file": "assets/app-DGjRX9Ms.css",
     "src": "resources/styles/app.css",
     "isEntry": true
   },
