@@ -504,3 +504,13 @@ add_filter('gettext', function($translated, $text, $domain){
   }
   return $translated;
 }, 10, 3);
+
+
+add_filter('woocommerce_order_button_html', function ($html) {
+  // Inserta tus clases Tailwind después de "button alt"
+  return preg_replace(
+    '/class="button([^"]*)"/',
+    'class="button$1 w-full rounded-xl px-4 py-3 bg-blue-600 text-white font-semibold shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"',
+    $html
+  );
+});
