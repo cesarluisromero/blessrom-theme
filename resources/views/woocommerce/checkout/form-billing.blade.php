@@ -32,13 +32,7 @@
       @endif
     </div>
 
-    {{-- Empresa (full) --}}
-    @if(isset($fields['billing_company']))
-      @php woocommerce_form_field('billing_company', $fields['billing_company'], $checkout->get_value('billing_company')); @endphp
-      @unset($fields['billing_company'])
-    @endif
-
-	{{-- DNI/RUC (si existe el campo) --}}
+		{{-- DNI/RUC (si existe el campo) --}}
 	@php $fields = $checkout->get_checkout_fields('billing') ?: []; @endphp
 	@if(isset($fields['billing_document']))
 	@php
@@ -51,6 +45,8 @@
 	@endphp
 	@endif
 
+
+	
 
     {{-- País (full) --}}
     @if(isset($fields['billing_country']))
