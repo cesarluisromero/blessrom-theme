@@ -267,7 +267,7 @@ add_action('wp', function () {
 remove_action( 'woocommerce_before_checkout_form', 'woocommerce_checkout_login_form', 10 );
 
 
-<?php
+
 // Aplica clases Tailwind a TODOS los campos del checkout (billing, shipping y account).
 add_filter('woocommerce_checkout_fields', function ($fields) {
 
