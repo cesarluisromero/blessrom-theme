@@ -267,6 +267,49 @@ add_action('wp', function () {
 remove_action( 'woocommerce_before_checkout_form', 'woocommerce_checkout_login_form', 10 );
 
 
+<?php
+// Aplica clases Tailwind a TODOS los campos del checkout (billing, shipping y account).
+add_filter('woocommerce_checkout_fields', function ($fields) {
+
+  $style_input = 'w-full rounded-xl border border-slate-300 focus:border-slate-400 focus:ring-0 text-sm py-2.5 px-3 bg-white';
+  $style_label = 'block mb-1 text-sm font-medium text-slate-700';
+  $style_wrap  = 'form-row mb-4'; // Mantener "form-row" para compatibilidad Woo
+
+  foreach (['billing','shipping','account'] as $group) {
+    if (empty($fields[$group])) continue;
+
+    foreach ($fields[$group] as $key => &$field) {
+      // Wrapper <p>...</p>
+      $field['class'] = isset($field['class']) ? array_unique(array_merge((array)$field['class'], explode(' ', $style_wrap))) : explode(' ', $style_wrap);
+
+      // Label
+      $field['label_class'] = isset($field['label_class']) ? array_unique(array_merge((array)$field['label_class'], explode(' ', $style_label))) : explode(' ', $style_label);
+
+      // Inputs (input/select/textarea)
+      $inputClasses = $style_input;
+
+      // Ajustes por tipo
+      $type = $field['type'] ?? 'text';
+      if ($type === 'textarea') {
+        $inputClasses .= ' min-h-[110px]';
+      }
+      if ($type === 'checkbox') {
+        // Para checkbox: no uses w-full
+        $inputClasses = 'h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-0';
+      }
+      if ($type === 'select') {
+        // Woo usa Select2, el select original queda oculto, pero igual dejamos clases
+        $inputClasses .= ' pr-8';
+      }
+
+      $field['input_class'] = isset($field['input_class'])
+        ? array_unique(array_merge((array)$field['input_class'], explode(' ', $inputClasses)))
+        : explode(' ', $inputClasses);
+    }
+  }
+
+  return $fields;
+}, 20);
 
 
 

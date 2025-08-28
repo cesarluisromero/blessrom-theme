@@ -11,7 +11,6 @@
 
 <div class="woocommerce-billing-fields">
   @if ($ship_to_billing_only && $needs_shipping)
-  <h1 class="text-3xl font-bold text-center mb-10 text-gray-800">Esto ES</h1>
     <h3>{{ __('Billing & Shipping', 'woocommerce') }}</h3>
   @else
     <h3>{{ __('Billing details', 'woocommerce') }}</h3>
