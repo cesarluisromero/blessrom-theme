@@ -448,3 +448,59 @@ add_filter('gettext', function ($translated, $text, $domain) {
   }
   return $translated;
 }, 10, 3);
+
+
+// app/setup.php
+add_filter('woocommerce_checkout_fields', function ($fields) {
+
+  $style_input = 'w-full rounded-xl border border-slate-300 focus:border-slate-400 focus:ring-0 text-sm py-2.5 px-3 bg-white';
+  $style_label = 'block mb-1 text-sm font-medium text-slate-700';
+  $style_wrap  = 'form-row mb-4';
+
+  foreach (['billing','shipping','account','order'] as $group) { // <— añade 'order'
+    if (empty($fields[$group])) continue;
+
+    foreach ($fields[$group] as $key => &$field) {
+      // wrapper <p>
+      $field['class'] = array_values(array_unique(array_merge($field['class'] ?? [], explode(' ', $style_wrap))));
+      // label
+      $field['label_class'] = array_values(array_unique(array_merge($field['label_class'] ?? [], explode(' ', $style_label))));
+      // input / textarea
+      $inputClasses = $style_input;
+      $type = $field['type'] ?? 'text';
+      if ($type === 'textarea') $inputClasses .= ' min-h-[120px]'; // más alto para notas
+      $field['input_class'] = array_values(array_unique(array_merge($field['input_class'] ?? [], explode(' ', $inputClasses))));
+    }
+  }
+
+  return $fields;
+}, 99); // prioridad alta para que afecte también a campos agregados después
+
+
+// app/setup.php
+add_filter('woocommerce_checkout_fields', function ($fields) {
+  if (isset($fields['order']['order_comments'])) {
+    $fields['order']['order_comments']['label']       = __('Notas del pedido', 'woocommerce');
+    $fields['order']['order_comments']['placeholder'] = __('Ej.: referencia de entrega, horario preferido, indicaciones para el repartidor…', 'woocommerce');
+    $fields['order']['order_comments']['priority']    = 30; // súbelo o bájalo según dónde lo quieras
+    $fields['order']['order_comments']['custom_attributes'] = array_merge(
+      $fields['order']['order_comments']['custom_attributes'] ?? [],
+      [
+        'rows'       => '4',
+        'maxlength'  => '250',
+        // (Opcional) contador con Alpine integrado:
+        // 'x-data'     => '{len: $el.value.length, max: 250}',
+        // 'x-on:input' => 'len = $el.value.length',
+      ]
+    );
+  }
+  return $fields;
+}, 80);
+
+
+add_filter('gettext', function($translated, $text, $domain){
+  if ($domain === 'woocommerce' && ($text === 'Additional information' || $text === 'Información adicional')) {
+    return __('Notas del pedido', 'woocommerce');
+  }
+  return $translated;
+}, 10, 3);
