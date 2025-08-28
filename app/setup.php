@@ -504,73 +504,72 @@ add_action('init', function(){
   }
 });
 
+<?php
+/* Guardar el distrito en sesión cada vez que el checkout se actualiza (AJAX) */
+add_action('woocommerce_checkout_update_order_review', function($posted_data){
+    parse_str($posted_data, $data);
 
-/**
- * Códigos de distrito con envío gratis (obtenidos por nombre en la tabla br_ubigeo)
- */
-if ( ! function_exists('br_free_district_codes') ) {
+    // Ajusta el nombre del campo según uses facturación o envío
+    // Si tu select de distrito guarda el código en billing_city, déjalo así:
+    $district = '';
+    if (isset($data['shipping_city']) && $data['shipping_city'] !== '') {
+        $district = sanitize_text_field($data['shipping_city']);
+    } elseif (isset($data['billing_city'])) {
+        $district = sanitize_text_field($data['billing_city']);
+    }
+
+    WC()->session->set('br_district_code', $district);
+});
+
+/* Helper: obtener códigos de los distritos con envío gratis */
+if (!function_exists('br_free_district_codes')) {
   function br_free_district_codes(){
     static $codes = null;
     if ($codes !== null) return $codes;
 
-    global $wpdb; 
-    // Ya la tienes definida en tu setup.php
-    if ( ! function_exists('br_ubigeo_table') ) {
+    global $wpdb;
+    if (!function_exists('br_ubigeo_table')) {
       function br_ubigeo_table(){ global $wpdb; return $wpdb->prefix . 'br_ubigeo'; }
     }
-
     $t = br_ubigeo_table();
-    // Nombres que quieres con envío gratis
+
+    // Nombres que son gratis (minúsculas para comparar en SQL)
     $names = ['tarapoto','morales','banda de shilcayo','cacatachi','juan guerra'];
-
-    // Buscar por nombre (insensible a mayúsculas/minúsculas)
     $placeholders = implode(',', array_fill(0, count($names), '%s'));
-    $sql = "SELECT DISTINCT district_code 
-            FROM $t 
-            WHERE country_code='PE' AND is_active=1 
-              AND LOWER(district_name) IN ($placeholders)";
 
-    $rows = $wpdb->get_col( $wpdb->prepare($sql, $names) );
-    $codes = array_map('strval', $rows ?: []);
+    $sql = "SELECT DISTINCT district_code
+            FROM $t
+            WHERE country_code='PE' AND is_active=1
+              AND LOWER(district_name) IN ($placeholders)";
+    $rows = (array) $wpdb->get_col($wpdb->prepare($sql, $names));
+    $codes = array_map('strval', $rows);
 
     return $codes;
   }
 }
 
-/**
- * Forzar costo 0 a las tarifas de envío cuando:
- * - No hay distrito elegido (billing_city vacío), o
- * - El district_code pertenece a la “lista gratis”
- */
+/* Poner costo 0 a las tarifas cuando no hay distrito o está en la lista gratis */
 add_filter('woocommerce_package_rates', function($rates, $package){
-  if (is_admin() && ! wp_doing_ajax()) return $rates;
+    if (is_admin() && !wp_doing_ajax()) return $rates;
 
-  // Preferir “shipping city” si usas dirección de envío diferente, si no, “billing city”
-  $district_code = '';
-  if (function_exists('WC') && WC()->customer) {
-    $district_code = WC()->customer->get_shipping_city();
-    if ($district_code === '' || $district_code === null) {
-      $district_code = WC()->customer->get_billing_city();
-    }
-  }
+    $district = WC()->session ? (string) WC()->session->get('br_district_code', '') : '';
+    $free_codes = br_free_district_codes();
 
-  $free_codes = br_free_district_codes();
-  $should_be_free = ( $district_code === '' || in_array($district_code, $free_codes, true) );
+    $should_be_free = ($district === '' || in_array($district, $free_codes, true));
 
-  if ($should_be_free) {
-    foreach ($rates as $rate_id => $rate_obj) {
-      // Si tienes un método nativo “free_shipping” lo dejamos tal cual; el resto a 0
-      if ( isset($rate_obj->method_id) && $rate_obj->method_id === 'free_shipping' ) {
-        continue;
-      }
-      $rates[$rate_id]->cost = 0.0;
-      if (!empty($rates[$rate_id]->taxes) && is_array($rates[$rate_id]->taxes)) {
-        foreach ($rates[$rate_id]->taxes as $k => $v) {
-          $rates[$rate_id]->taxes[$k] = 0.0;
+    if ($should_be_free) {
+        foreach ($rates as $rate_id => $rate) {
+            // si tienes método nativo "free_shipping" lo dejamos; el resto a 0
+            if (!empty($rate->method_id) && $rate->method_id === 'free_shipping') {
+                continue;
+            }
+            $rates[$rate_id]->cost = 0.0;
+            if (!empty($rates[$rate_id]->taxes) && is_array($rates[$rate_id]->taxes)) {
+                foreach ($rates[$rate_id]->taxes as $k => $v) {
+                    $rates[$rate_id]->taxes[$k] = 0.0;
+                }
+            }
         }
-      }
     }
-  }
-
-  return $rates;
+    return $rates;
 }, 999, 2);
