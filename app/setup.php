@@ -313,7 +313,7 @@ add_filter('woocommerce_checkout_fields', function ($fields) {
 
 
 
-<?php
+
 /**
  * Campo DNI/RUC en facturación
  */
