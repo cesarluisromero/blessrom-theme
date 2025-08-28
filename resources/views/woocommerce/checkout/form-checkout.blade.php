@@ -1,3 +1,5 @@
+@extends('layouts.app')
+@section('content')
 @php
   // Asegura instancia
   $checkout = isset($checkout) && is_object($checkout) ? $checkout : WC()->checkout();
