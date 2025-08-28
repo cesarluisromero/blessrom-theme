@@ -56,10 +56,10 @@
     @php $renderField('billing_country'); @endphp
 
     {{-- Dirección --}}
-	<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    @php $renderField('billing_address_1'); @endphp
-    @php $renderField('billing_address_2'); @endphp
-	</div>
+		
+		@php $renderField('billing_address_1'); @endphp
+		
+	
 
     {{-- Ciudad / Estado / Código Postal --}}
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
