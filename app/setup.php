@@ -426,15 +426,16 @@ add_filter('woocommerce_shipping_fields', function ($fields) {
   return $fields;
 }, 20);
 
-// Cambiar solo en checkout
 add_filter('woocommerce_checkout_fields', function ($fields) {
   if (isset($fields['billing']['billing_city'])) {
     $fields['billing']['billing_city']['label']       = __('Distrito / Ciudad', 'woocommerce');
     $fields['billing']['billing_city']['placeholder'] = __('Ej. Tarapoto, Morales…', 'woocommerce');
+    // Si guardas código:
+    // $fields['billing']['billing_city']['placeholder'] = __('Código de distrito (p. ej. 06)', 'woocommerce');
   }
   if (isset($fields['shipping']['shipping_city'])) {
     $fields['shipping']['shipping_city']['label']       = __('Distrito / Ciudad', 'woocommerce');
     $fields['shipping']['shipping_city']['placeholder'] = __('Ej. Tarapoto, Morales…', 'woocommerce');
   }
   return $fields;
-}, 99);
+}, 999);
