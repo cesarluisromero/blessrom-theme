@@ -38,6 +38,20 @@
       @unset($fields['billing_company'])
     @endif
 
+	{{-- DNI/RUC (si existe el campo) --}}
+	@php $fields = $checkout->get_checkout_fields('billing') ?: []; @endphp
+	@if(isset($fields['billing_document']))
+	@php
+		woocommerce_form_field(
+		'billing_document',
+		$fields['billing_document'],
+		$checkout->get_value('billing_document')
+		);
+		unset($fields['billing_document']); // Para que no se duplique si luego haces @foreach $fields
+	@endphp
+	@endif
+
+
     {{-- País (full) --}}
     @if(isset($fields['billing_country']))
       @php woocommerce_form_field('billing_country', $fields['billing_country'], $checkout->get_value('billing_country')); @endphp

@@ -338,3 +338,55 @@ add_filter('woocommerce_checkout_fields', function ($fields) {
   return $fields;
 }, 20);
 
+//Validamos que sea DNI (8 dígitos) o RUC (11 empezando por 10/15/17/20):
+add_action('woocommerce_after_checkout_validation', function ($data, $errors) {
+  $doc = isset($data['billing_document']) ? preg_replace('/\D+/', '', $data['billing_document']) : '';
+
+  if ($doc === '') {
+    $errors->add('billing_document_empty', __('El campo DNI/RUC es obligatorio.', 'woocommerce'));
+    return;
+  }
+
+  $is_dni = (bool) preg_match('/^\d{8}$/', $doc);
+  $is_ruc = (bool) preg_match('/^(10|15|17|20)\d{9}$/', $doc);
+
+  if (!$is_dni && !$is_ruc) {
+    $errors->add('billing_document_invalid', __('Ingresa un DNI (8 dígitos) o RUC válido (11 dígitos empezando por 10/15/17/20).', 'woocommerce'));
+  }
+}, 10, 2);
+
+//Guardar en el pedido (order meta)
+add_action('woocommerce_checkout_create_order', function ($order, $data) {
+  if (!empty($data['billing_document'])) {
+    $order->update_meta_data('_billing_document', sanitize_text_field($data['billing_document']));
+  }
+}, 10, 2);
+
+// Mostrar en el admin (datos de facturación)
+add_action('woocommerce_admin_order_data_after_billing_address', function ($order) {
+  $doc = $order->get_meta('_billing_document');
+  if ($doc) {
+    echo '<p><strong>' . esc_html__('DNI/RUC', 'woocommerce') . ':</strong> ' . esc_html($doc) . '</p>';
+  }
+});
+
+// Mostrar en el email (datos de facturación)
+add_filter('woocommerce_email_order_meta_fields', function ($fields, $sent_to_admin, $order) {
+  $doc = $order->get_meta('_billing_document');
+  if ($doc) {
+    $fields['billing_document'] = [
+      'label' => __('DNI/RUC', 'woocommerce'),
+      'value' => $doc,
+    ];
+  }
+  return $fields;
+}, 10, 3);
+
+// Guardar en el perfil del cliente (user meta)
+// Cuando Woo actualiza los datos del cliente en checkout
+add_action('woocommerce_checkout_update_customer', function ($customer, $data) {
+  if (!empty($data['billing_document'])) {
+    $customer->update_meta_data('billing_document', sanitize_text_field($data['billing_document']));
+    $customer->save();
+  }
+}, 10, 2);
