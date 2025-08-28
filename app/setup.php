@@ -439,3 +439,12 @@ add_filter('woocommerce_checkout_fields', function ($fields) {
   }
   return $fields;
 }, 999);
+
+add_filter('gettext', function ($translated, $text, $domain) {
+  if ($domain === 'woocommerce') {
+    if ($text === 'Town / City' || $text === 'Población') {
+      return 'Distrito / Ciudad';
+    }
+  }
+  return $translated;
+}, 10, 3);
