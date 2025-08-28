@@ -573,3 +573,12 @@ add_filter('woocommerce_package_rates', function($rates, $package){
     }
     return $rates;
 }, 999, 2);
+// Durante el AJAX de update_order_review, usa las plantillas core de WC para payment y review-order
+add_filter('woocommerce_locate_template', function($template, $template_name, $template_path){
+  if (defined('DOING_AJAX') && DOING_AJAX && isset($_REQUEST['wc-ajax']) && $_REQUEST['wc-ajax']==='update_order_review') {
+    if (in_array($template_name, ['checkout/payment.php','checkout/review-order.php'], true)) {
+      return WC()->plugin_path() . '/templates/' . $template_name;
+    }
+  }
+  return $template;
+}, 10, 3);
