@@ -507,18 +507,19 @@ add_action('init', function(){
 
 // 1. Capturar el valor del distrito en la sesión al actualizar el checkout
 add_action('woocommerce_checkout_update_order_review', 'capturar_distrito_checkout');
+
 function capturar_distrito_checkout($posted_data) {
     // Convertir los datos posteados en un arreglo legible
     parse_str($posted_data, $datos);
     // Obtener el valor del select de distrito (sea de facturación o envío, según dónde se haya colocado)
     $distrito = '';
-    if (isset($datos['billing_distrito'])) {
-        $distrito = sanitize_text_field($datos['billing_distrito']);
-    } elseif (isset($datos['shipping_distrito'])) {
-        $distrito = sanitize_text_field($datos['shipping_distrito']);
+    if (isset($datos['billing_city'])) {
+        $distrito = sanitize_text_field($datos['billing_city']);
+    } elseif (isset($datos['shipping_city'])) {
+        $distrito = sanitize_text_field($datos['shipping_city']);
     }
     // Guardar el distrito seleccionado en la sesión para usarlo en el cálculo de envío
-    WC()->session->set('checkout_distrito', $distrito);
+    WC()->session->set('checkout_city', $distrito);
 
     // Forzar la recalculación de las tarifas de envío al cambiar el distrito
     foreach (WC()->cart->get_shipping_packages() as $package_key => $package) {
@@ -536,7 +537,7 @@ function capturar_distrito_checkout($posted_data) {
 add_filter('woocommerce_package_rates', 'enviar_gratis_si_distrito_especifico', 100, 2);
 function enviar_gratis_si_distrito_especifico($rates, $package) {
     // Obtener el distrito desde la sesión
-    $distrito = WC()->session->get('checkout_distrito');
+    $distrito = WC()->session->get('checkout_city', '');
     $free_districts = array('Tarapoto','Morales','Banda de Shilcayo','Cacatachi','Juan Guerra');
     if (empty($distrito) || in_array($distrito, $free_districts)) {
         foreach ($rates as $rate_key => $rate) {
