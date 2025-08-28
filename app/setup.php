@@ -330,87 +330,94 @@ add_filter('woocommerce_checkout_fields', function ($fields) {
 });
 
 
-/* ============================================================
- * UBIGEO desde BD: Región -> Provincia -> Distrito (checkout)
- * Requiere tabla {prefix}br_ubigeo con columnas:
- * region_code, province_code, district_code, region_name, province_name, district_name, ubigeo_code, country_code, is_active
- * ============================================================ */
+/* ========= UBIGEO desde BD (Región -> Provincia -> Distrito) ========= */
 
-/** Helper: nombre real de la tabla con prefijo */
-function br_ubigeo_table() { global $wpdb; return $wpdb->prefix . 'wp_br_ubigeo'; }
+/** Detecta el nombre real de la tabla (prefijo dinámico o wp_ literal) */
+function br_ubigeo_table() {
+  global $wpdb;
+  $candidates = [
+    $wpdb->prefix . 'br_ubigeo',
+    'wp_br_ubigeo',
+  ];
+  foreach ($candidates as $t) {
+    $found = $wpdb->get_var( $wpdb->prepare("SHOW TABLES LIKE %s", $t) );
+    if ($found === $t) return $t;
+  }
+  return $wpdb->prefix . 'br_ubigeo';
+}
 
-/* -------- AJAX: Regiones -------- */
+/* ---------- Endpoints AJAX ---------- */
 add_action('wp_ajax_br_regions', function () {
   global $wpdb; $t = br_ubigeo_table();
   $rows = $wpdb->get_results("SELECT DISTINCT region_code, region_name FROM $t WHERE country_code='PE' AND is_active=1 ORDER BY region_name ASC", ARRAY_A);
-  \wp_send_json_success(['regions' => $rows ?: []]);
+  wp_send_json_success(['regions' => $rows ?: []]);
 });
 add_action('wp_ajax_nopriv_br_regions', function () { do_action('wp_ajax_br_regions'); });
 
-/* -------- AJAX: Provincias por región -------- */
 add_action('wp_ajax_br_provinces', function () {
   global $wpdb; $t = br_ubigeo_table();
-  $rc = isset($_POST['region_code']) ? \sanitize_text_field(\wp_unslash($_POST['region_code'])) : '';
+  $rc = isset($_POST['region_code']) ? sanitize_text_field(wp_unslash($_POST['region_code'])) : '';
   $rows = $wpdb->get_results($wpdb->prepare(
-    "SELECT DISTINCT province_code, province_name FROM $t
-     WHERE country_code='PE' AND is_active=1 AND region_code=%s ORDER BY province_name ASC", $rc
+    "SELECT DISTINCT province_code, province_name FROM $t WHERE country_code='PE' AND is_active=1 AND region_code=%s ORDER BY province_name ASC", $rc
   ), ARRAY_A);
-  \wp_send_json_success(['provinces' => $rows ?: []]);
+  wp_send_json_success(['provinces' => $rows ?: []]);
 });
 add_action('wp_ajax_nopriv_br_provinces', function () { do_action('wp_ajax_br_provinces'); });
 
-/* -------- AJAX: Distritos por región + provincia -------- */
 add_action('wp_ajax_br_districts', function () {
   global $wpdb; $t = br_ubigeo_table();
-  $rc = isset($_POST['region_code']) ? \sanitize_text_field(\wp_unslash($_POST['region_code'])) : '';
-  $pc = isset($_POST['province_code']) ? \sanitize_text_field(\wp_unslash($_POST['province_code'])) : '';
+  $rc = isset($_POST['region_code']) ? sanitize_text_field(wp_unslash($_POST['region_code'])) : '';
+  $pc = isset($_POST['province_code']) ? sanitize_text_field(wp_unslash($_POST['province_code'])) : '';
   $rows = $wpdb->get_results($wpdb->prepare(
-    "SELECT DISTINCT district_code, district_name, ubigeo_code FROM $t
-     WHERE country_code='PE' AND is_active=1 AND region_code=%s AND province_code=%s
-     ORDER BY district_name ASC", $rc, $pc
+    "SELECT DISTINCT district_code, district_name, ubigeo_code FROM $t WHERE country_code='PE' AND is_active=1 AND region_code=%s AND province_code=%s ORDER BY district_name ASC", $rc, $pc
   ), ARRAY_A);
-  \wp_send_json_success(['districts' => $rows ?: []]);
+  wp_send_json_success(['districts' => $rows ?: []]);
 });
 add_action('wp_ajax_nopriv_br_districts', function () { do_action('wp_ajax_br_districts'); });
 
-/* -------- Ajustar campos del checkout a SELECT con placeholder -------- */
+/* ---------- Cambia campos a SELECT y PRE-POBLA REGIONES desde BD ---------- */
 add_filter('woocommerce_checkout_fields', function ($fields) {
-  // Región/Departamento
+  global $wpdb; $t = br_ubigeo_table();
+
+  // Región
   $fields['billing']['billing_state']['type']      = 'select';
-  $fields['billing']['billing_state']['label']     = __('Región / Departamento *', 'theme');
+  $fields['billing']['billing_state']['label']     = __('Región / Departamento *','theme');
   $fields['billing']['billing_state']['required']  = true;
   $fields['billing']['billing_state']['priority']  = 60;
-  $fields['billing']['billing_state']['options']   = ['' => __('Seleccione su región', 'theme')];
+  $regions = $wpdb->get_results("SELECT DISTINCT region_code, region_name FROM $t WHERE country_code='PE' AND is_active=1 ORDER BY region_name ASC", ARRAY_A);
+  $opts = ['' => __('Seleccione su región','theme')];
+  foreach ($regions as $r) { $opts[$r['region_code']] = $r['region_name']; }
+  $fields['billing']['billing_state']['options'] = $opts;
 
-  // Provincia (nuevo campo)
+  // Provincia
   $fields['billing']['billing_province'] = [
-    'type'       => 'select',
-    'label'      => __('Provincia *', 'theme'),
-    'required'   => true,
-    'class'      => ['form-row-wide'],
-    'priority'   => 61,
-    'options'    => ['' => __('Seleccione su provincia', 'theme')],
+    'type'      => 'select',
+    'label'     => __('Provincia *','theme'),
+    'required'  => true,
+    'class'     => ['form-row-wide'],
+    'priority'  => 61,
+    'options'   => ['' => __('Seleccione su provincia','theme')],
   ];
 
-  // Distrito (usamos billing_city como select)
+  // Distrito
   $fields['billing']['billing_city']['type']      = 'select';
-  $fields['billing']['billing_city']['label']     = __('Distrito *', 'theme');
+  $fields['billing']['billing_city']['label']     = __('Distrito *','theme');
   $fields['billing']['billing_city']['required']  = true;
   $fields['billing']['billing_city']['priority']  = 62;
-  $fields['billing']['billing_city']['options']   = ['' => __('Seleccione su distrito', 'theme')];
+  $fields['billing']['billing_city']['options']   = ['' => __('Seleccione su distrito','theme')];
 
   return $fields;
 }, 20);
 
-/* -------- Validación: combinación válida en BD -------- */
+/* ---------- Validación contra BD ---------- */
 add_action('woocommerce_after_checkout_validation', function ($data, $errors) {
-  $rc = isset($data['billing_state'])    ? \sanitize_text_field($data['billing_state'])    : '';
-  $pc = isset($data['billing_province']) ? \sanitize_text_field($data['billing_province']) : '';
-  $dc = isset($data['billing_city'])     ? \sanitize_text_field($data['billing_city'])     : '';
+  $rc = isset($data['billing_state'])    ? sanitize_text_field($data['billing_state'])    : '';
+  $pc = isset($data['billing_province']) ? sanitize_text_field($data['billing_province']) : '';
+  $dc = isset($data['billing_city'])     ? sanitize_text_field($data['billing_city'])     : '';
 
-  if ($rc === '') $errors->add('billing_state', __('Selecciona tu región.', 'theme'));
-  if ($pc === '') $errors->add('billing_province', __('Selecciona tu provincia.', 'theme'));
-  if ($dc === '') $errors->add('billing_city', __('Selecciona tu distrito.', 'theme'));
+  if ($rc === '') $errors->add('billing_state', __('Selecciona tu región.','theme'));
+  if ($pc === '') $errors->add('billing_province', __('Selecciona tu provincia.','theme'));
+  if ($dc === '') $errors->add('billing_city', __('Selecciona tu distrito.','theme'));
 
   if ($rc && $pc && $dc) {
     global $wpdb; $t = br_ubigeo_table();
@@ -418,15 +425,15 @@ add_action('woocommerce_after_checkout_validation', function ($data, $errors) {
       "SELECT COUNT(*) FROM $t WHERE country_code='PE' AND is_active=1 AND region_code=%s AND province_code=%s AND district_code=%s",
       $rc, $pc, $dc
     ));
-    if (!$ok) $errors->add('billing_city', __('La combinación Región/Provincia/Distrito no es válida.', 'theme'));
+    if (!$ok) $errors->add('billing_city', __('La combinación Región/Provincia/Distrito no es válida.','theme'));
   }
 }, 10, 2);
 
-/* -------- Guardar nombres legibles + ubigeo en el pedido -------- */
+/* ---------- Guardado de nombres y ubigeo en el pedido ---------- */
 add_action('woocommerce_checkout_create_order', function ($order, $data) {
-  $rc = isset($data['billing_state'])    ? \sanitize_text_field($data['billing_state'])    : '';
-  $pc = isset($data['billing_province']) ? \sanitize_text_field($data['billing_province']) : '';
-  $dc = isset($data['billing_city'])     ? \sanitize_text_field($data['billing_city'])     : '';
+  $rc = isset($data['billing_state'])    ? sanitize_text_field($data['billing_state'])    : '';
+  $pc = isset($data['billing_province']) ? sanitize_text_field($data['billing_province']) : '';
+  $dc = isset($data['billing_city'])     ? sanitize_text_field($data['billing_city'])     : '';
   if (!$rc || !$pc || !$dc) return;
 
   global $wpdb; $t = br_ubigeo_table();
@@ -437,65 +444,47 @@ add_action('woocommerce_checkout_create_order', function ($order, $data) {
     $rc, $pc, $dc
   ));
   if ($row) {
-    $order->update_meta_data('_billing_state_name',    $row->region_name);
-    $order->update_meta_data('_billing_province',      $row->province_name); // mantén compatibilidad
-    $order->update_meta_data('_billing_city_name',     $row->district_name);
-    $order->update_meta_data('_billing_ubigeo',        $row->ubigeo_code);
+    $order->update_meta_data('_billing_state_name', $row->region_name);
+    $order->update_meta_data('_billing_province',   $row->province_name);
+    $order->update_meta_data('_billing_city_name',  $row->district_name);
+    $order->update_meta_data('_billing_ubigeo',     $row->ubigeo_code);
   }
 }, 10, 2);
 
-/* -------- JS: poblar selects desde AJAX y encadenar -------- */
+/* ---------- JS para provincias/distritos (AJAX) + logs en consola ---------- */
 add_action('wp_footer', function () {
-  if (!\is_checkout() || \is_wc_endpoint_url('order-received')) return;
-  $ajax = \esc_url(\admin_url('admin-ajax.php'));
+  if (!is_checkout() || is_wc_endpoint_url('order-received')) return;
+  $ajax = esc_url(admin_url('admin-ajax.php'));
   echo <<<HTML
 <script>
 (function(){
-  if (!document.body.classList.contains('woocommerce-checkout')) return;
   var $ = window.jQuery || window.$; if(!$) return;
-
-  var \$region   = $('#billing_state');    // value: region_code (CCDD)
-  var \$province = $('#billing_province'); // value: province_code (CCPP)
-  var \$district = $('#billing_city');     // value: district_code (CCDI)
-  var ajaxUrl = '{$ajax}';
-
+  var \$region = $('#billing_state'), \$province = $('#billing_province'), \$district = $('#billing_city');
   function reset(\$el, ph){ \$el.empty().append(new Option(ph, '', true, false)); }
-  function add(\$el, arr, textKey, valKey){ arr.forEach(function(it){ \$el.append(new Option(it[textKey], it[valKey])); }); }
+  function add(\$el, arr, textKey, valKey){ (arr||[]).forEach(function(it){ \$el.append(new Option(it[textKey], it[valKey])); }); }
   function upd(){ $('body').trigger('update_checkout'); }
 
-  function loadRegions(){
-    reset(\$region,'Seleccione su región');
-    return $.post(ajaxUrl,{action:'br_regions'}).done(function(r){
-      if(r && r.success){ add(\$region, r.data.regions, 'region_name', 'region_code'); }
-      var prev = \$region.attr('value') || \$region.data('value') || \$region.val();
-      if(prev) \$region.val(prev);
-    });
-  }
   function loadProvinces(rc){
     reset(\$province,'Seleccione su provincia'); reset(\$district,'Seleccione su distrito');
     if(!rc) return $.Deferred().resolve().promise();
-    return $.post(ajaxUrl,{action:'br_provinces', region_code: rc}).done(function(r){
-      if(r && r.success){ add(\$province, r.data.provinces, 'province_name', 'province_code'); }
-      var prev = \$province.attr('value') || \$province.data('value') || \$province.val();
-      if(prev) \$province.val(prev);
-    });
+    return $.post('{$ajax}', {action:'br_provinces', region_code: rc}).done(function(r){
+      if(!r || !r.success){ console.error('[UBIGEO] br_provinces error', r); return; }
+      add(\$province, r.data.provinces, 'province_name', 'province_code');
+    }).fail(function(x){ console.error('[UBIGEO] br_provinces FAIL', x.status); });
   }
   function loadDistricts(rc, pc){
     reset(\$district,'Seleccione su distrito');
     if(!rc || !pc) return $.Deferred().resolve().promise();
-    return $.post(ajaxUrl,{action:'br_districts', region_code: rc, province_code: pc}).done(function(r){
-      if(r && r.success){ add(\$district, r.data.districts, 'district_name', 'district_code'); }
-      var prev = \$district.attr('value') || \$district.data('value') || \$district.val();
-      if(prev) \$district.val(prev);
-    });
+    return $.post('{$ajax}', {action:'br_districts', region_code: rc, province_code: pc}).done(function(r){
+      if(!r || !r.success){ console.error('[UBIGEO] br_districts error', r); return; }
+      add(\$district, r.data.districts, 'district_name', 'district_code');
+    }).fail(function(x){ console.error('[UBIGEO] br_districts FAIL', x.status); });
   }
 
-  // Carga inicial (respeta valores guardados si existen)
-  $.when(loadRegions()).then(function(){
-    return loadProvinces(\$region.val());
-  }).then(function(){
-    return loadDistricts(\$region.val(), \$province.val());
-  }).then(upd);
+  // Carga inicial: regiones ya vienen del servidor; solo completa niveles inferiores si hay valores previos
+  if (\$region.val()) {
+    $.when(loadProvinces(\$region.val())).then(function(){ return loadDistricts(\$region.val(), \$province.val()); }).then(upd);
+  }
 
   // Cascada
   \$region.on('change', function(){ $.when(loadProvinces(this.value)).then(upd); });
@@ -504,7 +493,16 @@ add_action('wp_footer', function () {
 })();
 </script>
 HTML;
-}, 20);
+}, 25);
+
+/* ---------- PING de prueba (abre /?br_ubigeo_ping=1) ---------- */
+add_action('init', function(){
+  if (isset($_GET['br_ubigeo_ping'])) {
+    global $wpdb; $t = br_ubigeo_table();
+    $n = (int) $wpdb->get_var("SELECT COUNT(*) FROM $t");
+    wp_send_json_success(['table'=>$t,'rows'=>$n,'sample'=>$wpdb->get_results("SELECT region_code,region_name FROM $t GROUP BY region_code,region_name ORDER BY region_name LIMIT 5", ARRAY_A)]);
+  }
+});
 
 
 
