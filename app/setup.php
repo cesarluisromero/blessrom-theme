@@ -507,6 +507,109 @@ add_action('init', function(){
 
 
 
+/* ============================================================
+ * Envío = 0 cuando no hay distrito o para distritos específicos
+ * (Tarapoto, Morales, Banda de Shilcayo, Cacatachi, Juan Guerra)
+ * ============================================================ */
+
+/** normaliza texto (para comparar sin tildes/mayúsculas) */
+function br_norm($s){
+  $s = is_string($s) ? $s : '';
+  $s = remove_accents($s);
+  $s = strtolower(trim($s));
+  $s = preg_replace('~\s+~',' ',$s);
+  return $s;
+}
+
+/** lista blanca de distritos con envío gratis (normalizados) */
+function br_free_districts(){
+  static $free = null;
+  if ($free === null) {
+    $free = array_map('br_norm', [
+      'Tarapoto', 'Morales', 'Banda de Shilcayo', 'Cacatachi', 'Juan Guerra',
+    ]);
+  }
+  return $free;
+}
+function br_is_free_district_name($name){
+  return in_array(br_norm($name), br_free_districts(), true);
+}
+
+/* --- Guarda en sesión el nombre del distrito seleccionado (desde JS) --- */
+add_action('wp_ajax_br_set_selected_district', function(){
+  $name = isset($_POST['district_name']) ? wp_unslash($_POST['district_name']) : '';
+  WC()->session && WC()->session->set('br_selected_district_name', sanitize_text_field($name));
+  wp_send_json_success();
+});
+add_action('wp_ajax_nopriv_br_set_selected_district', function(){ do_action('wp_ajax_br_set_selected_district'); });
+
+/* --- Cero costo de envío según regla --- */
+add_filter('woocommerce_package_rates', function($rates, $package){
+
+  // Solo en checkout (no en página de gracias)
+  if ( ! is_checkout() || is_wc_endpoint_url('order-received') ) {
+    return $rates;
+  }
+
+  // 1) Recuperar nombre de distrito desde sesión (lo pone el JS)
+  $selected_name = WC()->session ? WC()->session->get('br_selected_district_name') : '';
+
+  // 2) Si NO hay distrito -> envío = 0
+  $make_free = false;
+  if ($selected_name === '' || $selected_name === null) {
+    $make_free = true;
+  } else {
+    // 3) Si está en lista blanca -> envío = 0
+    if (br_is_free_district_name($selected_name)) {
+      $make_free = true;
+    }
+  }
+
+  if ($make_free) {
+    foreach ($rates as $rate_id => $rate) {
+      // poner costo a 0
+      $rates[$rate_id]->set_cost(0);
+
+      // poner impuestos de envío a 0 (si los hubiera)
+      $taxes = $rates[$rate_id]->get_taxes();
+      if (is_array($taxes) && !empty($taxes)) {
+        $taxes_zero = array_fill_keys(array_keys($taxes), 0.0);
+        $rates[$rate_id]->set_taxes($taxes_zero);
+      }
+    }
+  }
+
+  return $rates;
+}, 9999, 2);
+
+/* --- JS: cuando cambia el select de distrito, guardar el NOMBRE en sesión y recalcular checkout --- */
+add_action('wp_footer', function () {
+  if (!is_checkout() || is_wc_endpoint_url('order-received')) return;
+  $ajax = esc_url(admin_url('admin-ajax.php'));
+  echo <<<HTML
+<script>
+(function(){
+  var $ = window.jQuery || window.$; if(!$) return;
+  var \$district = $('#billing_city'); // tu select de distrito (value=CCDI, texto=nombre)
+  function sendDistrictName(){
+    if (!\$district.length) return;
+    var name = \$district.find('option:selected').text() || '';
+    $.post('{$ajax}', { action:'br_set_selected_district', district_name: name }, function(){
+      $('body').trigger('update_checkout'); // recalcula tarifas
+    });
+  }
+  // inicial (por si ya hay algo seleccionado)
+  $(document).ready(sendDistrictName);
+  // cuando cambia el distrito
+  $(document).on('change', '#billing_city', sendDistrictName);
+  // si tu JS carga distritos por AJAX, reintenta después
+  $(document.body).on('updated_checkout', function(){
+    // opcional: podrías volver a mandar si quieres asegurar consistencia
+  });
+})();
+</script>
+HTML;
+}, 30);
 
 
 
