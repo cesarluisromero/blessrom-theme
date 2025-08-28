@@ -508,108 +508,87 @@ add_action('init', function(){
 
 
 /* ============================================================
- * Envío = 0 cuando no hay distrito o para distritos específicos
+ * ENVÍO GRATIS: si no hay distrito o si está en la lista blanca
  * (Tarapoto, Morales, Banda de Shilcayo, Cacatachi, Juan Guerra)
  * ============================================================ */
 
-/** normaliza texto (para comparar sin tildes/mayúsculas) */
-function br_norm($s){
-  $s = is_string($s) ? $s : '';
-  $s = remove_accents($s);
-  $s = strtolower(trim($s));
-  $s = preg_replace('~\s+~',' ',$s);
-  return $s;
+/** Tabla ubigeo con prefijo dinámico */
+function br_ubigeo_table(){ global $wpdb; return $wpdb->prefix . 'br_ubigeo'; }
+
+/** Ubigeos con envío gratis (buscados en BD por nombre) */
+function br_free_ubigeo_codes(){
+  static $codes = null;
+  if ($codes !== null) return $codes;
+
+  global $wpdb; $t = br_ubigeo_table();
+
+  // Normaliza nombres tal como están en tu tabla (title case)
+  $names = ['Tarapoto','Morales','Banda De Shilcayo','Cacatachi','Juan Guerra'];
+
+  // Limita a San Martín para evitar homónimos
+  $rowset = $wpdb->get_col(
+    $wpdb->prepare(
+      "SELECT DISTINCT ubigeo_code
+       FROM $t
+       WHERE country_code='PE' AND is_active=1
+         AND region_name = %s      /* San Martín */
+         AND district_name IN (" . implode(',', array_fill(0, count($names), '%s')) . ")",
+      array_merge(['San Martín'], $names)
+    )
+  );
+
+  // Fallback duro (por si no encontró en BD)
+  if (empty($rowset)) $rowset = ['220901','220902','220903','220904','220905'];
+
+  return $codes = array_values(array_unique(array_map('strval',$rowset)));
 }
 
-/** lista blanca de distritos con envío gratis (normalizados) */
-function br_free_districts(){
-  static $free = null;
-  if ($free === null) {
-    $free = array_map('br_norm', [
-      'Tarapoto', 'Morales', 'Banda de Shilcayo', 'Cacatachi', 'Juan Guerra',
-    ]);
+/**
+ * Captura los valores del checkout en cada refresh y calcula el ubigeo (CCDD+CCPP+CCDI).
+ * WooCommerce nos pasa todo en $post_data (querystring).
+ */
+add_action('woocommerce_checkout_update_order_review', function($post_data){
+  parse_str($post_data, $data);
+
+  $rc = isset($data['billing_state'])    ? sanitize_text_field($data['billing_state'])    : '';
+  $pc = isset($data['billing_province']) ? sanitize_text_field($data['billing_province']) : '';
+  $dc = isset($data['billing_city'])     ? sanitize_text_field($data['billing_city'])     : '';
+
+  $ub = ($rc && $pc && $dc) ? ($rc.$pc.$dc) : '';
+  if (WC()->session) {
+    WC()->session->set('br_ubigeo_cur', $ub);
+    WC()->session->set('br_no_district', empty($dc) ? '1' : '0');
   }
-  return $free;
-}
-function br_is_free_district_name($name){
-  return in_array(br_norm($name), br_free_districts(), true);
-}
+}, 10);
 
-/* --- Guarda en sesión el nombre del distrito seleccionado (desde JS) --- */
-add_action('wp_ajax_br_set_selected_district', function(){
-  $name = isset($_POST['district_name']) ? wp_unslash($_POST['district_name']) : '';
-  WC()->session && WC()->session->set('br_selected_district_name', sanitize_text_field($name));
-  wp_send_json_success();
-});
-add_action('wp_ajax_nopriv_br_set_selected_district', function(){ do_action('wp_ajax_br_set_selected_district'); });
-
-/* --- Cero costo de envío según regla --- */
+/**
+ * Cero costo de envío cuando:
+ *  - no hay distrito, o
+ *  - el ubigeo está en la lista blanca.
+ */
 add_filter('woocommerce_package_rates', function($rates, $package){
+  if (is_wc_endpoint_url('order-received')) return $rates; // no tocar en "gracias"
 
-  // Solo en checkout (no en página de gracias)
-  if ( ! is_checkout() || is_wc_endpoint_url('order-received') ) {
-    return $rates;
-  }
+  $no_district = WC()->session ? WC()->session->get('br_no_district') : '1';
+  $ub          = WC()->session ? WC()->session->get('br_ubigeo_cur') : '';
 
-  // 1) Recuperar nombre de distrito desde sesión (lo pone el JS)
-  $selected_name = WC()->session ? WC()->session->get('br_selected_district_name') : '';
+  $free = ($no_district === '1') || ($ub && in_array($ub, br_free_ubigeo_codes(), true));
 
-  // 2) Si NO hay distrito -> envío = 0
-  $make_free = false;
-  if ($selected_name === '' || $selected_name === null) {
-    $make_free = true;
-  } else {
-    // 3) Si está en lista blanca -> envío = 0
-    if (br_is_free_district_name($selected_name)) {
-      $make_free = true;
-    }
-  }
-
-  if ($make_free) {
-    foreach ($rates as $rate_id => $rate) {
-      // poner costo a 0
-      $rates[$rate_id]->set_cost(0);
-
-      // poner impuestos de envío a 0 (si los hubiera)
-      $taxes = $rates[$rate_id]->get_taxes();
-      if (is_array($taxes) && !empty($taxes)) {
-        $taxes_zero = array_fill_keys(array_keys($taxes), 0.0);
-        $rates[$rate_id]->set_taxes($taxes_zero);
+  if ($free) {
+    foreach ($rates as $id => $rate) {
+      if (is_object($rate) && is_callable([$rate,'set_cost'])) {
+        $rate->set_cost(0);
+        // Quita impuestos de envío con la forma más segura
+        if (is_callable([$rate,'set_taxes'])) $rate->set_taxes([]);
+      } else {
+        // compatibilidad rara (no debería ocurrir)
+        $rates[$id]->cost  = 0;
+        $rates[$id]->taxes = [];
       }
     }
   }
-
   return $rates;
 }, 9999, 2);
-
-/* --- JS: cuando cambia el select de distrito, guardar el NOMBRE en sesión y recalcular checkout --- */
-add_action('wp_footer', function () {
-  if (!is_checkout() || is_wc_endpoint_url('order-received')) return;
-  $ajax = esc_url(admin_url('admin-ajax.php'));
-  echo <<<HTML
-<script>
-(function(){
-  var $ = window.jQuery || window.$; if(!$) return;
-  var \$district = $('#billing_city'); // tu select de distrito (value=CCDI, texto=nombre)
-  function sendDistrictName(){
-    if (!\$district.length) return;
-    var name = \$district.find('option:selected').text() || '';
-    $.post('{$ajax}', { action:'br_set_selected_district', district_name: name }, function(){
-      $('body').trigger('update_checkout'); // recalcula tarifas
-    });
-  }
-  // inicial (por si ya hay algo seleccionado)
-  $(document).ready(sendDistrictName);
-  // cuando cambia el distrito
-  $(document).on('change', '#billing_city', sendDistrictName);
-  // si tu JS carga distritos por AJAX, reintenta después
-  $(document.body).on('updated_checkout', function(){
-    // opcional: podrías volver a mandar si quieres asegurar consistencia
-  });
-})();
-</script>
-HTML;
-}, 30);
 
 
 
