@@ -309,7 +309,7 @@ add_filter('woocommerce_checkout_fields', function ($fields) {
   }
 
   return $fields;
-}, 20);
+}, 99);
 
 
 
