@@ -313,4 +313,28 @@ add_filter('woocommerce_checkout_fields', function ($fields) {
 
 
 
+<?php
+/**
+ * Campo DNI/RUC en facturación
+ */
+add_filter('woocommerce_checkout_fields', function ($fields) {
+  // Define el nuevo campo
+  $fields['billing']['billing_document'] = [
+    'type'        => 'text',
+    'label'       => __('DNI / RUC', 'woocommerce'),
+    'placeholder' => __('Ingresa tu DNI (8) o RUC (11)', 'woocommerce'),
+    'required'    => true,
+    'class'       => ['form-row-wide'], // Woo necesita "form-row-*"
+    'priority'    => 82,                // Ubicación relativa en el bloque de billing
+    // Atributos del <input>
+    'custom_attributes' => [
+      'maxlength'   => '11',
+      'inputmode'   => 'numeric',
+      'autocomplete'=> 'off',
+      'pattern'     => '[0-9]{8}|(10|15|17|20)[0-9]{9}', // 8 dígitos (DNI) o 11 empezando por 10/15/17/20 (RUC)
+    ],
+  ];
+
+  return $fields;
+}, 20);
 
