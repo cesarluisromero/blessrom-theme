@@ -514,3 +514,7 @@ add_filter('woocommerce_order_button_html', function ($html) {
     $html
   );
 });
+
+add_filter('woocommerce_thankyou_order_received_text', function($msg, $order){
+  return __('¡Gracias! Tu pedido fue recibido.', 'tu-textdomain');
+}, 10, 2);
