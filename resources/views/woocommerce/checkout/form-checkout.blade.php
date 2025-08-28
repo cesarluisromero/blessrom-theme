@@ -25,7 +25,7 @@
 	enctype="multipart/form-data"
 	aria-label="{{ __('Checkout', 'woocommerce') }}"
 	>
-		<h1 class="text-3xl font-bold text-center mb-10 text-gray-800">Finalizar compra</h1>
+		
 		<div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10"> 
 			@php if ($checkout->get_checkout_fields()) do_action('woocommerce_checkout_before_customer_details'); @endphp
 			<div class="bg-gray-50 rounded-xl shadow p-4 md:p-6">
