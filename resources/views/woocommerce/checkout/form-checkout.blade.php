@@ -40,7 +40,7 @@
 					@php do_action('woocommerce_checkout_after_customer_details'); @endphp
 				@endif
 			</div>
-			<div class="bg-gray-50 rounded-xl shadow p-4 md:p-6 w-full"> 
+			<div x-data="{ loading: false }" class="bg-gray-50 rounded-xl shadow p-4 md:p-6 w-full"> 
 				@php do_action('woocommerce_checkout_before_order_review_heading'); @endphp
 
 				<h3 id="order_review_heading">{{ __('Your order', 'woocommerce') }}</h3>
