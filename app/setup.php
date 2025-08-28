@@ -390,3 +390,38 @@ add_action('woocommerce_checkout_update_customer', function ($customer, $data) {
     $customer->save();
   }
 }, 10, 2);
+
+
+// Quitar "Nombre de empresa" y "Dirección 2" del checkout (FACTURACIÓN)
+add_filter('woocommerce_checkout_fields', function ($fields) {
+
+  // elimina por completo (no se renderizan ni se validan)
+  unset($fields['billing']['billing_company']);
+  unset($fields['billing']['billing_address_2']);
+
+  return $fields;
+}, 20);
+
+// Quitar también en el formulario de edición de dirección de la cuenta
+add_filter('woocommerce_billing_fields', function ($fields) {
+
+  unset($fields['billing_company']);
+  unset($fields['billing_address_2']);
+  // unset($fields['billing_address_2']);
+
+  return $fields;
+}, 20);
+
+add_filter('woocommerce_checkout_fields', function ($fields) {
+  unset($fields['shipping']['shipping_company']);
+  unset($fields['shipping']['shipping_address_2']);
+  // unset($fields['shipping']['shipping_address_2']);
+  return $fields;
+}, 20);
+
+add_filter('woocommerce_shipping_fields', function ($fields) {
+  unset($fields['shipping_company']);
+  unset($fields['shipping_address_2']);
+  // unset($fields['shipping_address_2']);
+  return $fields;
+}, 20);

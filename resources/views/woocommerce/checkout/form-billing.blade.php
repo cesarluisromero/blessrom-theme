@@ -41,9 +41,6 @@
       @php $renderField('billing_last_name');  @endphp
     </div>
 
-    {{-- Empresa --}}
-    @php $renderField('billing_company'); @endphp
-
     {{-- ⚠️ AQUÍ donde quieras: DNI/RUC --}}
     @php
       // Puedes forzar que ocupe una columna o dos:
@@ -57,7 +54,7 @@
 
     {{-- Dirección --}}
 		
-		@php $renderField('billing_address_1'); @endphp
+	@php $renderField('billing_address_1'); @endphp
 		
 	
 
