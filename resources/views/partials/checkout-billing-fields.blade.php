@@ -35,7 +35,7 @@
     {{-- Provincia / Departamento --}}
     {{-- Región / Departamento --}}
 <div>
-  <label for="billing_state" class="block text-sm font-medium text-gray-700 mb-1">Región / Departamento *</label>
+  <label for="billing_state" class="block text-sm font-medium text-gray-700 mb-1"></label>
   {!! woocommerce_form_field('billing_state', $checkout->get_checkout_fields()['billing']['billing_state'], $checkout->get_value('billing_state')) !!}
 </div>
 
