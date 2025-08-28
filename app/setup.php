@@ -504,108 +504,54 @@ add_action('init', function(){
   }
 });
 
+<?php
+// 1. Capturar el valor del distrito en la sesión al actualizar el checkout
+add_action('woocommerce_checkout_update_order_review', 'capturar_distrito_checkout');
+function capturar_distrito_checkout($posted_data) {
+    // Convertir los datos posteados en un arreglo legible
+    parse_str($posted_data, $datos);
+    // Obtener el valor del select de distrito (sea de facturación o envío, según dónde se haya colocado)
+    $distrito = '';
+    if (isset($datos['billing_distrito'])) {
+        $distrito = sanitize_text_field($datos['billing_distrito']);
+    } elseif (isset($datos['shipping_distrito'])) {
+        $distrito = sanitize_text_field($datos['shipping_distrito']);
+    }
+    // Guardar el distrito seleccionado en la sesión para usarlo en el cálculo de envío
+    WC()->session->set('checkout_distrito', $distrito);
 
-
-
-/* ============================================================
- * ENVÍO GRATIS SOLO CUANDO:
- *  - no hay distrito seleccionado, o
- *  - el UBIgeo (CCDD+CCPP+CCDI) está en la lista blanca
- *    (Tarapoto, Morales, Banda de Shilcayo, Cacatachi, Juan Guerra – San Martín)
- * ============================================================ */
-
-/** Códigos ubigeo en lista blanca (consultados 1 vez en BD) */
-function br_free_ubigeo_codes(){
-  static $codes = null;
-  if ($codes !== null) return $codes;
-
-  global $wpdb; $t = br_ubigeo_table();
-  $names = ['Tarapoto','Morales','Banda De Shilcayo','Cacatachi','Juan Guerra'];
-
-  // Trae los 5 códigos de distrito (San Martín) desde tu tabla
-  $placeholders = implode(',', array_fill(0, count($names), '%s'));
-  $sql = "SELECT DISTINCT ubigeo_code
-          FROM $t
-          WHERE country_code='PE' AND is_active=1
-            AND region_name=%s
-            AND district_name IN ($placeholders)";
-  $rowset = $wpdb->get_col($wpdb->prepare($sql, array_merge(['San Martín'], $names)));
-
-  // Por seguridad, fallback a valores conocidos si no devuelve nada
-  if (empty($rowset)) $rowset = ['220901','220902','220903','220904','220905'];
-
-  return $codes = array_values(array_unique(array_map('strval',$rowset)));
+    // Forzar la recalculación de las tarifas de envío al cambiar el distrito
+    foreach (WC()->cart->get_shipping_packages() as $package_key => $package) {
+        // Si no hay distrito seleccionado o es uno de los distritos con envío gratis, marcar para recálculo
+        $free_districts = array('Tarapoto','Morales','Banda de Shilcayo','Cacatachi','Juan Guerra');
+        $necesita_envio_gratis = (empty($distrito) || in_array($distrito, $free_districts));
+        // WooCommerce recalcula las tarifas si 'shipping_for_package' está en false
+        WC()->session->set("shipping_for_package_$package_key", $necesita_envio_gratis ? false : true);
+    }
+    // Opcional: recalcular inmediatamente el envío
+    WC()->cart->calculate_shipping();
 }
 
-/**
- * Decide costo 0 leyendo SIEMPRE los datos actuales del checkout.
- * Nota: WooCommerce envía $_POST['post_data'] en cada update_order_review.
- */
-add_filter('woocommerce_package_rates', function($rates, $package){
-  // No tocar en página de "gracias"
-  if (is_wc_endpoint_url('order-received')) return $rates;
-
-  $rc = $pc = $dc = '';
-
-  // 1) Durante el refresh AJAX de checkout: leer post_data
-  if (defined('DOING_AJAX') && DOING_AJAX && isset($_POST['post_data'])) {
-    parse_str( wp_unslash($_POST['post_data']), $posted );
-    $rc = isset($posted['billing_state'])    ? sanitize_text_field($posted['billing_state'])    : '';
-    $pc = isset($posted['billing_province']) ? sanitize_text_field($posted['billing_province']) : '';
-    $dc = isset($posted['billing_city'])     ? sanitize_text_field($posted['billing_city'])     : '';
-  }
-
-  // 2) Fallback (primera carga o no-AJAX): intenta recuperar de sesión
-  if (!$rc && WC()->session) $rc = (string) WC()->session->get('billing_state');
-  if (!$pc && WC()->session) $pc = (string) WC()->session->get('billing_province');
-  if (!$dc && WC()->session) $dc = (string) WC()->session->get('billing_city');
-
-  // ¿Sin distrito?
-  $no_district = empty($dc);
-
-  // Armar ubigeo actual
-  $ub = ($rc && $pc && $dc) ? ($rc.$pc.$dc) : '';
-
-  // Regla: gratis si no hay distrito, o si el ubigeo está en la lista blanca
-  $free = $no_district || ($ub && in_array($ub, br_free_ubigeo_codes(), true));
-
-  // Aplicar costo
-  if ($free) {
-    foreach ($rates as $id => $rate) {
-      if (is_object($rate) && is_callable([$rate,'set_cost'])) {
-        $rate->set_cost(0);
-        if (is_callable([$rate,'set_taxes'])) $rate->set_taxes([]);
-      } else {
-        $rates[$id]->cost  = 0;
-        $rates[$id]->taxes = [];
-      }
-    }
-  }
-  return $rates;
-}, 9999, 2);
-
-/* (Opcional) Log para depurar: habilita WP_DEBUG y mira /wp-content/debug.log */
-if (defined('WP_DEBUG') && WP_DEBUG) {
-  add_filter('woocommerce_package_rates', function($rates){
-    if (defined('DOING_AJAX') && DOING_AJAX && isset($_POST['post_data'])) {
-      parse_str(wp_unslash($_POST['post_data']), $p);
-      error_log('[UBIGEO] rc='.$p['billing_state'].' pc='.$p['billing_province'].' dc='.$p['billing_city']);
+// 2. Filtrar las tarifas de envío para establecer costo $0 según el distrito
+add_filter('woocommerce_package_rates', 'enviar_gratis_si_distrito_especifico', 100, 2);
+function enviar_gratis_si_distrito_especifico($rates, $package) {
+    // Obtener el distrito desde la sesión
+    $distrito = WC()->session->get('checkout_distrito');
+    $free_districts = array('Tarapoto','Morales','Banda de Shilcayo','Cacatachi','Juan Guerra');
+    if (empty($distrito) || in_array($distrito, $free_districts)) {
+        foreach ($rates as $rate_key => $rate) {
+            // Si existe un método "free_shipping", lo dejamos tal cual; de lo contrario, ajustamos costos a 0
+            if ($rate->method_id !== 'free_shipping') {
+                $rates[$rate_key]->cost = 0.0;  // costo de envío gratis
+                // Si hay impuestos asociados al envío, también ponerlos en 0
+                if (!empty($rates[$rate_key]->taxes)) {
+                    foreach ($rates[$rate_key]->taxes as $tax_id => $tax_amount) {
+                        $rates[$rate_key]->taxes[$tax_id] = 0.0;
+                    }
+                }
+            }
+        }
     }
     return $rates;
-  }, 9998, 1);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+?>
