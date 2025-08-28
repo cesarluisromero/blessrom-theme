@@ -23,35 +23,37 @@
   enctype="multipart/form-data"
   aria-label="{{ __('Checkout', 'woocommerce') }}"
 >
-  <h1 class="text-3xl font-bold text-center mb-10 text-gray-800">Finalizar compra</h1>
-  @php if ($checkout->get_checkout_fields()) do_action('woocommerce_checkout_before_customer_details'); @endphp
-  @if ($checkout->get_checkout_fields())
-    @php do_action('woocommerce_checkout_before_customer_details'); @endphp
+	<h1 class="text-3xl font-bold text-center mb-10 text-gray-800">Finalizar compra</h1>
+	<div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10"> 
+			@php if ($checkout->get_checkout_fields()) do_action('woocommerce_checkout_before_customer_details'); @endphp
+				@if ($checkout->get_checkout_fields())
+					@php do_action('woocommerce_checkout_before_customer_details'); @endphp
 
-    <div class="col2-set" id="customer_details">
-      <div class="col-1">
-        @php do_action('woocommerce_checkout_billing'); @endphp
-      </div>
+					<div class="col2-set" id="customer_details">
+					<div class="col-1">
+						@php do_action('woocommerce_checkout_billing'); @endphp
+					</div>
 
-      <div class="col-2">
-        @php do_action('woocommerce_checkout_shipping'); @endphp
-      </div>
-    </div>
+					<div class="col-2">
+						@php do_action('woocommerce_checkout_shipping'); @endphp
+					</div>
+					</div>
 
-    @php do_action('woocommerce_checkout_after_customer_details'); @endphp
-  @endif
+					@php do_action('woocommerce_checkout_after_customer_details'); @endphp
+				@endif
 
-  @php do_action('woocommerce_checkout_before_order_review_heading'); @endphp
+			@php do_action('woocommerce_checkout_before_order_review_heading'); @endphp
 
-  <h3 id="order_review_heading">{{ __('Your order', 'woocommerce') }}</h3>
+			<h3 id="order_review_heading">{{ __('Your order', 'woocommerce') }}</h3>
 
-  @php do_action('woocommerce_checkout_before_order_review'); @endphp
+  			@php do_action('woocommerce_checkout_before_order_review'); @endphp
 
-  <div id="order_review" class="woocommerce-checkout-review-order">
-    @php do_action('woocommerce_checkout_order_review'); @endphp
-  </div>
+		<div id="order_review" class="woocommerce-checkout-review-order">
+			@php do_action('woocommerce_checkout_order_review'); @endphp
+		</div>
 
-  @php do_action('woocommerce_checkout_after_order_review'); @endphp
+  		@php do_action('woocommerce_checkout_after_order_review'); @endphp
+	</div>
 </form>
 
 @php do_action('woocommerce_after_checkout_form', $checkout); @endphp
