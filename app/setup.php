@@ -123,34 +123,12 @@ add_filter('template_include', function ($template) {
         return $template;
 }, 99);
 
-//redirige al checkout
-add_filter('template_include', function ($template) {
-    if (is_checkout() && !is_order_received_page()) {
-        $blade_template = locate_template('resources/views/woocommerce/checkout/form-checkout.blade.php');
-        if ($blade_template) {
-            echo \Roots\view('woocommerce.checkout.form-checkout')->render();
-            exit; // Detiene el flujo de carga de otras plantillas
-        }
-    }
-    return $template;
-}, 99);
 
-//redirige a la página de agradecimiento después de comprar
-add_filter('template_include', function ($template) {
-    if (is_order_received_page()) {
-        $order_id = absint(get_query_var('order-received'));
-        $order = wc_get_order($order_id);
 
-        if ($order) {
-            echo \Roots\view('woocommerce.thankyou', [
-                'order' => $order,
-            ])->render();
-            exit;
-        }
-    }
 
-    return $template;
-}, 99);
+
+
+
 
 
 /**
