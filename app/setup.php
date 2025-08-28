@@ -381,7 +381,7 @@ add_filter('woocommerce_checkout_fields', function ($fields) {
 
   // Región
   $fields['billing']['billing_state']['type']      = 'select';
-  $fields['billing']['billing_state']['label']     = __('Región / Departamento *','theme');
+  $fields['billing']['billing_state']['label']     = __('','theme');
   $fields['billing']['billing_state']['required']  = true;
   $fields['billing']['billing_state']['priority']  = 60;
   $regions = $wpdb->get_results("SELECT DISTINCT region_code, region_name FROM $t WHERE country_code='PE' AND is_active=1 ORDER BY region_name ASC", ARRAY_A);
@@ -392,7 +392,7 @@ add_filter('woocommerce_checkout_fields', function ($fields) {
   // Provincia
   $fields['billing']['billing_province'] = [
     'type'      => 'select',
-    'label'     => __('Provincia *','theme'),
+    'label'     => __('','theme'),
     'required'  => true,
     'class'     => ['form-row-wide'],
     'priority'  => 61,
@@ -401,7 +401,7 @@ add_filter('woocommerce_checkout_fields', function ($fields) {
 
   // Distrito
   $fields['billing']['billing_city']['type']      = 'select';
-  $fields['billing']['billing_city']['label']     = __('Distrito *','theme');
+  $fields['billing']['billing_city']['label']     = __('','theme');
   $fields['billing']['billing_city']['required']  = true;
   $fields['billing']['billing_city']['priority']  = 62;
   $fields['billing']['billing_city']['options']   = ['' => __('Seleccione su distrito','theme')];
