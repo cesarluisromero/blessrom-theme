@@ -504,3 +504,62 @@ add_action('init', function(){
   }
 });
 
+
+
+
+
+/* --- Códigos con envío gratis (desde tu tabla br_ubigeo) --- */
+if (!function_exists('br_free_district_codes')) {
+  function br_free_district_codes(){
+    static $codes = null;
+    if ($codes !== null) return $codes;
+
+    global $wpdb;
+    if (!function_exists('br_ubigeo_table')) {
+      function br_ubigeo_table(){ global $wpdb; return $wpdb->prefix . 'br_ubigeo'; }
+    }
+    $t = br_ubigeo_table();
+
+    $names = ['tarapoto','morales','banda de shilcayo','cacatachi','juan guerra'];
+    $placeholders = implode(',', array_fill(0, count($names), '%s'));
+    $sql = "SELECT DISTINCT district_code
+            FROM $t
+            WHERE country_code='PE' AND is_active=1
+              AND LOWER(district_name) IN ($placeholders)";
+
+    // más compatible en algunos entornos que pasar el array directo:
+    $query = $wpdb->prepare($sql, ...$names);
+    $rows  = (array) $wpdb->get_col($query);
+    $codes = array_map('strval', $rows);
+
+    return $codes;
+  }
+}
+
+/* --- Poner coste 0 cuando no hay distrito o está en la lista gratis --- */
+add_filter('woocommerce_package_rates', function($rates, $package){
+  if (is_admin() && !wp_doing_ajax()) return $rates;
+
+  $district = '';
+  if (function_exists('WC') && WC()->customer) {
+    // Tu select guarda el código de distrito en billing_city
+    $district = (string) WC()->customer->get_shipping_city();
+    if ($district === '') $district = (string) WC()->customer->get_billing_city();
+  }
+
+  $free_codes     = br_free_district_codes();
+  $should_be_free = ($district === '' || in_array($district, $free_codes, true));
+
+  if ($should_be_free) {
+    foreach ($rates as $rate_id => $rate) {
+      if (!empty($rate->method_id) && $rate->method_id === 'free_shipping') continue;
+      $rates[$rate_id]->cost = 0.0;
+      if (!empty($rates[$rate_id]->taxes) && is_array($rates[$rate_id]->taxes)) {
+        foreach ($rates[$rate_id]->taxes as $k => $v) {
+          $rates[$rate_id]->taxes[$k] = 0.0;
+        }
+      }
+    }
+  }
+  return $rates;
+}, 999, 2);
