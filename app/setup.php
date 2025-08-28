@@ -513,7 +513,10 @@ add_action('init', function(){
  * ============================================================ */
 
 /** Tabla ubigeo con prefijo dinámico */
-function br_ubigeo_table(){ global $wpdb; return $wpdb->prefix . 'br_ubigeo'; }
+if ( ! function_exists(__NAMESPACE__ . '\\br_ubigeo_table') ) {
+    function br_ubigeo_table(){ global $wpdb; return $wpdb->prefix . 'br_ubigeo'; }
+}
+
 
 /** Ubigeos con envío gratis (buscados en BD por nombre) */
 function br_free_ubigeo_codes(){
