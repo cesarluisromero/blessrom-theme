@@ -337,7 +337,7 @@ add_filter('woocommerce_checkout_fields', function ($fields) {
  * ============================================================ */
 
 /** Helper: nombre real de la tabla con prefijo */
-function br_ubigeo_table() { global $wpdb; return $wpdb->prefix . 'br_ubigeo'; }
+function br_ubigeo_table() { global $wpdb; return $wpdb->prefix . 'wp_br_ubigeo'; }
 
 /* -------- AJAX: Regiones -------- */
 add_action('wp_ajax_br_regions', function () {
