@@ -27,7 +27,7 @@
         {!! $message !!}
       </p>
       <p class="mt-1 text-sm text-green-700">
-        {{ __('We’ve emailed your order confirmation. You can review the details below or in your account.', 'woocommerce') }}
+        {{ __('Hemos enviado la confirmación a tu correo. Revisa los detalles abajo o en tu cuenta.', 'woocommerce') }}
       </p>
     </div>
   </div>
