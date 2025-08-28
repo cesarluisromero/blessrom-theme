@@ -504,7 +504,7 @@ add_action('init', function(){
   }
 });
 
-<?php
+
 // 1. Capturar el valor del distrito en la sesión al actualizar el checkout
 add_action('woocommerce_checkout_update_order_review', 'capturar_distrito_checkout');
 function capturar_distrito_checkout($posted_data) {
@@ -554,4 +554,4 @@ function enviar_gratis_si_distrito_especifico($rates, $package) {
     }
     return $rates;
 }
-?>
+
