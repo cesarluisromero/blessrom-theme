@@ -508,83 +508,74 @@ add_action('init', function(){
 
 
 /* ============================================================
- * ENVÍO GRATIS: si no hay distrito o si está en la lista blanca
- * (Tarapoto, Morales, Banda de Shilcayo, Cacatachi, Juan Guerra)
+ * ENVÍO GRATIS SOLO CUANDO:
+ *  - no hay distrito seleccionado, o
+ *  - el UBIgeo (CCDD+CCPP+CCDI) está en la lista blanca
+ *    (Tarapoto, Morales, Banda de Shilcayo, Cacatachi, Juan Guerra – San Martín)
  * ============================================================ */
 
-/** Tabla ubigeo con prefijo dinámico */
-if ( ! function_exists(__NAMESPACE__ . '\\br_ubigeo_table') ) {
-    function br_ubigeo_table(){ global $wpdb; return $wpdb->prefix . 'br_ubigeo'; }
-}
-
-
-/** Ubigeos con envío gratis (buscados en BD por nombre) */
+/** Códigos ubigeo en lista blanca (consultados 1 vez en BD) */
 function br_free_ubigeo_codes(){
   static $codes = null;
   if ($codes !== null) return $codes;
 
   global $wpdb; $t = br_ubigeo_table();
-
-  // Normaliza nombres tal como están en tu tabla (title case)
   $names = ['Tarapoto','Morales','Banda De Shilcayo','Cacatachi','Juan Guerra'];
 
-  // Limita a San Martín para evitar homónimos
-  $rowset = $wpdb->get_col(
-    $wpdb->prepare(
-      "SELECT DISTINCT ubigeo_code
-       FROM $t
-       WHERE country_code='PE' AND is_active=1
-         AND region_name = %s      /* San Martín */
-         AND district_name IN (" . implode(',', array_fill(0, count($names), '%s')) . ")",
-      array_merge(['San Martín'], $names)
-    )
-  );
+  // Trae los 5 códigos de distrito (San Martín) desde tu tabla
+  $placeholders = implode(',', array_fill(0, count($names), '%s'));
+  $sql = "SELECT DISTINCT ubigeo_code
+          FROM $t
+          WHERE country_code='PE' AND is_active=1
+            AND region_name=%s
+            AND district_name IN ($placeholders)";
+  $rowset = $wpdb->get_col($wpdb->prepare($sql, array_merge(['San Martín'], $names)));
 
-  // Fallback duro (por si no encontró en BD)
+  // Por seguridad, fallback a valores conocidos si no devuelve nada
   if (empty($rowset)) $rowset = ['220901','220902','220903','220904','220905'];
 
   return $codes = array_values(array_unique(array_map('strval',$rowset)));
 }
 
 /**
- * Captura los valores del checkout en cada refresh y calcula el ubigeo (CCDD+CCPP+CCDI).
- * WooCommerce nos pasa todo en $post_data (querystring).
- */
-add_action('woocommerce_checkout_update_order_review', function($post_data){
-  parse_str($post_data, $data);
-
-  $rc = isset($data['billing_state'])    ? sanitize_text_field($data['billing_state'])    : '';
-  $pc = isset($data['billing_province']) ? sanitize_text_field($data['billing_province']) : '';
-  $dc = isset($data['billing_city'])     ? sanitize_text_field($data['billing_city'])     : '';
-
-  $ub = ($rc && $pc && $dc) ? ($rc.$pc.$dc) : '';
-  if (WC()->session) {
-    WC()->session->set('br_ubigeo_cur', $ub);
-    WC()->session->set('br_no_district', empty($dc) ? '1' : '0');
-  }
-}, 10);
-
-/**
- * Cero costo de envío cuando:
- *  - no hay distrito, o
- *  - el ubigeo está en la lista blanca.
+ * Decide costo 0 leyendo SIEMPRE los datos actuales del checkout.
+ * Nota: WooCommerce envía $_POST['post_data'] en cada update_order_review.
  */
 add_filter('woocommerce_package_rates', function($rates, $package){
-  if (is_wc_endpoint_url('order-received')) return $rates; // no tocar en "gracias"
+  // No tocar en página de "gracias"
+  if (is_wc_endpoint_url('order-received')) return $rates;
 
-  $no_district = WC()->session ? WC()->session->get('br_no_district') : '1';
-  $ub          = WC()->session ? WC()->session->get('br_ubigeo_cur') : '';
+  $rc = $pc = $dc = '';
 
-  $free = ($no_district === '1') || ($ub && in_array($ub, br_free_ubigeo_codes(), true));
+  // 1) Durante el refresh AJAX de checkout: leer post_data
+  if (defined('DOING_AJAX') && DOING_AJAX && isset($_POST['post_data'])) {
+    parse_str( wp_unslash($_POST['post_data']), $posted );
+    $rc = isset($posted['billing_state'])    ? sanitize_text_field($posted['billing_state'])    : '';
+    $pc = isset($posted['billing_province']) ? sanitize_text_field($posted['billing_province']) : '';
+    $dc = isset($posted['billing_city'])     ? sanitize_text_field($posted['billing_city'])     : '';
+  }
 
+  // 2) Fallback (primera carga o no-AJAX): intenta recuperar de sesión
+  if (!$rc && WC()->session) $rc = (string) WC()->session->get('billing_state');
+  if (!$pc && WC()->session) $pc = (string) WC()->session->get('billing_province');
+  if (!$dc && WC()->session) $dc = (string) WC()->session->get('billing_city');
+
+  // ¿Sin distrito?
+  $no_district = empty($dc);
+
+  // Armar ubigeo actual
+  $ub = ($rc && $pc && $dc) ? ($rc.$pc.$dc) : '';
+
+  // Regla: gratis si no hay distrito, o si el ubigeo está en la lista blanca
+  $free = $no_district || ($ub && in_array($ub, br_free_ubigeo_codes(), true));
+
+  // Aplicar costo
   if ($free) {
     foreach ($rates as $id => $rate) {
       if (is_object($rate) && is_callable([$rate,'set_cost'])) {
         $rate->set_cost(0);
-        // Quita impuestos de envío con la forma más segura
         if (is_callable([$rate,'set_taxes'])) $rate->set_taxes([]);
       } else {
-        // compatibilidad rara (no debería ocurrir)
         $rates[$id]->cost  = 0;
         $rates[$id]->taxes = [];
       }
@@ -592,6 +583,18 @@ add_filter('woocommerce_package_rates', function($rates, $package){
   }
   return $rates;
 }, 9999, 2);
+
+/* (Opcional) Log para depurar: habilita WP_DEBUG y mira /wp-content/debug.log */
+if (defined('WP_DEBUG') && WP_DEBUG) {
+  add_filter('woocommerce_package_rates', function($rates){
+    if (defined('DOING_AJAX') && DOING_AJAX && isset($_POST['post_data'])) {
+      parse_str(wp_unslash($_POST['post_data']), $p);
+      error_log('[UBIGEO] rc='.$p['billing_state'].' pc='.$p['billing_province'].' dc='.$p['billing_city']);
+    }
+    return $rates;
+  }, 9998, 1);
+}
+
 
 
 
