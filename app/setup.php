@@ -505,54 +505,72 @@ add_action('init', function(){
 });
 
 
-// 1. Capturar el valor del distrito en la sesión al actualizar el checkout
-add_action('woocommerce_checkout_update_order_review', 'capturar_distrito_checkout');
+/**
+ * Códigos de distrito con envío gratis (obtenidos por nombre en la tabla br_ubigeo)
+ */
+if ( ! function_exists('br_free_district_codes') ) {
+  function br_free_district_codes(){
+    static $codes = null;
+    if ($codes !== null) return $codes;
 
-function capturar_distrito_checkout($posted_data) {
-    // Convertir los datos posteados en un arreglo legible
-    parse_str($posted_data, $datos);
-    // Obtener el valor del select de distrito (sea de facturación o envío, según dónde se haya colocado)
-    $distrito = '';
-    if (isset($datos['billing_city'])) {
-        $distrito = sanitize_text_field($datos['billing_city']);
-    } elseif (isset($datos['shipping_city'])) {
-        $distrito = sanitize_text_field($datos['shipping_city']);
+    global $wpdb; 
+    // Ya la tienes definida en tu setup.php
+    if ( ! function_exists('br_ubigeo_table') ) {
+      function br_ubigeo_table(){ global $wpdb; return $wpdb->prefix . 'br_ubigeo'; }
     }
-    // Guardar el distrito seleccionado en la sesión para usarlo en el cálculo de envío
-    WC()->session->set('checkout_city', $distrito);
 
-    // Forzar la recalculación de las tarifas de envío al cambiar el distrito
-    foreach (WC()->cart->get_shipping_packages() as $package_key => $package) {
-        // Si no hay distrito seleccionado o es uno de los distritos con envío gratis, marcar para recálculo
-        $free_districts = array('Tarapoto','Morales','Banda de Shilcayo','Cacatachi','Juan Guerra');
-        $necesita_envio_gratis = (empty($distrito) || in_array($distrito, $free_districts));
-        // WooCommerce recalcula las tarifas si 'shipping_for_package' está en false
-        WC()->session->set("shipping_for_package_$package_key", $necesita_envio_gratis ? false : true);
-    }
-    // Opcional: recalcular inmediatamente el envío
-    WC()->cart->calculate_shipping();
+    $t = br_ubigeo_table();
+    // Nombres que quieres con envío gratis
+    $names = ['tarapoto','morales','banda de shilcayo','cacatachi','juan guerra'];
+
+    // Buscar por nombre (insensible a mayúsculas/minúsculas)
+    $placeholders = implode(',', array_fill(0, count($names), '%s'));
+    $sql = "SELECT DISTINCT district_code 
+            FROM $t 
+            WHERE country_code='PE' AND is_active=1 
+              AND LOWER(district_name) IN ($placeholders)";
+
+    $rows = $wpdb->get_col( $wpdb->prepare($sql, $names) );
+    $codes = array_map('strval', $rows ?: []);
+
+    return $codes;
+  }
 }
 
-// 2. Filtrar las tarifas de envío para establecer costo $0 según el distrito
-add_filter('woocommerce_package_rates', 'enviar_gratis_si_distrito_especifico', 100, 2);
-function enviar_gratis_si_distrito_especifico($rates, $package) {
-    // Obtener el distrito desde la sesión
-    $distrito = WC()->session->get('checkout_city', '');
-    $free_districts = array('Tarapoto','Morales','Banda de Shilcayo','Cacatachi','Juan Guerra');
-    if (empty($distrito) || in_array($distrito, $free_districts)) {
-        foreach ($rates as $rate_key => $rate) {
-            // Si existe un método "free_shipping", lo dejamos tal cual; de lo contrario, ajustamos costos a 0
-            if ($rate->method_id !== 'free_shipping') {
-                $rates[$rate_key]->cost = 0.0;  // costo de envío gratis
-                // Si hay impuestos asociados al envío, también ponerlos en 0
-                if (!empty($rates[$rate_key]->taxes)) {
-                    foreach ($rates[$rate_key]->taxes as $tax_id => $tax_amount) {
-                        $rates[$rate_key]->taxes[$tax_id] = 0.0;
-                    }
-                }
-            }
+/**
+ * Forzar costo 0 a las tarifas de envío cuando:
+ * - No hay distrito elegido (billing_city vacío), o
+ * - El district_code pertenece a la “lista gratis”
+ */
+add_filter('woocommerce_package_rates', function($rates, $package){
+  if (is_admin() && ! wp_doing_ajax()) return $rates;
+
+  // Preferir “shipping city” si usas dirección de envío diferente, si no, “billing city”
+  $district_code = '';
+  if (function_exists('WC') && WC()->customer) {
+    $district_code = WC()->customer->get_shipping_city();
+    if ($district_code === '' || $district_code === null) {
+      $district_code = WC()->customer->get_billing_city();
+    }
+  }
+
+  $free_codes = br_free_district_codes();
+  $should_be_free = ( $district_code === '' || in_array($district_code, $free_codes, true) );
+
+  if ($should_be_free) {
+    foreach ($rates as $rate_id => $rate_obj) {
+      // Si tienes un método nativo “free_shipping” lo dejamos tal cual; el resto a 0
+      if ( isset($rate_obj->method_id) && $rate_obj->method_id === 'free_shipping' ) {
+        continue;
+      }
+      $rates[$rate_id]->cost = 0.0;
+      if (!empty($rates[$rate_id]->taxes) && is_array($rates[$rate_id]->taxes)) {
+        foreach ($rates[$rate_id]->taxes as $k => $v) {
+          $rates[$rate_id]->taxes[$k] = 0.0;
         }
+      }
     }
-    return $rates;
-}
+  }
 
+  return $rates;
+}, 999, 2);
