@@ -504,7 +504,7 @@ add_action('init', function(){
   }
 });
 
-<?php
+
 /* Guardar el distrito en sesión cada vez que el checkout se actualiza (AJAX) */
 add_action('woocommerce_checkout_update_order_review', function($posted_data){
     parse_str($posted_data, $data);
