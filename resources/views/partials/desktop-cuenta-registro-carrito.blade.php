@@ -1,7 +1,7 @@
 
       {{-- Íconos --}}
       <div class="flex items-center space-x-3">
-        <a href="#" class="hover:underline">Registrate</a>
+        {{--<a href="#" class="hover:underline">Registrate</a>--}}
         <a href="https://blessrom.com/mi-cuenta/" class="hover:underline">Mi cuenta</a>
         <a href="https://blessrom.com/carrito/" class="relative hover:underline widget_shopping_cart_content bg-white text-white p-2 rounded-full">
           🛒
