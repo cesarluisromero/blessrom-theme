@@ -33,7 +33,7 @@
   </div>
 </section>
 
-<section class="block md:hidden full-bleed text-center py-2 overflow-x-clip">
+<section class="block md:hidden full-bleed text-center py-6 overflow-x-clip">
   <div class="bg-white">
     <div class="swiper bannervestidos-swiper rounded-none" aria-label="Banner vestidos móvil">
       <div class="swiper-wrapper">
@@ -66,7 +66,8 @@
       <div class="swiper-button-next bannervestidos-swiper-button-next !hidden md:!flex"></div>
     </div>
     {{-- debajo del .swiper bannervestidos-swiper --}}
-    <div class="mt-4 flex justify-center">
+    
+    <div class="mt-6 mb-10 flex justify-center">
       <a
         href="{{ esc_url( add_query_arg(
           ['categorias' => ['vestido']],
