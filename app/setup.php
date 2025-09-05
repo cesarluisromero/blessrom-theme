@@ -518,3 +518,12 @@ add_filter('woocommerce_order_button_html', function ($html) {
 add_filter('woocommerce_thankyou_order_received_text', function($msg, $order){
   return __('¡Gracias! Tu pedido fue recibido.', 'tu-textdomain');
 }, 10, 2);
+
+// functions.php
+add_action('wp_enqueue_scripts', function () {
+  $css = get_theme_file_path('dist/app.css');
+  $js  = get_theme_file_path('dist/app.js');
+
+  wp_enqueue_style('blessrom-app', get_theme_file_uri('dist/app.css'), [], filemtime($css));
+  wp_enqueue_script('blessrom-app', get_theme_file_uri('dist/app.js'), [], filemtime($js), true);
+});
