@@ -435,6 +435,44 @@ document.addEventListener('DOMContentLoaded', () => {
       },
     },
   });
+  // HERO (si lo usas)
+
+  new Swiper('.js-hero-swiper', {
+    slidesPerView: 4,
+    slidesPerGroup: 4,
+    loop: true,
+    spaceBetween: 10,
+    navigation: { 
+      nextEl: '.js-hero-swiper-button-next',
+      prevEl: '.js-hero-swiper-button-prev',
+      enabled: true,
+    },
+    autoplay: {
+      delay: 3000, // ⏱ Tiempo entre slides en milisegundos (3000 = 3 segundos)
+      disableOnInteraction: false // sigue después de hacer clic o tocar
+    },
+    pagination: {
+      el: '.js-hero-swiper-pagination',
+      clickable: true,
+      enabled: false,
+    },
+    breakpoints: {
+      0: { 
+        slidesPerView: 1,
+        slidesPerGroup: 1,
+        navigation: { enabled: false },
+        pagination:  { enabled: true  },
+      },
+      640: {   
+        slidesPerView: 3,
+        slidesPerGroup: 3,
+      },
+      1024: {
+        slidesPerView: 4,
+        slidesPerGroup: 4, 
+      },
+    },
+  });
 
 });
 
@@ -448,72 +486,6 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
-// --- HERO: dos instancias, mobile y desktop, con media query ---
-document.addEventListener('DOMContentLoaded', () => {
-  const mq = window.matchMedia('(min-width: 768px)'); // md breakpoint de Tailwind
-
-  const initDesktop = () => {
-    document.querySelectorAll('.js-hero-desktop').forEach((el) => {
-      if (el._swiper) return;
-      el._swiper = new Swiper(el, {
-        effect: 'fade',
-        fadeEffect: { crossFade: true },
-        speed: 700,
-        loop: true,
-        autoplay: { delay: 5000, disableOnInteraction: false },
-        pagination: { el: el.querySelector('.swiper-pagination'), clickable: true },
-        navigation: {
-          nextEl: el.querySelector('.swiper-button-next'),
-          prevEl: el.querySelector('.swiper-button-prev'),
-        },
-        observer: true,
-        observeParents: true,
-        watchOverflow: true,
-      });
-    });
-  };
-
-  const destroyDesktop = () => {
-    document.querySelectorAll('.js-hero-desktop').forEach((el) => {
-      if (el._swiper) { el._swiper.destroy(true, true); el._swiper = null; }
-    });
-  };
-
-  const initMobile = () => {
-    document.querySelectorAll('.js-hero-mobile').forEach((el) => {
-      if (el._swiper) return;
-      el._swiper = new Swiper(el, {
-        // en móvil uso slide normal (más natural)
-        speed: 600,
-        loop: true,
-        autoplay: { delay: 5000, disableOnInteraction: false },
-        pagination: { el: el.querySelector('.swiper-pagination'), clickable: true },
-        // si activas flechas en el Blade de móvil, añade:
-        // navigation: { nextEl: el.querySelector('.swiper-button-next'), prevEl: el.querySelector('.swiper-button-prev') },
-        observer: true,
-        observeParents: true,
-        watchOverflow: true,
-      });
-    });
-  };
-
-  const destroyMobile = () => {
-    document.querySelectorAll('.js-hero-mobile').forEach((el) => {
-      if (el._swiper) { el._swiper.destroy(true, true); el._swiper = null; }
-    });
-  };
-
-  const apply = () => {
-    if (mq.matches) { // escritorio
-      destroyMobile(); initDesktop();
-    } else {          // móvil
-      destroyDesktop(); initMobile();
-    }
-  };
-
-  apply();
-  mq.addEventListener ? mq.addEventListener('change', apply) : mq.addListener(apply); // compat safari viejito
-});
 
 
   

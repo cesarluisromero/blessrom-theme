@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import tailwindcss from '@tailwindcss/vite';
 import laravel from 'laravel-vite-plugin'
 import { wordpressPlugin, wordpressThemeJson } from '@roots/vite-plugin';
-import path from 'node:path';
+
 
 
 
@@ -37,12 +37,10 @@ export default defineConfig({
       '@styles': '/resources/styles',
       '@fonts': '/resources/fonts',
       '@images': '/resources/images',
-      'swiper/bundle': path.resolve(__dirname, 'resources/scripts/swiper-bundle-shim.js'),
-      'swiper/css/bundle': path.resolve(__dirname, 'resources/styles/swiper-bundle-shim.css'),
+      
       
     },
   },
-  optimizeDeps: { include: ['swiper'] },
-  build: { commonjsOptions: { transformMixedEsModules: true } },
+  
   
 })
