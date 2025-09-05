@@ -448,6 +448,22 @@ document.addEventListener('DOMContentLoaded', () => {
         nextEl: el.querySelector('.swiper-button-next'),
         prevEl: el.querySelector('.swiper-button-prev'),
       },
+      breakpoints: {
+        0: { 
+          slidesPerView: 1,
+          slidesPerGroup: 1,
+          navigation: { enabled: false },
+          pagination:  { enabled: true  },
+        },
+        640: {   
+          slidesPerView: 3,
+          slidesPerGroup: 3,
+        },
+        1024: {
+          slidesPerView: 4,
+          slidesPerGroup: 4, 
+        },
+      },
     });
   });
 });
