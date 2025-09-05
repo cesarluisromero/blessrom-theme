@@ -5,7 +5,7 @@ $products = wc_get_products([
   'limit'     => 16,          // ajusta
   'orderby'   => 'date',      // 'rand' si quieres aleatorio
   'order'     => 'DESC',
-  'category'  => ['Vestidos'],// slug(s) de product_cat
+  'category'  => ['vestido'],// slug(s) de product_cat
   'return'    => 'objects',
   'stock_status' => 'instock', // descomenta si quieres solo en stock
 ]);
