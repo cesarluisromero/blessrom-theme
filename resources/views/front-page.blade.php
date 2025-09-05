@@ -15,10 +15,11 @@
   @include('partials.home-slider-products')
   
   {{-- Productos más vendidos --}}
-  @include('partials.home-categories')
+  @include('partials.home-banner-vestidos')
 
   {{-- Slider productos --}}
-  @include('partials.home-categories-vestidos')
+  {{-- Categorías destacadas --}}
+  @include('partials.home-categories')
 
   {{-- Productos más vendidos --}}
   @include('partials.home-best-sellers')
