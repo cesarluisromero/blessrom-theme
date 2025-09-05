@@ -35,47 +35,46 @@
 
 <section class="block md:hidden full-bleed text-center py-6 overflow-x-clip">
   <div class="bg-white">
-    <div class="relative">
-      <div class="swiper bannervestidos-swiper rounded-none" aria-label="Banner vestidos móvil">
-        <div class="swiper-wrapper">
-          <div class="swiper-slide">
-            <img
-              src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/1.png') }}"
-              alt="Experimenta nuestra pasión por la moda en Tarapoto"
-              class="w-full h-auto block"
-              fetchpriority="high" decoding="async">
-          </div>
-          <div class="swiper-slide">
-            <img src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/1-1.png') }}"
-                alt="Colección de vestidos"
-                class="w-full h-auto block" loading="lazy" decoding="async">
-          </div>
-          <div class="swiper-slide">
-            <img src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/1-2.png') }}"
-                alt="Colección de vestidos"
-                class="w-full h-auto block" loading="lazy" decoding="async">
-          </div>
-          <div class="swiper-slide">
-            <img src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/2.png') }}"
-                alt="Colección de vestidos"
-                class="w-full h-auto block" loading="lazy" decoding="async">
-          </div>
+    <div class="swiper bannervestidos-swiper rounded-none" aria-label="Banner vestidos móvil">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide">
+          <img
+            src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/1.png') }}"
+            alt="Experimenta nuestra pasión por la moda en Tarapoto"
+            class="w-full h-auto block"
+            fetchpriority="high" decoding="async">
         </div>
-
-        {{-- Flechas (ocultas en móvil) --}}
-        <div class="swiper-button-prev bannervestidos-swiper-button-prev !hidden md:!flex"></div>
-        <div class="swiper-button-next bannervestidos-swiper-button-next !hidden md:!flex"></div>
+        <div class="swiper-slide">
+          <img src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/1-1.png') }}"
+               alt="Colección de vestidos"
+               class="w-full h-auto block" loading="lazy" decoding="async">
+        </div>
+        <div class="swiper-slide">
+          <img src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/1-2.png') }}"
+               alt="Colección de vestidos"
+               class="w-full h-auto block" loading="lazy" decoding="async">
+        </div>
+        <div class="swiper-slide">
+          <img src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/2.png') }}"
+               alt="Colección de vestidos"
+               class="w-full h-auto block" loading="lazy" decoding="async">
+        </div>
       </div>
+
+      {{-- Flechas (ocultas en móvil) --}}
+      <div class="swiper-button-prev bannervestidos-swiper-button-prev !hidden md:!flex"></div>
+      <div class="swiper-button-next bannervestidos-swiper-button-next !hidden md:!flex"></div>
+    </div>
     {{-- debajo del .swiper bannervestidos-swiper --}}
     
-      {{-- botón fuera del swiper --}}
-      <div class="pointer-events-none absolute inset-x-0 bottom-6 md:bottom-10 pb-safe flex justify-center">
-        <a href="https://blessrom.com/tienda/?categorias[]=vestido"
-          class="pointer-events-auto inline-flex items-center gap-2 rounded-full bg-[#FFB816] px-6 py-3 text-white font-semibold shadow hover:bg-yellow-500">
-          Ver más vestidos
-        </a>
-      </div>
+    {{-- botón fuera del swiper --}}
+    <div class="mt-6 mb-10 flex justify-center">
+      <a href="https://blessrom.com/tienda/?categorias[]=vestido"
+        class="inline-flex items-center gap-2 rounded-full bg-[#FFB816] px-6 py-3 text-white font-semibold shadow hover:bg-yellow-500">
+        Ver más vestidos
+      </a>
     </div>
+
   </div>
 </section>
 
