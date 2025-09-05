@@ -18,7 +18,7 @@
   @include('partials.home-best-sellers')
 
   {{-- Productos más vendidos --}}
-  @include('partials.hero-swiper')
+  @include('partials.home-banner-vestidos')
   
   @include('partials.home-testimonials')
   

@@ -5,22 +5,16 @@
         <!-- Contenedor de slides -->
       
         <div class="swiper-wrapper">
-        <div class="swiper-slide">
-          <img
-            src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/Experimenta-nuestra-pasion-por-la-moda.png') }}"
-            alt="Experimenta nuestra pasión por la moda en Tarapoto (mobile)"
-            class="h-full w-full object-cover"
-            fetchpriority="high"
-            decoding="async">
-        </div>
-        <div class="swiper-slide">
-          <img
-            src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/Experimenta-nuestra-pasion-por-la-moda.-2.png') }}"
-            alt="Colección de vestidos (mobile)"
-            class="h-full w-full object-cover"
-            loading="lazy"
-            decoding="async">
-        </div>
+          <div class="swiper-slide">
+            <img
+              src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/Experimenta-nuestra-pasion-por-la-moda.png') }}"
+              >
+          </div>
+          <div class="swiper-slide">
+            <img
+              src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/Experimenta-nuestra-pasion-por-la-moda.-2.png') }}"
+              >
+          </div>
       </div>
       
 
