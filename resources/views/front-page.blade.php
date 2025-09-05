@@ -17,7 +17,7 @@
   {{-- Productos más vendidos --}}
   @include('partials.home-banner-vestidos')
 
- @include('partials.home-slider-products')
+ @include('partials.home-categories-vestidos')
 
   {{-- Productos más vendidos --}}
   @include('partials.home-best-sellers')
