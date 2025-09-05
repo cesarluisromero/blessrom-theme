@@ -34,7 +34,7 @@
 </section>
 
 <section class="block md:hidden full-bleed text-center py-0 overflow-x-clip">
-  <div class="bg-amber-600">
+  <div class="bg-white">
     <div class="swiper bannervestidos-swiper rounded-none" aria-label="Banner vestidos móvil">
       <div class="swiper-wrapper">
         <div class="swiper-slide">
