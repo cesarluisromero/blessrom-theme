@@ -73,3 +73,16 @@ a {
   margin-left: -50vw;
   margin-right: -50vw;
 }
+/* Deja que el Swiper y sus slides crezcan según el contenido (la imagen) */
+.bannervestidos-swiper,
+.bannervestidos-swiper .swiper-wrapper,
+.bannervestidos-swiper .swiper-slide {
+  height: auto;
+}
+
+/* Asegura que la imagen dicte la altura y no deje huecos */
+.bannervestidos-swiper .swiper-slide > img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
