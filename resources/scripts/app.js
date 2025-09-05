@@ -4,6 +4,11 @@ import Swiper from 'swiper/bundle';
 import 'swiper/css/bundle';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import 'swiper/css';                 // CSS base
+import 'swiper/css/navigation';      // opcional si quieres estilos de flechas
+import 'swiper/css/pagination';      // opcional si quieres estilos de bullets
+
+
 
 document.addEventListener('alpine:init', () => {
   const map = window.BLESSROM_COLOR_IMAGE_MAP; // puede ser undefined
