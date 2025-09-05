@@ -501,12 +501,12 @@ document.addEventListener('DOMContentLoaded', () => {
         pagination:  { enabled: true  },
       },
       640: {   
-        slidesPerView: 1,
-        slidesPerGroup: 1,
+        slidesPerView: 3,
+        slidesPerGroup: 3,
       },
       1024: {
-        slidesPerView: 1,
-        slidesPerGroup: 1, 
+        slidesPerView: 4,
+        slidesPerGroup: 4, 
       },
     },
   });

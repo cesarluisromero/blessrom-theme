@@ -2,7 +2,7 @@
 // Solo la categoría con slug 'vestido'
 $categories = get_terms([
   'taxonomy'   => 'product_cat',
-  'slug'       => ['vestido'],   // 👈 filtra por slug
+  'slug'       => ['vestido'],   //filtra por slug
   'hide_empty' => true,
   'number'     => 1,
 ]);
