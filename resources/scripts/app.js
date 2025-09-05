@@ -436,6 +436,42 @@ document.addEventListener('DOMContentLoaded', () => {
     },
   });
   // HERO (si lo usas)
+  new Swiper('.banner-swiper', {
+    slidesPerView: 4,
+    slidesPerGroup: 4,
+    loop: true,
+    spaceBetween: 10,
+    navigation: { 
+      nextEl: '.banner-swiper-button-next',
+      prevEl: '.banner-swiper-button-prev',
+      enabled: true,
+    },
+    autoplay: {
+      delay: 3000, // ⏱ Tiempo entre slides en milisegundos (3000 = 3 segundos)
+      disableOnInteraction: false // sigue después de hacer clic o tocar
+    },
+    pagination: {
+      el: '.banner-swiper-pagination',
+      clickable: true,
+      enabled: false,
+    },
+    breakpoints: {
+      0: { 
+        slidesPerView: 1,
+        slidesPerGroup: 1,
+        navigation: { enabled: false },
+        pagination:  { enabled: true  },
+      },
+      640: {   
+        slidesPerView: 1,
+        slidesPerGroup: 1,
+      },
+      1024: {
+        slidesPerView: 1,
+        slidesPerGroup: 1, 
+      },
+    },
+  });
 
 });
 
