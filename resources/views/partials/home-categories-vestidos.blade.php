@@ -36,7 +36,7 @@ function get_random_product_image_from_category($category_id) {
             @php 
               $image = get_random_product_image_from_category($cat->term_id);
               $cat_link = get_term_link($cat);  
-              $cat_slug = $cat->slug;         
+              $cat_slug = basename(untrailingslashit($cat_link));          
             @endphp
             <div class="swiper-slide">
               <a href="{{ $cat_link . '?min_price=5&max_price=500&categorias%5B%5D=' . $cat_slug }}" class="bg-white rounded-2xl shadow-md hover:shadow-lg transition duration-300 p-10 flex flex-col items-center text-center">
