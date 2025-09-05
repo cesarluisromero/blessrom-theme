@@ -436,22 +436,22 @@ document.addEventListener('DOMContentLoaded', () => {
     },
   });
   // HERO (si lo usas)
-  new Swiper('.banner-swiper', {
+  new Swiper('.bannervestidos-swiper', {
     slidesPerView: 4,
     slidesPerGroup: 4,
     loop: true,
     spaceBetween: 10,
     navigation: { 
-      nextEl: '.banner-swiper-button-next',
-      prevEl: '.banner-swiper-button-prev',
+      nextEl: '.bannervestidos-swiper-button-next',
+      prevEl: '.bannervestidos-swiper-button-prev',
       enabled: true,
     },
     autoplay: {
-      delay: 3000, // ⏱ Tiempo entre slides en milisegundos (3000 = 3 segundos)
+      delay: 5000, // ⏱ Tiempo entre slides en milisegundos (3000 = 3 segundos)
       disableOnInteraction: false // sigue después de hacer clic o tocar
     },
     pagination: {
-      el: '.banner-swiper-pagination',
+      el: '.bannervestidos-swiper-pagination',
       clickable: true,
       enabled: false,
     },
