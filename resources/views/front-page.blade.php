@@ -19,7 +19,7 @@
 
   @include('partials.hero-swiper')
   
-{{-- @include('partials.home-testimonials')--}}
+  @include('partials.home-testimonials')
   
   
   {{-- Beneficios o razones para elegir Blessrom --}}
