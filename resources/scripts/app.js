@@ -1,12 +1,7 @@
 import '../styles/app.css';
 import Alpine from 'alpinejs';
-import Swiper from 'swiper';
-import { Navigation, Pagination, Autoplay, Scrollbar, EffectFade } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import 'swiper/css/scrollbar';
-
+import Swiper from 'swiper/bundle';
+import 'swiper/css/bundle';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
