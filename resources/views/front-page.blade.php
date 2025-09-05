@@ -13,11 +13,11 @@
 
   {{-- Slider productos --}}
   @include('partials.home-slider-products')
-  @include('partials.home-slider-products')
   
-  {{-- Productos más vendidos --}}
+  
+  {{-- banner de vestidos --}}
   @include('partials.home-banner-vestidos')
-
+{{-- slider de vestidos --}}
  @include('partials.home-categories-vestidos')
 
   {{-- Productos más vendidos --}}
