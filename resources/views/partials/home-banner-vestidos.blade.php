@@ -15,7 +15,7 @@
           </div>
           <div class="swiper-slide">
             <img
-              src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/Experimenta-nuestra-pasion-por-la-moda.-2.png') }}"
+              src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/Experimenta-nuestra-pasion-por-la-moda100.png') }}"
               alt="Colección de vestidos"
               class="w-full h-full object-cover"
               loading="lazy" decoding="async">
