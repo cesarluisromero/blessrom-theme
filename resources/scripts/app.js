@@ -435,6 +435,21 @@ document.addEventListener('DOMContentLoaded', () => {
       },
     },
   });
+  // HERO (si lo usas)
+  document.querySelectorAll('.js-hero-swiper').forEach((el) => {
+    new Swiper(el, {
+      effect: 'fade',
+      fadeEffect: { crossFade: true },
+      speed: 700,
+      loop: true,
+      autoplay: { delay: 5000, disableOnInteraction: false },
+      pagination: { el: el.querySelector('.swiper-pagination'), clickable: true },
+      navigation: {
+        nextEl: el.querySelector('.swiper-button-next'),
+        prevEl: el.querySelector('.swiper-button-prev'),
+      },
+    });
+  });
 });
 
   
