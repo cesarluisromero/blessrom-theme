@@ -13,12 +13,17 @@
 
   {{-- Slider productos --}}
   @include('partials.home-slider-products')
+  
+  {{-- Productos más vendidos --}}
+  @include('partials.home-banner-vestidos')
+
+  {{-- Slider productos --}}
+  @include('partials.home-slider-products')
 
   {{-- Productos más vendidos --}}
   @include('partials.home-best-sellers')
 
-  {{-- Productos más vendidos --}}
-  @include('partials.home-banner-vestidos')
+  
   
   @include('partials.home-testimonials')
   
