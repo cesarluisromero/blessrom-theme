@@ -35,7 +35,7 @@
 
 <section class="block md:hidden w-full text-center py-2 px-4">
   <div class="max-w-screen-2xl mx-auto px-4">
-    <div class="bg-white rounded-lg shadow-md p-6">
+    <div class="bg-amber-600 rounded-lg shadow-md p-6">
       <div class="swiper bannervestidos-swiper">
         <!-- Contenedor de slides -->
       
