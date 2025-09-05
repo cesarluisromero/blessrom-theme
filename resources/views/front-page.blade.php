@@ -17,7 +17,7 @@
   {{-- Productos más vendidos --}}
   @include('partials.home-best-sellers')
 
-  @include('partials.hero-swiper')
+  
   
 
   @include('partials.home-testimonials')
