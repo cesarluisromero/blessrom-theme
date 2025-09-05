@@ -5,12 +5,14 @@
 {{-- Banner principal --}}
   @include('partials.home-banner')
 
-  
+  {{-- Categorías destacadas --}}
+  @include('partials.home-categories')
 
   {{-- Sección después de las categorías --}}
   @include('partials.home-despues-categorias')
 
   {{-- Slider productos --}}
+  @include('partials.home-slider-products')
   @include('partials.home-slider-products')
   
   {{-- Productos más vendidos --}}
