@@ -437,14 +437,14 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   // HERO (si lo usas)
 
-  new Swiper('.js-hero-swiper', {
-    slidesPerView: 4,
-    slidesPerGroup: 4,
+  new Swiper('.banner1-swiper', {
+    slidesPerView: 1,
+    slidesPerGroup: 1,
     loop: true,
     spaceBetween: 10,
     navigation: { 
-      nextEl: '.js-hero-swiper-button-next',
-      prevEl: '.js-hero-swiper-button-prev',
+      nextEl: '.banner1-swiper-button-next',
+      prevEl: '.banner1-swiper-button-prev',
       enabled: true,
     },
     autoplay: {
@@ -452,7 +452,7 @@ document.addEventListener('DOMContentLoaded', () => {
       disableOnInteraction: false // sigue después de hacer clic o tocar
     },
     pagination: {
-      el: '.js-hero-swiper-pagination',
+      el: '.banner1-swiper-pagination',
       clickable: true,
       enabled: false,
     },
@@ -464,12 +464,12 @@ document.addEventListener('DOMContentLoaded', () => {
         pagination:  { enabled: true  },
       },
       640: {   
-        slidesPerView: 3,
-        slidesPerGroup: 3,
+        slidesPerView: 1,
+        slidesPerGroup: 1,
       },
       1024: {
-        slidesPerView: 4,
-        slidesPerGroup: 4, 
+        slidesPerView: 1,
+        slidesPerGroup: 1, 
       },
     },
   });
