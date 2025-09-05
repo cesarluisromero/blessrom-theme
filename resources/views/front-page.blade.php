@@ -17,8 +17,7 @@
   {{-- Productos más vendidos --}}
   @include('partials.home-best-sellers')
 
-  {{-- Banner con swipper --}}
-  @include('partials.hero-swiper')
+  
   
   @include('partials.home-testimonials')
   

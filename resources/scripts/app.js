@@ -437,43 +437,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   // HERO (si lo usas)
 
-  new Swiper('.banner1-swiper', {
-    slidesPerView: 1,
-    slidesPerGroup: 1,
-    loop: true,
-    spaceBetween: 10,
-    navigation: { 
-      nextEl: '.banner1-swiper-button-next',
-      prevEl: '.banner1-swiper-button-prev',
-      enabled: true,
-    },
-    autoplay: {
-      delay: 3000, // ⏱ Tiempo entre slides en milisegundos (3000 = 3 segundos)
-      disableOnInteraction: false // sigue después de hacer clic o tocar
-    },
-    pagination: {
-      el: '.banner1-swiper-pagination',
-      clickable: true,
-      enabled: false,
-    },
-    breakpoints: {
-      0: { 
-        slidesPerView: 1,
-        slidesPerGroup: 1,
-        navigation: { enabled: false },
-        pagination:  { enabled: true  },
-      },
-      640: {   
-        slidesPerView: 1,
-        slidesPerGroup: 1,
-      },
-      1024: {
-        slidesPerView: 1,
-        slidesPerGroup: 1, 
-      },
-    },
-  });
-
 });
 
   
