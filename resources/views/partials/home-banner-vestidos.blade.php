@@ -64,8 +64,7 @@
       {{-- Flechas (ocultas en móvil) --}}
       <div class="swiper-button-prev bannervestidos-swiper-button-prev !hidden md:!flex"></div>
       <div class="swiper-button-next bannervestidos-swiper-button-next !hidden md:!flex"></div>
-    </div>
-    {{-- debajo del .swiper bannervestidos-swiper --}}
+      {{-- debajo del .swiper bannervestidos-swiper --}}
     
     {{-- botón fuera del swiper --}}
     <div class="mt-6 mb-10 flex justify-center">
@@ -74,6 +73,8 @@
         Ver más vestidos
       </a>
     </div>
+    </div>
+    
 
   </div>
 </section>
