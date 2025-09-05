@@ -65,6 +65,23 @@
       <div class="swiper-button-prev bannervestidos-swiper-button-prev !hidden md:!flex"></div>
       <div class="swiper-button-next bannervestidos-swiper-button-next !hidden md:!flex"></div>
     </div>
+    {{-- debajo del .swiper bannervestidos-swiper --}}
+<div class="mt-4 flex justify-center">
+  <a
+    href="{{ esc_url( add_query_arg(
+      ['categorias' => ['vestido']],
+      wc_get_page_permalink('shop')
+    )) }}"
+    class="inline-flex items-center gap-2 rounded-full bg-[#FFB816] px-6 py-3 text-white font-semibold shadow hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
+    aria-label="Ver más vestidos"
+  >
+    Ver más vestidos
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24">
+      <path fill="currentColor" d="m10 17l5-5l-5-5v10Z"/>
+    </svg>
+  </a>
+</div>
+
   </div>
 </section>
 
