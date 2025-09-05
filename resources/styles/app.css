@@ -63,3 +63,13 @@ a {
   height: 42px;
   right: 0.5rem;
 }
+
+/* Full-bleed: rompe el contenedor y ocupa todo el viewport de ancho */
+.full-bleed {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+}

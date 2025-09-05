@@ -33,10 +33,9 @@
   </div>
 </section>
 
-<section class="block md:hidden w-full text-center py-2 px-4">
-  <div class="max-w-screen-2xl mx-auto px-4">
-    <div class="bg-amber-600 rounded-lg shadow-md p-6">
-      <div class="swiper bannervestidos-swiper">
+<section class="block md:hidden full-bleed text-center py-0 overflow-x-clip">  
+    <div class="bg-white">
+      <div class="swiper bannervestidos-swiper h-[56vh]" aria-label="Banner vestidos móvil">
         <!-- Contenedor de slides -->
       
         <div class="swiper-wrapper">
@@ -78,8 +77,6 @@
 
       </div>
     </div>
-  </div>
 </section>
-
 
 
