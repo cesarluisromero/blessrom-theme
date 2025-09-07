@@ -11,11 +11,11 @@ $products = wc_get_products([
 ]);
 @endphp
 
-<section class="text-center popular-products  py-2 px-4 sm:px-3 lg:px-4">
+<section class="text-center popular-products py-2 px-0 -mx-4 sm:-mx-6 lg:-mx-8">
  
   <div class="mx-auto max-w-none"> 
-    <div class="bg-white rounded-lg shadow-md p-6">
-      <div class="swiper product-swiper">
+    <div class="bg-white rounded-none sm:rounded-lg shadow-md p-0 sm:p-6">
+      <div class="swiper product-swiper overflow-visible">
         <!-- Contenedor de slides -->
       
         <div class="swiper-wrapper">
