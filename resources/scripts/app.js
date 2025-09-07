@@ -393,8 +393,8 @@ document.addEventListener('DOMContentLoaded', () => {
         slidesPerGroup: 3,
       },
       1024: {
-        slidesPerView: 4,
-        slidesPerGroup: 4,
+        slidesPerView: 6,
+        slidesPerGroup: 6,
       },
     },
   });
