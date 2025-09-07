@@ -29,13 +29,13 @@ function get_random_product_image_from_category($category_id) {
 @endphp
 <section class="text-center popular-products py-2 px-0 -mx-4 sm:-mx-6 lg:-mx-8">
   <div class="mx-auto max-w-none"> 
-    <div class="bg-white rounded-none sm:rounded-lg shadow-md p-0 sm:p-6">
+    <div class="bg-gray-300 rounded-none sm:rounded-lg shadow-md p-0 sm:p-6">
       {{-- Título centrado --}}
       <header class="bg-white mb-6 flex w-full flex-col items-center text-center">
         <h2 id="home-products-title" class="text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900">
-          Colección Vestidos - Para ti
+          Nuestras Categorías - Para ti
         </h2>
-        <p class="mt-1 text-sm text-slate-600">Lo último en nuestra tienda</p>
+        <p class="mt-1 text-sm text-slate-600">Lo que encontrarás en nuestra tienda</p>
         <span class="mt-2 h-0.5 w-16 bg-[#FFB816] mx-auto"></span>
       </header>
       <div class="swiper category-swiper">
