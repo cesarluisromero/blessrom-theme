@@ -28,17 +28,22 @@ $products = wc_get_products([
           @foreach ($products as $product)
     <div class="swiper-slide">
       <a href="{{ get_permalink($product->get_id()) }}"
-         class="flex items-center gap-4 p-2 text-left">
-        <div class="shrink-0">
-          {!! $product->get_image('medium', [
-            'class' => 'w-24 h-24 object-contain rounded-md',
-            'alt'   => esc_attr($product->get_name()),
-            'loading' => 'lazy'
-          ]) !!}
+         class="grid grid-cols-5 items-center gap-4 p-3 text-left">
+
+        {{-- 60% imagen --}}
+        <div class="col-span-3">
+          <div class="relative w-full aspect-square">
+            {!! $product->get_image('medium', [
+              'class' => 'absolute inset-0 w-full h-full object-contain rounded-md',
+              'alt'   => esc_attr($product->get_name()),
+              'loading' => 'lazy'
+            ]) !!}
+          </div>
         </div>
 
-        <div class="min-w-0 flex-1">
-          <p class="text-base sm:text-lg font-serif leading-snug">
+        {{-- 40% texto --}}
+        <div class="col-span-2 min-w-0">
+          <p class="text-base sm:text-lg font-serif leading-snug line-clamp-2">
             {{ $product->get_name() }}
           </p>
 
@@ -47,6 +52,7 @@ $products = wc_get_products([
             <span class="mt-1 block text-sm text-slate-600">{!! $price_html !!}</span>
           @endif
         </div>
+
       </a>
     </div>
   @endforeach
