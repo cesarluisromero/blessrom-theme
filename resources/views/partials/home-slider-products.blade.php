@@ -16,7 +16,7 @@ $products = wc_get_products([
   <div class="mx-auto max-w-none"> 
     {{-- Título + subtítulo + CTA --}}
     {{-- Título centrado --}}
-    <header class="mb-6 flex w-full flex-col items-center text-center">
+    <header class="bg-white mb-6 flex w-full flex-col items-center text-center">
       <h2 id="home-products-title" class="text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900">
         Productos destacados
       </h2>
