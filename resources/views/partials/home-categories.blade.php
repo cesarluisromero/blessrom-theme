@@ -40,21 +40,43 @@ function get_random_product_image_from_category($category_id) {
       </header>
       <div class="swiper category-swiper">
         <div class="swiper-wrapper">
-          @foreach($categories as $cat)          
-              @php 
-                $image = get_random_product_image_from_category($cat->term_id);
-                $cat_link = get_term_link($cat);  
-                $cat_slug = basename(untrailingslashit($cat_link));          
-              @endphp
-              <div class="swiper-slide">
-                <a href="{{ $cat_link . '?min_price=5&max_price=500&categorias%5B%5D=' . $cat_slug }}" class="bg-white rounded-2xl shadow-md hover:shadow-lg transition duration-300 p-10 flex flex-col items-center text-center">
-                  <img src="{{ $image }}" alt="{{ $cat->name }}" class="rounded-xl w-64 h-64 object-contain mb-4 transition-transform duration-300 hover:scale-105" />
-                  <h3 class="text-2xl font-semibold text-gray-700 mb-1 font-serif">{{ $cat->name }}</h3>
-                  <p class="text-sm text-gray-500 mb-3">{{ $cat->description ?: 'Categorías' }}</p>
-                  <span class="inline-block bg-[#FFB816] text-white text-lg font-semibold px-6 py-2 rounded-full hover:bg-yellow-500 transition">Ver más</span>
-                </a>
-              </div>          
-          @endforeach
+           @foreach($categories as $cat)
+    @php 
+      $image    = get_random_product_image_from_category($cat->term_id);
+      $cat_link = get_term_link($cat);
+      $cat_slug = $cat->slug; // más fiable que basename()
+    @endphp
+
+    <div class="swiper-slide">
+      <a href="{{ esc_url($cat_link . '?min_price=5&max_price=500&categorias%5B%5D=' . $cat_slug) }}"
+         class="group grid grid-cols-1 md:grid-cols-5 gap-4 items-center bg-white rounded-2xl shadow-md hover:shadow-lg transition duration-300 p-4 sm:p-6 text-left">
+        
+        {{-- 60% Imagen --}}
+        <div class="md:col-span-3">
+          <div class="relative w-full aspect-square overflow-hidden rounded-xl">
+            <img src="{{ esc_url($image) }}" alt="{{ esc_attr($cat->name) }}"
+                 class="absolute inset-0 w-full h-full object-contain transition-transform duration-300 group-hover:scale-105" />
+          </div>
+        </div>
+
+        {{-- 40% Texto --}}
+        <div class="md:col-span-2 min-w-0">
+          <h3 class="text-xl sm:text-2xl font-semibold text-gray-800 font-serif">
+            {{ $cat->name }}
+          </h3>
+          <p class="mt-1 text-sm text-gray-500 line-clamp-2">
+            {{ $cat->description ?: 'Categorías' }}
+          </p>
+
+          <span class="mt-4 inline-flex items-center gap-2 rounded-full bg-[#FFB816] px-5 py-2 text-white font-semibold hover:bg-yellow-500 transition">
+            Ver más
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24"><path fill="currentColor" d="m10 17l5-5l-5-5v10Z"/></svg>
+          </span>
+        </div>
+
+      </a>
+    </div>
+  @endforeach
         </div> 
 
         {{-- Flechas de navegación --}}
