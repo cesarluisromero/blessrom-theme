@@ -33,7 +33,7 @@ function get_random_product_image_from_category($category_id) {
       {{-- Título centrado --}}
         <header class="bg-white mb-6 flex w-full flex-col items-center text-center">
           <h2 id="home-products-title" class="text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900">
-            Categorías de Destacadas
+            Categorías Destacadas
           </h2>
           <p class="mt-1 text-sm text-slate-600">Lo mejor para ti aquí</p>
           <span class="mt-2 h-0.5 w-16 bg-[#FFB816] mx-auto"></span>
