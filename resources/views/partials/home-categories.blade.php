@@ -1,30 +1,35 @@
 
 @php
 $categories = get_terms([
-    'taxonomy' => 'product_cat',
+    'taxonomy'   => 'product_cat',
     'hide_empty' => true,
-    'number' => 32, // puedes ajustar esto
+    'number'     => 32,
 ]);
 
-function get_random_product_image_from_category($category_id) {
-    $args = [
-        'post_type' => 'product',
-        'posts_per_page' => 1,
-        'orderby' => 'rand',
-        'tax_query' => [[
-            'taxonomy' => 'product_cat',
-            'field'    => 'term_id',
-            'terms'    => $category_id,
-        ]]
-    ];
-    $query = new WP_Query($args);
-    if ($query->have_posts()) {
-        $query->the_post();
-        $image = get_the_post_thumbnail_url(get_the_ID(), 'medium');
-        wp_reset_postdata();
-        return $image;
+if ( ! function_exists('br_get_random_product_image_from_category') ) {
+    function br_get_random_product_image_from_category($term_id) {
+        $q = new WP_Query([
+            'post_type'      => 'product',
+            'posts_per_page' => 1,
+            'orderby'        => 'rand',
+            'tax_query'      => [[
+                'taxonomy'         => 'product_cat',
+                'field'            => 'term_id',
+                'terms'            => $term_id,
+                'include_children' => true,
+            ]],
+            'no_found_rows'  => true,
+            'fields'         => 'ids',
+        ]);
+
+        if ( $q->have_posts() ) {
+            $product_id = $q->posts[0];
+            $img = get_the_post_thumbnail_url($product_id, 'medium');
+            wp_reset_postdata();
+            return $img ?: wc_placeholder_img_src();
+        }
+        return wc_placeholder_img_src(); // fallback si no hay productos
     }
-    return wc_placeholder_img_src(); // imagen por defecto si no hay productos
 }
 @endphp
 
