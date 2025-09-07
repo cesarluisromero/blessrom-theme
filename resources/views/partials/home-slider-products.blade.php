@@ -20,21 +20,36 @@ $products = wc_get_products([
           Colección Polos - Hombre
         </h2>
         <p class="mt-1 text-sm text-slate-600">Lo último en nuestra tienda</p>
-        <span class="mt-2 h-0.5 w-16 bg-[#FFB816] mx-auto"></span>
-        
+        <span class="mt-2 h-0.5 w-16 bg-[#FFB816] mx-auto"></span>  
       </header>
       <div class="swiper product-swiper overflow-visible">
         <!-- Contenedor de slides -->
-      
         <div class="swiper-wrapper">
-          @foreach($products as $product)
-            <div class="swiper-slide">
-              <a href="{{ get_permalink($product->get_id()) }}" class="block">
-              {!! $product->get_image('medium', ['class' => 'mx-auto']) !!}
-              <p class="text-xxl text-center mt-4 mb-6 font-serif">{{ $product->get_name() }}</p>
-              </a>
-            </div>
-          @endforeach
+          @foreach ($products as $product)
+    <div class="swiper-slide">
+      <a href="{{ get_permalink($product->get_id()) }}"
+         class="flex items-center gap-4 p-2 text-left">
+        <div class="shrink-0">
+          {!! $product->get_image('medium', [
+            'class' => 'w-24 h-24 object-contain rounded-md',
+            'alt'   => esc_attr($product->get_name()),
+            'loading' => 'lazy'
+          ]) !!}
+        </div>
+
+        <div class="min-w-0 flex-1">
+          <p class="text-base sm:text-lg font-serif leading-snug">
+            {{ $product->get_name() }}
+          </p>
+
+          @php $price_html = $product->get_price_html(); @endphp
+          @if (!empty($price_html))
+            <span class="mt-1 block text-sm text-slate-600">{!! $price_html !!}</span>
+          @endif
+        </div>
+      </a>
+    </div>
+  @endforeach
         </div> 
           <!-- button Ver todo -->
           <div class="mt-6 mb-10 flex justify-center">
@@ -45,9 +60,7 @@ $products = wc_get_products([
           </a>
         </div>
         <!-- Botones -->
-        
         <div class="swiper-button-prev product-swiper-button-prev !hidden md:!flex text-blue-500 absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center bg-white rounded-full shadow-md"></div>
-
         <div class="swiper-button-next product-swiper-button-next !hidden md:!flex text-blue-500 absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center bg-white rounded-full shadow-md"></div>
           
       </div>
