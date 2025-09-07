@@ -52,21 +52,24 @@ function get_random_product_image_from_category($category_id) {
      class="group bg-white rounded-2xl shadow-md hover:shadow-lg transition p-3 sm:p-4 md:p-6 lg:p-10
             flex flex-row md:flex-col items-center md:items-center gap-3 md:gap-4
             text-left md:text-center">
-    
-    {{-- Imagen (a la izquierda en móvil) --}}
-    <img
-      src="{{ $image }}"
-      alt="{{ $cat->name }}"
-      class="rounded-xl w-24 h-24 sm:w-32 sm:h-32 md:w-64 md:h-64 object-contain flex-shrink-0
-             transition-transform duration-300 group-hover:scale-105" />
 
-    {{-- Texto + botón (a la derecha en móvil) --}}
-    <div class="flex-1 md:flex-none">
-      <h3 class="text-base sm:text-lg md:text-xxl font-semibold text-gray-700 mb-1 font-serif">
+    {{-- Imagen: 70% en móvil --}}
+    <div class="flex-[0_0_70%] md:flex-none md:w-full">
+      <img
+        src="{{ $image }}"
+        alt="{{ $cat->name }}"
+        class="w-full aspect-square object-contain rounded-xl
+               transition-transform duration-300 group-hover:scale-105
+               md:w-64 md:h-64 md:mx-auto" />
+    </div>
+
+    {{-- Texto + botón: 30% en móvil --}}
+    <div class="flex-[0_0_30%] md:flex-none md:w-full min-w-0">
+      <h3 class="text-base sm:text-lg md:text-xxl font-semibold text-gray-700 mb-1 font-serif truncate">
         {{ $cat->name }}
       </h3>
 
-      <p class="text-xs sm:text-sm text-gray-500 mb-2 md:mb-3">
+      <p class="text-xs sm:text-sm text-gray-500 mb-2 md:mb-3 line-clamp-2">
         {{ $cat->description ?: 'Categorías' }}
       </p>
 
@@ -78,7 +81,7 @@ function get_random_product_image_from_category($category_id) {
     </div>
   </a>
 </div>
-      
+        
         @endforeach
       </div> 
       {{-- Flechas de navegación --}}
