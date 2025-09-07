@@ -93,11 +93,7 @@ function get_random_product_image_from_category($category_id) {
 
             @if ( ! is_wp_error($cat_link) )
               <div class="swiper-slide">
-                <a href="{{ esc_url( add_query_arg([
-                      'min_price' => 5,
-                      'max_price' => 500,
-                      'categorias' => [$cat_slug],
-                    ], $cat_link) ) }}"
+                <a href="{{ $cat_link . '?min_price=5&max_price=500&categorias%5B%5D=' . $cat_slug }}"
                    class="grid grid-cols-5 items-center gap-4 p-3 text-left">
 
                   {{-- 60% imagen --}}
