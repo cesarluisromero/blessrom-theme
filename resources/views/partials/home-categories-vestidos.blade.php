@@ -16,7 +16,7 @@ $products = wc_get_products([
       {{-- Título centrado --}}
       <header class="bg-white mb-6 flex w-full flex-col items-center text-center">
         <h2 id="home-products-title" class="text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900">
-          Colección Polos - Hombre
+          Colección vestido - Mujer
         </h2>
         <p class="mt-1 text-sm text-slate-600">Lo último en nuestra tienda</p>
         <span class="mt-2 h-0.5 w-16 bg-[#FFB816] mx-auto"></span>  
@@ -57,7 +57,7 @@ $products = wc_get_products([
       {{-- Título centrado --}}
       <header class="bg-white mb-6 flex w-full flex-col items-center text-center">
         <h2 id="home-products-title" class="text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900">
-          Colección Polos - Hombre
+          Colección Vestidos - Mujer
         </h2>
         <p class="mt-1 text-sm text-slate-600">Lo último en nuestra tienda</p>
         <span class="mt-2 h-0.5 w-16 bg-[#FFB816] mx-auto"></span>  
