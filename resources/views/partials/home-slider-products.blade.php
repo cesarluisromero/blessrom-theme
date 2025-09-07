@@ -17,11 +17,11 @@ $products = wc_get_products([
     {{-- Título + subtítulo + CTA --}}
     <header class="mb-4 sm:mb-6 flex items-end justify-between gap-4">
       <div>
-        <h2 id="home-products-title" class="text-left text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900">
+        <h2 id="home-products-title" class="text-center text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900">
           Productos destacados
         </h2>
-        <p class="mt-1 text-sm text-slate-600">Lo último en nuestra tienda</p>
-        <span class="mt-2 block h-0.5 w-16 bg-[#FFB816]"></span>
+        <p class="text-center mt-1 text-sm text-slate-600">Lo último en nuestra tienda</p>
+        <span class="bg-center mt-2 block h-0.5 w-16 bg-[#FFB816]"></span>
       </div>
 
       <a href="{{ esc_url( wc_get_page_permalink('shop') ) }}"
