@@ -3,7 +3,7 @@
 @section('content')
 
 {{-- Banner principal --}}
-  @include('partials.home-banner')
+  @include('partials.home-banner2')
 
   {{-- Categorías destacadas --}}
   @include('partials.home-categories')
@@ -14,20 +14,19 @@
   {{-- Slider productos --}}
   @include('partials.home-slider-products')
   
-  
   {{-- banner de vestidos --}}
   @include('partials.home-banner-vestidos')
-{{-- slider de vestidos --}}
- @include('partials.home-categories-vestidos')
+
+  {{-- slider de vestidos --}}
+  @include('partials.home-categories-vestidos')
 
   {{-- Productos más vendidos --}}
   @include('partials.home-best-sellers')
 
-  
-  
+  {{-- Testimonios --}}  
   @include('partials.home-testimonials')
-  
   
   {{-- Beneficios o razones para elegir Blessrom --}}
   @include('partials.home-features')
+
 @endsection
