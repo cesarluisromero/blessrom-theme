@@ -1,7 +1,6 @@
 {{-- Slider solo para escritorio (md en adelante) --}}
-<section class="hidden md:block w-full text-center py-2 px-4">
-  <div class="max-w-screen-2xl mx-auto px-4">
-    <div class="bg-white rounded-lg shadow-md p-6">
+<section class="hidden md:block full-bleed text-center py-2 px-4">
+    <div class="bg-white">
       <div class="swiper bannervestidos-swiper">
         <!-- Contenedor de slides -->
       
@@ -30,7 +29,7 @@
 
       </div>
     </div>
-  </div>
+  
 </section>
 
 {{-- Slider solo para móvil (hasta sm) --}}
