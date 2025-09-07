@@ -11,8 +11,9 @@ $products = wc_get_products([
 ]);
 @endphp
 
-<section class="text-center popular-products  py-2 px-4">
-  <div class="max-w-screen-2xl mx-auto px-4">
+<section class="text-center popular-products  py-2 px-4 sm:px-3 lg:px-4">
+ 
+  <div class="mx-auto max-w-none"> 
     <div class="bg-white rounded-lg shadow-md p-6">
       <div class="swiper product-swiper">
         <!-- Contenedor de slides -->
