@@ -403,7 +403,7 @@ document.addEventListener('DOMContentLoaded', () => {
     slidesPerView: 4,
     slidesPerGroup: 4,
     loop: true,
-    spaceBetween: 30,
+    spaceBetween: 20,
     navigation: { 
       nextEl: '.category-swiper-button-next',
       prevEl: '.category-swiper-button-prev',
@@ -430,8 +430,8 @@ document.addEventListener('DOMContentLoaded', () => {
         slidesPerGroup: 3,
       },
       1024: {
-        slidesPerView: 6,
-        slidesPerGroup: 6, 
+        slidesPerView: 5,
+        slidesPerGroup: 5, 
       },
     },
   });
