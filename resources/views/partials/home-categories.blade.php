@@ -37,7 +37,7 @@ if (! function_exists('br_get_random_product_image_from_category')) {
 }
 @endphp
 
-<section class="hidden md:block text-center popular-products py-2 px-0 -mx-4 sm:-mx-6 lg:-mx-8">
+<section class="text-center popular-products py-2 px-0 -mx-4 sm:-mx-6 lg:-mx-8">
   <div class="mx-auto max-w-none">
     <div class="bg-white rounded-none sm:rounded-lg shadow-md p-0 sm:p-6">
 
