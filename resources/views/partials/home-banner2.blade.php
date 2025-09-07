@@ -14,7 +14,7 @@
           </div>
           <div class="swiper-slide">
             <img
-              src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/Neutral-Modern-Fashion-Collection-Banner-scaled.png') }}"
+              src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/Neutral-Modern-Fashion-Collection-Banner-2-scaled.png') }}"
               alt="Colección de vestidos"
               class="w-full h-full object-cover"
               loading="lazy" decoding="async">
