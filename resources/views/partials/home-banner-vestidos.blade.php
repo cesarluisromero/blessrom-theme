@@ -14,7 +14,7 @@
           </div>
           <div class="swiper-slide">
             <img
-              src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/Experimenta-nuestra-pasion-por-la-moda.-150.png') }}"
+              src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/Beige-Brown-Clean-Aesthetic-Fashion-Collection-Medium-Banner-scaled.png') }}"
               alt="Colección de vestidos"
               class="w-full h-full object-cover"
               loading="lazy" decoding="async">
@@ -27,6 +27,13 @@
         <div class="swiper-button-prev bannervestidos-swiper-button-prev !hidden md:!flex text-blue-500 absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center bg-white rounded-full shadow-md"></div>
         <div class="swiper-button-next bannervestidos-swiper-button-next !hidden md:!flex text-blue-500 absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center bg-white rounded-full shadow-md"></div>
 
+        {{-- botón fuera del swiper --}}
+        <div class="mt-6 mb-10 flex justify-center">
+          <a href="https://blessrom.com/tienda/?categorias[]=vestido"
+            class="inline-flex items-center gap-2 rounded-full bg-[#FFB816] px-6 py-3 text-white font-semibold shadow hover:bg-yellow-500">
+            Ver más vestidos
+          </a>
+        </div>
       </div>
     </div>
   </div>
