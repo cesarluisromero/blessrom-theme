@@ -43,7 +43,7 @@ if (! function_exists('br_get_random_product_image_from_category')) {
       {{-- Título centrado --}}
       <header class="bg-white mb-6 flex w-full flex-col items-center text-center">
         <h2 id="home-products-title" class="text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900">
-          Colección - Mujer
+          Categorías Destacadas
         </h2>
         <p class="mt-1 text-sm text-slate-600">Explora nuestras categorías</p>
         <span class="mt-2 h-0.5 w-16 bg-[#FFB816] mx-auto"></span>
@@ -65,7 +65,7 @@ if (! function_exists('br_get_random_product_image_from_category')) {
                    class="group grid grid-cols-1 md:grid-cols-5 gap-4 items-center bg-white rounded-2xl shadow-md hover:shadow-lg transition duration-300 p-4 sm:p-6 text-left">
 
                   {{-- 60% Imagen (izquierda) --}}
-                  <div class="md:col-span-3">
+                  <div class="md:col-span-2">
                     <div class="relative w-full aspect-square overflow-hidden rounded-xl">
                       <img src="{{ esc_url($image) }}" alt="{{ esc_attr($cat->name) }}"
                            class="absolute inset-0 w-full h-full object-contain transition-transform duration-300 group-hover:scale-105" />
@@ -73,7 +73,7 @@ if (! function_exists('br_get_random_product_image_from_category')) {
                   </div>
 
                   {{-- 40% Texto (derecha) --}}
-                  <div class="md:col-span-2 min-w-0">
+                  <div class="md:col-span-3 min-w-0">
                     <h3 class="text-xl sm:text-2xl font-semibold text-gray-800 font-serif">
                       {{ $cat->name }}
                     </h3>
