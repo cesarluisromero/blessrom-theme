@@ -14,21 +14,18 @@ $products = wc_get_products([
 <section class="text-center popular-products py-2 px-0 -mx-4 sm:-mx-6 lg:-mx-8">
  
   <div class="mx-auto max-w-none"> 
-    {{-- Título + subtítulo + CTA --}}
-    {{-- Título centrado --}}
-    <header class="bg-white mb-6 flex w-full flex-col items-center text-center">
-      <h2 id="home-products-title" class="text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900">
-        Productos destacados
-      </h2>
-      <p class="mt-1 text-sm text-slate-600">Lo último en nuestra tienda</p>
-      <span class="mt-2 h-0.5 w-16 bg-[#FFB816] mx-auto"></span>
-      <a href="{{ esc_url( wc_get_page_permalink('shop') ) }}"
-         class="mt-4 inline-flex items-center gap-2 rounded-full bg-[#FFB816] px-5 py-2.5 text-white font-semibold hover:bg-yellow-500">
-        Ver todo
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24"><path fill="currentColor" d="m10 17l5-5l-5-5v10Z"/></svg>
-      </a>
-    </header>
+    
+    
     <div class="bg-white rounded-none sm:rounded-lg shadow-md p-0 sm:p-6">
+      {{-- Título centrado --}}
+      <header class="bg-white mb-6 flex w-full flex-col items-center text-center">
+        <h2 id="home-products-title" class="text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900">
+          Colección Polos - Hombre
+        </h2>
+        <p class="mt-1 text-sm text-slate-600">Lo último en nuestra tienda</p>
+        <span class="mt-2 h-0.5 w-16 bg-[#FFB816] mx-auto"></span>
+        
+      </header>
       <div class="swiper product-swiper overflow-visible">
         <!-- Contenedor de slides -->
       
@@ -53,6 +50,11 @@ $products = wc_get_products([
         <!-- Barra inferior -->
         <div class="swiper-scrollbar rounded-full"></div>
 
+          <a href="{{ esc_url( wc_get_page_permalink('shop') ) }}"
+          class="mt-4 inline-flex items-center gap-2 rounded-full bg-[#FFB816] px-5 py-2.5 text-white font-semibold hover:bg-yellow-500">
+          Ver todo
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24"><path fill="currentColor" d="m10 17l5-5l-5-5v10Z"/></svg>
+      </a>
       </div>
     </div>
   </div>
