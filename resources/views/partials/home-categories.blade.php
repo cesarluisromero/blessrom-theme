@@ -48,13 +48,37 @@ function get_random_product_image_from_category($category_id) {
               $cat_slug = basename(untrailingslashit($cat_link));          
             @endphp
             <div class="swiper-slide">
-              <a href="{{ $cat_link . '?min_price=5&max_price=500&categorias%5B%5D=' . $cat_slug }}" class="bg-white rounded-2xl shadow-md hover:shadow-lg transition duration-300 p-10 flex flex-col items-center text-center">
-                <img src="{{ $image }}" alt="{{ $cat->name }}" class="rounded-xl w-64 h-64 object-contain mb-4 transition-transform duration-300 hover:scale-105" />
-                <h3 class="text-xxl font-semibold text-gray-700 mb-1 font-serif">{{ $cat->name }}</h3>
-                <p class="text-sm text-gray-500 mb-3">{{ $cat->description ?: 'Categorías' }}</p>
-                <span class="inline-block bg-[#FFB816] text-white text-xxl font-semibold px-6 py-2 rounded-full hover:bg-yellow-500 transition">Ver más</span>
-              </a>
-            </div>          
+  <a href="{{ $cat_link . '?min_price=5&max_price=500&categorias%5B%5D=' . $cat_slug }}"
+     class="group bg-white rounded-2xl shadow-md hover:shadow-lg transition p-3 sm:p-4 md:p-6 lg:p-10
+            flex flex-row md:flex-col items-center md:items-center gap-3 md:gap-4
+            text-left md:text-center">
+    
+    {{-- Imagen (a la izquierda en móvil) --}}
+    <img
+      src="{{ $image }}"
+      alt="{{ $cat->name }}"
+      class="rounded-xl w-24 h-24 sm:w-32 sm:h-32 md:w-64 md:h-64 object-contain flex-shrink-0
+             transition-transform duration-300 group-hover:scale-105" />
+
+    {{-- Texto + botón (a la derecha en móvil) --}}
+    <div class="flex-1 md:flex-none">
+      <h3 class="text-base sm:text-lg md:text-xxl font-semibold text-gray-700 mb-1 font-serif">
+        {{ $cat->name }}
+      </h3>
+
+      <p class="text-xs sm:text-sm text-gray-500 mb-2 md:mb-3">
+        {{ $cat->description ?: 'Categorías' }}
+      </p>
+
+      <span class="inline-block bg-[#FFB816] text-white text-sm sm:text-base font-semibold
+                   px-3 py-1.5 sm:px-4 sm:py-2 rounded-full
+                   group-hover:bg-yellow-500 transition">
+        Ver más
+      </span>
+    </div>
+  </a>
+</div>
+      
         @endforeach
       </div> 
       {{-- Flechas de navegación --}}
