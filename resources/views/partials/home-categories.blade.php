@@ -29,6 +29,14 @@ function get_random_product_image_from_category($category_id) {
 @endphp
 <section class="py-2"> 
   <div class="container mx-auto px-4">
+    {{-- Título centrado --}}
+      <header class="bg-white mb-6 flex w-full flex-col items-center text-center">
+        <h2 id="home-products-title" class="text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900">
+          Colección Vestidos - Para ti
+        </h2>
+        <p class="mt-1 text-sm text-slate-600">Lo último en nuestra tienda</p>
+        <span class="mt-2 h-0.5 w-16 bg-[#FFB816] mx-auto"></span>
+      </header>
     <div class="swiper category-swiper">
       <div class="swiper-wrapper">
         @foreach($categories as $cat)          
