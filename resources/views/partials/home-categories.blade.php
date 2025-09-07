@@ -1,24 +1,13 @@
 @php
-// 1) Traemos las categorías que quieras mostrar.
-//    Opción A: subcategorías de la categoría "vestido"
-$vestido = get_term_by('slug', 'vestido', 'product_cat');
 
-if ($vestido && ! is_wp_error($vestido)) {
-  $categories = get_terms([
-    'taxonomy'   => 'product_cat',
-    'hide_empty' => true,          // solo categorías con productos
-    'parent'     => $vestido->term_id, // solo hijas de "vestido"
-    'number'     => 18,            // ajusta
-  ]);
-} else {
-  // Opción B (fallback): todas las categorías de primer nivel
+  
   $categories = get_terms([
     'taxonomy'   => 'product_cat',
     'hide_empty' => true,
     'parent'     => 0,
     'number'     => 18,
   ]);
-}
+
 
 // Helper: imagen aleatoria desde productos de la categoría
 if (! function_exists('br_get_random_product_image_from_category')) {
@@ -111,14 +100,7 @@ if (! function_exists('br_get_random_product_image_from_category')) {
         <div class="swiper-button-next category-swiper-button-next !hidden md:!flex text-blue-500 absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center bg-white rounded-full shadow-md"></div>
       </div>
 
-      {{-- Botón Ver Todo (a la categoría madre "vestido" o a la tienda filtrada) --}}
-      <div class="mt-6 mb-10 flex justify-center">
-        <a href="{{ esc_url( get_term_link($vestido ?: 0) ?: add_query_arg(['categorias'=>['vestido']], wc_get_page_permalink('shop')) ) }}"
-           class="inline-flex items-center gap-2 rounded-full bg-[#FFB816] px-6 py-3 text-white font-semibold shadow hover:bg-yellow-500">
-          Ver Todo
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24"><path fill="currentColor" d="m10 17l5-5l-5-5v10Z"/></svg>
-        </a>
-      </div>
+      
 
     </div>
   </div>
