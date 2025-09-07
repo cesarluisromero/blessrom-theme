@@ -2,7 +2,7 @@
 // Trae solo productos publicados en la categoría con slug "vestidos"
 $products = wc_get_products([
   'status'    => 'publish',
-  'limit'     => 16,          // ajusta
+  'limit'     => 18,          // ajusta
   'orderby'   => 'date',      // 'rand' si quieres aleatorio
   'order'     => 'DESC',
   'category'  => ['hombre-polos'],// slug(s) de product_cat
