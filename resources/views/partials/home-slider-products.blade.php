@@ -49,12 +49,15 @@ $products = wc_get_products([
 
         <!-- Barra inferior -->
         <div class="swiper-scrollbar rounded-full"></div>
-
+        <!-- Ver todo -->
+        <div class="flex justify-center mt-4">
           <a href="{{ esc_url( wc_get_page_permalink('shop') ) }}"
-          class="mt-4 inline-flex items-center gap-2 rounded-full bg-[#FFB816] px-5 py-2.5 text-white font-semibold hover:bg-yellow-500">
-          Ver todo
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24"><path fill="currentColor" d="m10 17l5-5l-5-5v10Z"/></svg>
-      </a>
+                    class="mt-4 inline-flex items-center gap-2 rounded-full bg-[#FFB816] px-5 py-2.5 text-white font-semibold hover:bg-yellow-500">
+                    Ver todo
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24"><path fill="currentColor" d="m10 17l5-5l-5-5v10Z"/></svg>
+          </a>
+        </div>
+          
       </div>
     </div>
   </div>
