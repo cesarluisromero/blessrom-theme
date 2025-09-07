@@ -4,7 +4,6 @@
   $categories = get_terms([
     'taxonomy'   => 'product_cat',
     'hide_empty' => true,
-    'parent'     => 0,
     'number'     => 18,
   ]);
 
