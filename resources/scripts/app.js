@@ -366,7 +366,7 @@ document.addEventListener('DOMContentLoaded', () => {
     slidesPerView: 4,
     slidesPerGroup: 4,
     loop: true,
-    spaceBetween: 10,
+    spaceBetween: 18,
     navigation: {
       nextEl: '.product-swiper-button-next',
       prevEl: '.product-swiper-button-prev',
