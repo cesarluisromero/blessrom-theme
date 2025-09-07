@@ -37,11 +37,13 @@ $products = wc_get_products([
           @endforeach
         </div> 
           <!-- button Ver todo -->
-          <a href="{{ esc_url( wc_get_page_permalink('shop') ) }}"
-                    class="mt-4 inline-flex items-center gap-2 rounded-full bg-[#FFB816] px-5 py-2.5 text-white font-semibold hover:bg-yellow-500">
-                    Ver todo
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24"><path fill="currentColor" d="m10 17l5-5l-5-5v10Z"/></svg>
+          <div class="mt-6 mb-10 flex justify-center">
+          <a href="https://blessrom.com/tienda/?categorias[]=vestido"
+            class="inline-flex items-center gap-2 rounded-full bg-[#FFB816] px-6 py-3 text-white font-semibold shadow hover:bg-yellow-500">
+            Ver Todo
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24"><path fill="currentColor" d="m10 17l5-5l-5-5v10Z"/></svg>
           </a>
+        </div>
         <!-- Botones -->
         
         <div class="swiper-button-prev product-swiper-button-prev !hidden md:!flex text-blue-500 absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center bg-white rounded-full shadow-md"></div>
