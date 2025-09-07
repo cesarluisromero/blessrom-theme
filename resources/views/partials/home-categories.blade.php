@@ -3,7 +3,7 @@
 $categories = get_terms([
     'taxonomy' => 'product_cat',
     'hide_empty' => true,
-    'number' => 32, // puedes ajustar esto
+    'number' => 18, // puedes ajustar esto
 ]);
 
 function get_random_product_image_from_category($category_id) {
