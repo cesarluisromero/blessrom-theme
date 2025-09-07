@@ -42,46 +42,45 @@ function get_random_product_image_from_category($category_id) {
     <div class="swiper category-swiper">
       <div class="swiper-wrapper">
         @foreach($categories as $cat)          
-            @php 
-              $image = get_random_product_image_from_category($cat->term_id);
-              $cat_link = get_term_link($cat);  
-              $cat_slug = basename(untrailingslashit($cat_link));          
-            @endphp
-            <div class="swiper-slide">
-  <a href="{{ $cat_link . '?min_price=5&max_price=500&categorias%5B%5D=' . $cat_slug }}"
-     class="group bg-white rounded-2xl shadow-md hover:shadow-lg transition p-3 sm:p-4 md:p-6 lg:p-10
-            flex flex-row md:flex-col items-center md:items-center gap-3 md:gap-4
-            text-left md:text-center">
+          @php 
+            $image = get_random_product_image_from_category($cat->term_id);
+            $cat_link = get_term_link($cat);  
+            $cat_slug = basename(untrailingslashit($cat_link));          
+          @endphp
+          <div class="swiper-slide">
+            <a href="{{ $cat_link . '?min_price=5&max_price=500&categorias%5B%5D=' . $cat_slug }}"
+              class="group bg-white rounded-2xl shadow-md hover:shadow-lg transition p-3 sm:p-4 md:p-6 lg:p-10
+                      flex flex-row md:flex-col items-center md:items-center gap-3 md:gap-4
+                      text-left md:text-center">
 
-    {{-- Imagen: 70% en móvil --}}
-    <div class="flex-[0_0_70%] md:flex-none md:w-full">
-      <img
-        src="{{ $image }}"
-        alt="{{ $cat->name }}"
-        class="w-full aspect-square object-contain rounded-xl
-               transition-transform duration-300 group-hover:scale-105
-               md:w-64 md:h-64 md:mx-auto" />
-    </div>
+              {{-- Imagen: 70% en móvil --}}
+              <div class="flex-[0_0_60%] md:flex-none md:w-full">
+                <img
+                  src="{{ $image }}"
+                  alt="{{ $cat->name }}"
+                  class="w-full aspect-square object-contain rounded-xl
+                        transition-transform duration-300 group-hover:scale-105
+                        md:w-64 md:h-64 md:mx-auto" />
+              </div>
 
-    {{-- Texto + botón: 30% en móvil --}}
-    <div class="flex-[0_0_30%] md:flex-none md:w-full min-w-0">
-      <h3 class="text-base sm:text-lg md:text-xxl font-semibold text-gray-700 mb-1 font-serif truncate">
-        {{ $cat->name }}
-      </h3>
+              {{-- Texto + botón: 30% en móvil --}}
+              <div class="flex-[0_0_40%] md:flex-none md:w-full min-w-0">
+                <h3 class="text-base sm:text-lg md:text-xxl font-semibold text-gray-700 mb-1 font-serif truncate">
+                  {{ $cat->name }}
+                </h3>
 
-      <p class="text-xs sm:text-sm text-gray-500 mb-2 md:mb-3 line-clamp-2">
-        {{ $cat->description ?: 'Categorías' }}
-      </p>
+                <p class="text-xs sm:text-sm text-gray-500 mb-2 md:mb-3 line-clamp-2">
+                  {{ $cat->description ?: 'Categorías' }}
+                </p>
 
-      <span class="inline-block bg-[#FFB816] text-white text-sm sm:text-base font-semibold
-                   px-3 py-1.5 sm:px-4 sm:py-2 rounded-full
-                   group-hover:bg-yellow-500 transition">
-        Ver más
-      </span>
-    </div>
-  </a>
-</div>
-        
+                <span class="inline-block bg-[#FFB816] text-white text-sm sm:text-base font-semibold
+                            px-3 py-1.5 sm:px-4 sm:py-2 rounded-full
+                            group-hover:bg-yellow-500 transition">
+                  Ver más
+                </span>
+              </div>
+            </a>
+          </div>
         @endforeach
       </div> 
       {{-- Flechas de navegación --}}
