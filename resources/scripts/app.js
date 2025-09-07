@@ -478,7 +478,7 @@ document.addEventListener('DOMContentLoaded', () => {
     slidesPerView: 4,
     slidesPerGroup: 4,
     loop: true,
-    spaceBetween: 10,
+    spaceBetween: 18,
     navigation: { 
       nextEl: '.vestidos-swiper-button-next',
       prevEl: '.vestidos-swiper-button-prev',
@@ -505,8 +505,8 @@ document.addEventListener('DOMContentLoaded', () => {
         slidesPerGroup: 3,
       },
       1024: {
-        slidesPerView: 4,
-        slidesPerGroup: 4, 
+        slidesPerView: 6,
+        slidesPerGroup: 6, 
       },
     },
   });

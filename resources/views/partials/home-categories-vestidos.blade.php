@@ -2,7 +2,7 @@
 // Trae solo productos publicados en la categoría con slug "vestidos"
 $products = wc_get_products([
   'status'    => 'publish',
-  'limit'     => 16,          // ajusta
+  'limit'     => 18,          // ajusta
   'orderby'   => 'date',      // 'rand' si quieres aleatorio
   'order'     => 'DESC',
   'category'  => ['vestido'],// slug(s) de product_cat
@@ -13,6 +13,15 @@ $products = wc_get_products([
 <section class="text-center py-2 px-4">
   <div class="max-w-screen-2xl mx-auto px-4">
     <div class="bg-white rounded-lg shadow-md p-6">
+      {{-- Título centrado --}}
+      <header class="bg-white mb-6 flex w-full flex-col items-center text-center">
+        <h2 id="home-products-title" class="text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900">
+          Colección Vestidos - Para ti
+        </h2>
+        <p class="mt-1 text-sm text-slate-600">Lo último en nuestra tienda</p>
+        <span class="mt-2 h-0.5 w-16 bg-[#FFB816] mx-auto"></span>
+        
+      </header>
       <div class="swiper vestidos-swiper">
         <!-- Contenedor de slides -->
       
@@ -27,15 +36,19 @@ $products = wc_get_products([
           @endforeach
         </div> 
       
-
+        <!-- button Ver todo -->
+        <a href="{{ esc_url( wc_get_page_permalink('shop') ) }}"
+                  class="mt-4 inline-flex items-center gap-2 rounded-full bg-[#FFB816] px-5 py-2.5 text-white font-semibold hover:bg-yellow-500">
+                  Ver todo
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24"><path fill="currentColor" d="m10 17l5-5l-5-5v10Z"/></svg>
+        </a>
         <!-- Botones -->
         
         <div class="swiper-button-prev vestidos-swiper-button-prev !hidden md:!flex text-blue-500 absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center bg-white rounded-full shadow-md"></div>
 
         <div class="swiper-button-next vestidos-swiper-button-next !hidden md:!flex text-blue-500 absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center bg-white rounded-full shadow-md"></div>
 
-        <!-- Barra inferior -->
-        <div class="swiper-scrollbar rounded-full"></div>
+        
 
       </div>
     </div>
