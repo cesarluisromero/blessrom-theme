@@ -15,17 +15,15 @@ $products = wc_get_products([
  
   <div class="mx-auto max-w-none"> 
     {{-- Título + subtítulo + CTA --}}
-    <header class="mb-4 sm:mb-6 flex items-end justify-between gap-4">
-      <div>
-        <h2 id="home-products-title" class="text-center text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900">
-          Productos destacados
-        </h2>
-        <p class="text-center mt-1 text-sm text-slate-600">Lo último en nuestra tienda</p>
-        <span class="bg-center mt-2 block h-0.5 w-16 bg-[#FFB816]"></span>
-      </div>
-
+    {{-- Título centrado --}}
+    <header class="mb-6 flex w-full flex-col items-center text-center">
+      <h2 id="home-products-title" class="text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900">
+        Productos destacados
+      </h2>
+      <p class="mt-1 text-sm text-slate-600">Lo último en nuestra tienda</p>
+      <span class="mt-2 h-0.5 w-16 bg-[#FFB816] mx-auto"></span>
       <a href="{{ esc_url( wc_get_page_permalink('shop') ) }}"
-         class="hidden md:inline-flex items-center gap-2 rounded-full bg-[#FFB816] px-4 py-2 text-white font-semibold hover:bg-yellow-500">
+         class="mt-4 inline-flex items-center gap-2 rounded-full bg-[#FFB816] px-5 py-2.5 text-white font-semibold hover:bg-yellow-500">
         Ver todo
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24"><path fill="currentColor" d="m10 17l5-5l-5-5v10Z"/></svg>
       </a>
