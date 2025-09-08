@@ -9,7 +9,7 @@
   @include('partials.home-categories')
 
   {{-- Sección después de las categorías --}}
-  @include('partials.home-despues-categorias')
+  @include('partials.home-despues-categorias') 
 
   {{-- Slider productos --}}
   @include('partials.home-slider-products')
