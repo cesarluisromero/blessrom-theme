@@ -51,7 +51,22 @@
             fetchpriority="high" decoding="async">
         </div>
         <div class="swiper-slide">
-          <img src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/Creamy-Black-Clean-Mens-Fashion-Instagram-Post-movil.png') }}"
+          <img src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/1-3.png') }}"
+               alt="Colección de vestidos"
+               class="w-full h-auto block" loading="lazy" decoding="async">
+        </div>
+        <div class="swiper-slide">
+          <img src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/2-1.png') }}"
+               alt="Colección de vestidos"
+               class="w-full h-auto block" loading="lazy" decoding="async">
+        </div>
+        <div class="swiper-slide">
+          <img src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/3.png') }}"
+               alt="Colección de vestidos"
+               class="w-full h-auto block" loading="lazy" decoding="async">
+        </div>
+        <div class="swiper-slide">
+          <img src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/4.png') }}"
                alt="Colección de vestidos"
                class="w-full h-auto block" loading="lazy" decoding="async">
         </div>
@@ -65,7 +80,7 @@
     
       {{-- botón fuera del swiper --}}
       <div class="mt-6 mb-10 flex justify-center">
-        <a href="https://blessrom.com/tienda/?categorias[]=vestido"
+        <a href="https://blessrom.com/tienda/?categorias[]=hombre-polos"
           class="inline-flex items-center gap-2 rounded-full bg-[#FFB816] px-6 py-3 text-white font-semibold shadow hover:bg-yellow-500">
           Ver Todo
         </a>
