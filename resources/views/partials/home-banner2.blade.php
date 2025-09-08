@@ -7,14 +7,14 @@
         <div class="swiper-wrapper">
           <div class="swiper-slide">
             <img
-              src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/Neutral-Modern-Fashion-Collection-Banner-scaled.png') }}"
+              src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/1-4-scaled.png') }}"
               alt="Experimenta nuestra pasión por la moda en Tarapoto"
               class="w-full h-full object-cover"
               fetchpriority="high" decoding="async">
           </div>
           <div class="swiper-slide">
             <img
-              src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/Neutral-Modern-Fashion-Collection-Banner-3.png') }}"
+              src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/2-2-scaled.png') }}"
               alt="Colección de vestidos"
               class="w-full h-full object-cover"
               loading="lazy" decoding="async">
@@ -47,14 +47,14 @@
         <div class="swiper-wrapper">
           <div class="swiper-slide">
             <img
-              src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/2-2.png') }}"
+              src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/3-1.png') }}"
               alt="Experimenta nuestra pasión por la moda en Tarapoto"
               class="w-full h-full object-cover"
               fetchpriority="high" decoding="async">
           </div>
           <div class="swiper-slide">
             <img
-              src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/3-1.png') }}"
+              src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/4-1.png') }}"
               alt="Colección de vestidos"
               class="w-full h-full object-cover"
               loading="lazy" decoding="async">
