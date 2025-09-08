@@ -20,9 +20,6 @@
   {{-- slider de vestidos --}}
   @include('partials.home-categories-vestidos')
 
-  {{-- Productos más vendidos --}}
-  @include('partials.home-best-sellers')
-
   {{-- Testimonios --}}  
   @include('partials.home-testimonials')
   
