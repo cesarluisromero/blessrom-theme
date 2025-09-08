@@ -29,9 +29,9 @@
 
         {{-- botón fuera del swiper --}}
         <div class="mt-6 mb-10 flex justify-center">
-          <a href="https://blessrom.com/tienda/?categorias[]=vestido"
+          <a href="https://blessrom.com/tienda/?categorias[]=hombre-polos"
             class="inline-flex items-center gap-2 rounded-full bg-[#FFB816] px-6 py-3 text-white font-semibold shadow hover:bg-yellow-500">
-            Ver más vestidos
+            Ver Todo
           </a>
         </div>
       </div>
