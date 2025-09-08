@@ -47,7 +47,7 @@
         <div class="swiper-wrapper">
           <div class="swiper-slide">
             <img
-              src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/Beige-Black-Bold-Fashion-Product-Promotion-Instagram-Story.mp4') }}"
+              src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/Post-de-Instagram-Vertical-Nueva-Coleccion-de-Moda-Fotografico-Rojo.png') }}"
               alt="Experimenta nuestra pasión por la moda en Tarapoto"
               class="w-full h-full object-cover"
               fetchpriority="high" decoding="async">
