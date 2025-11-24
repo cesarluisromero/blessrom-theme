@@ -18,7 +18,7 @@
             {{-- Fallback si no hay slides configurados --}}
             <div class="swiper-slide">
               <img
-                src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/Creamy-Black-Clean-Mens-Fashion-Landscape-Banner.png') }}"
+                src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/White-Simple-Photocentric-Jewelry-Promo-Banner-Landscape-scaled.png') }}"
                 alt="Banner"
                 class="w-full h-full object-cover"
                 fetchpriority="high" decoding="async">
