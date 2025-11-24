@@ -5,7 +5,7 @@
         <!-- Contenedor de slides -->
       
         <div class="swiper-wrapper">
-          @forelse($slides as $index => $slide)
+          @forelse($slides_desktop as $index => $slide)
             <div class="swiper-slide">
               <img
                 src="{{ esc_url($slide['imagen']['url'] ?? $slide['imagen'] ?? '') }}"
@@ -46,11 +46,12 @@
   </div>
 </section>
 
+<!-- Banner móvil -->
 <section class="block md:hidden full-bleed text-center py-6 overflow-x-clip">
   <div class="bg-white">
     <div class="swiper bannervestidos-swiper rounded-none" aria-label="Banner vestidos móvil">
       <div class="swiper-wrapper">
-        @forelse($slides as $index => $slide)
+        @forelse($slides_mobile as $index => $slide)
           <div class="swiper-slide">
             <img
               src="{{ esc_url($slide['imagen']['url'] ?? $slide['imagen'] ?? '') }}"
