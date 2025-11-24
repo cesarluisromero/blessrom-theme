@@ -520,3 +520,10 @@ add_filter('woocommerce_thankyou_order_received_text', function($msg, $order){
 }, 10, 2);
 
 
+if (function_exists('acf_add_options_page')) {
+  acf_add_options_page([
+      'page_title' => 'Ajustes del Tema',
+      'menu_title' => 'Ajustes del Tema',
+      'menu_slug'  => 'theme-settings',
+  ]);
+}
