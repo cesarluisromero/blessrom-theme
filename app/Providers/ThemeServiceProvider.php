@@ -41,7 +41,8 @@ class ThemeServiceProvider extends SageServiceProvider
     }
 
     protected $composers = [
-    \App\View\Composers\HeaderMenu::class,
+        \App\View\Composers\HeaderMenu::class,
+        \App\View\Composers\HomeBannerComposer::class,
     ];
 
 }

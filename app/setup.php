@@ -519,7 +519,17 @@ add_filter('woocommerce_thankyou_order_received_text', function($msg, $order){
   return __('¡Gracias! Tu pedido fue recibido.', 'tu-textdomain');
 }, 10, 2);
 
-
+/**
+ * Página de opciones de ACF (requiere ACF Pro)
+ * 
+ * NOTA: Esta funcionalidad solo está disponible con ACF Pro.
+ * Si no tienes ACF Pro, los campos se deben asignar a una página específica
+ * (ver HomeBannerComposer.php para ejemplo de uso con página específica).
+ * 
+ * Si adquieres ACF Pro, descomenta este código y actualiza los composers
+ * para usar 'option' en lugar del ID de página.
+ */
+/*
 if (function_exists('acf_add_options_page')) {
   acf_add_options_page([
       'page_title' => 'Ajustes del Tema',
@@ -527,3 +537,4 @@ if (function_exists('acf_add_options_page')) {
       'menu_slug'  => 'theme-settings',
   ]);
 }
+*/
