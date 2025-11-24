@@ -20,7 +20,7 @@ class HomeBannerComposer extends Composer
          * 
          * Alternativa: Usa get_page_by_path() si prefieres buscar por slug
          */
-        $page_id = 1241; // ID de la página de configuración del banner
+        $page_id = 2873; // ID de la página de configuración del banner
 
         // Fallback: intentar buscar por slug si no se configuró el ID
         if (!$page_id) {
