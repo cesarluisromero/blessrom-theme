@@ -435,162 +435,166 @@ document.addEventListener('DOMContentLoaded', () => {
       },
     },
   });
-  // HERO (si lo usas)
-  new Swiper('.bannervestidos-swiper', {
-    slidesPerView: 4,
-    slidesPerGroup: 4,
-    loop: true,
-    spaceBetween: 10,
-    navigation: { 
-      nextEl: '.bannervestidos-swiper-button-next',
-      prevEl: '.bannervestidos-swiper-button-prev',
-      enabled: true,
-    },
-    autoplay: {
-      delay: 5000, // ⏱ Tiempo entre slides en milisegundos (3000 = 3 segundos)
-      disableOnInteraction: false // sigue después de hacer clic o tocar
-    },
-    pagination: {
-      el: '.bannervestidos-swiper-pagination',
-      clickable: true,
-      enabled: false,
-    },
-    breakpoints: {
-      0: { 
-        slidesPerView: 1,
-        slidesPerGroup: 1,
-        navigation: { enabled: false },
-        pagination:  { enabled: true  },
+  // HERO (si lo usas) - bannervestidos-swiper
+  const bannervestidosElements = document.querySelectorAll('.bannervestidos-swiper:not(.swiper-initialized)');
+  bannervestidosElements.forEach((element) => {
+    const slides = element.querySelectorAll('.swiper-slide');
+    const slideCount = slides.length;
+    const hasMultipleSlides = slideCount > 1;
+    
+    const section = element.closest('section');
+    const nextBtn = section ? section.querySelector('.bannervestidos-swiper-button-next') : null;
+    const prevBtn = section ? section.querySelector('.bannervestidos-swiper-button-prev') : null;
+    
+    new Swiper(element, {
+      slidesPerView: 1,
+      slidesPerGroup: 1,
+      loop: hasMultipleSlides,
+      spaceBetween: 10,
+      touchEventsTarget: 'container',
+      navigation: hasMultipleSlides && nextBtn && prevBtn ? { 
+        nextEl: nextBtn,
+        prevEl: prevBtn,
+        enabled: true,
+      } : false,
+      autoplay: hasMultipleSlides ? {
+        delay: 5000,
+        disableOnInteraction: false
+      } : false,
+      pagination: {
+        el: '.bannervestidos-swiper-pagination',
+        clickable: true,
+        enabled: false,
       },
-      640: {   
-        slidesPerView: 1,
-        slidesPerGroup: 1,
+      observer: true,
+      observeParents: true,
+      watchOverflow: true,
+      breakpoints: {
+        0: { 
+          slidesPerView: 1,
+          slidesPerGroup: 1,
+          navigation: { enabled: false },
+          pagination: { enabled: hasMultipleSlides },
+        },
+        640: {   
+          slidesPerView: 1,
+          slidesPerGroup: 1,
+        },
+        1024: {
+          slidesPerView: 1,
+          slidesPerGroup: 1, 
+        },
       },
-      1024: {
-        slidesPerView: 1,
-        slidesPerGroup: 1, 
-      },
-    },
+    });
   });
 
   const createSingleImageSwiper = ({ selector, nextSelector, prevSelector, paginationSelector }) => {
     const elements = document.querySelectorAll(`${selector}:not(.swiper-initialized)`);
 
     elements.forEach((element) => {
-      // Verificar si el elemento está visible (no oculto por CSS)
-      const isVisible = () => {
-        const style = window.getComputedStyle(element);
-        return style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0';
-      };
+      // Si ya está inicializado, no hacer nada
+      if (element.swiper) {
+        return;
+      }
 
-      const initSwiper = () => {
-        // Si ya está inicializado, no hacer nada
-        if (element.swiper) {
-          return;
-        }
+      const slides = element.querySelectorAll('.swiper-slide');
+      const slideCount = slides.length;
 
-        const slides = element.querySelectorAll('.swiper-slide');
-        const slideCount = slides.length;
+      if (slideCount === 0) {
+        return;
+      }
 
-        if (slideCount === 0) {
-          return;
-        }
+      const section = element.closest('section');
+      const nextBtn = section ? section.querySelector(nextSelector) : null;
+      const prevBtn = section ? section.querySelector(prevSelector) : null;
+      const paginationEl = paginationSelector && section ? section.querySelector(paginationSelector) : null;
 
-        const section = element.closest('section');
-        const nextBtn = section ? section.querySelector(nextSelector) : null;
-        const prevBtn = section ? section.querySelector(prevSelector) : null;
-        const paginationEl = paginationSelector && section ? section.querySelector(paginationSelector) : null;
-
-        const swiperConfig = {
-          slidesPerView: 1,
-          slidesPerGroup: 1,
-          loop: slideCount > 1,
-          spaceBetween: 10,
-          allowTouchMove: slideCount > 1,
-          touchEventsTarget: 'container',
-          autoplay: slideCount > 1 ? {
-            delay: 5000,
-            disableOnInteraction: false,
-          } : false,
-          navigation: slideCount > 1 && nextBtn && prevBtn ? {
-            nextEl: nextBtn,
-            prevEl: prevBtn,
-            enabled: true,
-          } : false,
-          pagination: false,
-          observer: true,
-          observeParents: true,
-          watchOverflow: true,
-          breakpoints: {
-            0: {
-              slidesPerView: 1,
-              slidesPerGroup: 1,
-            },
-            640: {
-              slidesPerView: 1,
-              slidesPerGroup: 1,
-            },
-            1024: {
-              slidesPerView: 1,
-              slidesPerGroup: 1,
-            },
+      const swiperConfig = {
+        slidesPerView: 1,
+        slidesPerGroup: 1,
+        loop: slideCount > 1,
+        spaceBetween: 10,
+        allowTouchMove: slideCount > 1,
+        touchEventsTarget: 'container',
+        autoplay: slideCount > 1 ? {
+          delay: 5000,
+          disableOnInteraction: false,
+        } : false,
+        navigation: slideCount > 1 && nextBtn && prevBtn ? {
+          nextEl: nextBtn,
+          prevEl: prevBtn,
+          enabled: true,
+        } : false,
+        pagination: false,
+        observer: true,
+        observeParents: true,
+        watchOverflow: true,
+        breakpoints: {
+          0: {
+            slidesPerView: 1,
+            slidesPerGroup: 1,
           },
-        };
-
-        if (slideCount > 1 && paginationEl) {
-          swiperConfig.pagination = {
-            el: paginationEl,
-            clickable: true,
-            enabled: false,
-          };
-          swiperConfig.breakpoints[0].pagination = { enabled: true };
-        }
-
-        try {
-          console.info(`[Swiper] init ${selector}`, { slideCount, visible: isVisible() });
-          const swiper = new Swiper(element, swiperConfig);
-          
-          // Si el elemento estaba oculto, actualizar cuando se muestre
-          if (!isVisible()) {
-            const checkVisibility = setInterval(() => {
-              if (isVisible() && swiper) {
-                swiper.update();
-                swiper.slideTo(0, 0); // Resetear al primer slide
-                clearInterval(checkVisibility);
-              }
-            }, 100);
-            
-            // Limpiar después de 5 segundos si no se muestra
-            setTimeout(() => clearInterval(checkVisibility), 5000);
-          }
-        } catch (error) {
-          console.error(`Error inicializando ${selector}:`, error);
-        }
+          640: {
+            slidesPerView: 1,
+            slidesPerGroup: 1,
+          },
+          1024: {
+            slidesPerView: 1,
+            slidesPerGroup: 1,
+          },
+        },
       };
 
-      // Inicializar inmediatamente si está visible
-      if (isVisible()) {
-        initSwiper();
-      } else {
-        // Si está oculto, usar IntersectionObserver para inicializar cuando sea visible
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting && !element.swiper) {
-              initSwiper();
-              observer.disconnect();
+      if (slideCount > 1 && paginationEl) {
+        swiperConfig.pagination = {
+          el: paginationEl,
+          clickable: true,
+          enabled: false,
+        };
+        swiperConfig.breakpoints[0].pagination = { enabled: true };
+      }
+
+      try {
+        const swiper = new Swiper(element, swiperConfig);
+        
+        // Actualizar cuando el elemento se muestre (para elementos ocultos por CSS responsive)
+        const updateWhenVisible = () => {
+          if (swiper) {
+            swiper.update();
+            swiper.slideTo(0, 0);
+          }
+        };
+        
+        // Usar MutationObserver para detectar cambios en clases CSS
+        const sectionElement = element.closest('section');
+        if (sectionElement) {
+          const styleObserver = new MutationObserver(() => {
+            const style = window.getComputedStyle(sectionElement);
+            if (style.display !== 'none' && swiper) {
+              // Pequeño delay para asegurar que el layout esté listo
+              setTimeout(updateWhenVisible, 50);
             }
           });
-        }, { threshold: 0.1 });
+          
+          styleObserver.observe(sectionElement, {
+            attributes: true,
+            attributeFilter: ['class', 'style']
+          });
+        }
         
-        observer.observe(element);
+        // También actualizar en resize
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(() => {
+            if (swiper) {
+              swiper.update();
+            }
+          }, 250);
+        });
         
-        // Fallback: inicializar después de un delay si aún no se ha inicializado
-        setTimeout(() => {
-          if (!element.swiper) {
-            initSwiper();
-            observer.disconnect();
-          }
-        }, 1000);
+      } catch (error) {
+        console.error(`Error inicializando ${selector}:`, error);
       }
     });
   };
