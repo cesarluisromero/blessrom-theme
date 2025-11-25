@@ -459,14 +459,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // HERO (si lo usas) - bannervestidos-swiper
   const initBannervestidos = () => {
     const bannervestidosElements = document.querySelectorAll('.bannervestidos-swiper:not(.swiper-initialized)');
-    console.log(`[Swiper] Encontrados ${bannervestidosElements.length} elementos .bannervestidos-swiper`);
     
     bannervestidosElements.forEach((element) => {
       const slides = element.querySelectorAll('.swiper-slide');
       const slideCount = slides.length;
       const hasMultipleSlides = slideCount > 1;
-      
-      console.log(`[Swiper] Inicializando .bannervestidos-swiper, slides: ${slideCount}`);
       
       const section = element.closest('section');
       const nextBtn = section ? section.querySelector('.bannervestidos-swiper-button-next') : null;
@@ -513,16 +510,14 @@ document.addEventListener('DOMContentLoaded', () => {
             },
           },
         });
-        console.log(`[Swiper] ✅ .bannervestidos-swiper inicializado`, swiper);
         
         setTimeout(() => {
           if (swiper) {
             swiper.update();
-            console.log(`[Swiper] .bannervestidos-swiper actualizado`);
           }
         }, 100);
       } catch (error) {
-        console.error(`[Swiper] ❌ Error inicializando .bannervestidos-swiper:`, error);
+        console.error(`[Swiper] Error inicializando .bannervestidos-swiper:`, error);
       }
     });
   };
@@ -605,15 +600,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       try {
-        console.log(`[Swiper] Inicializando ${selector}, slides: ${slideCount}`);
         const swiper = new Swiper(element, swiperConfig);
-        console.log(`[Swiper] ✅ ${selector} inicializado correctamente`, swiper);
         
         // Forzar actualización después de un breve delay para asegurar que el layout esté listo
         setTimeout(() => {
           if (swiper) {
             swiper.update();
-            console.log(`[Swiper] ${selector} actualizado`);
           }
         }, 100);
         
@@ -622,7 +614,6 @@ document.addEventListener('DOMContentLoaded', () => {
           if (swiper) {
             swiper.update();
             swiper.slideTo(0, 0);
-            console.log(`[Swiper] ${selector} actualizado por visibilidad`);
           }
         };
         
@@ -656,14 +647,12 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('resize', resizeHandler);
         
       } catch (error) {
-        console.error(`[Swiper] ❌ Error inicializando ${selector}:`, error);
+        console.error(`[Swiper] Error inicializando ${selector}:`, error);
       }
     });
   };
 
   const initHomeBanners = () => {
-    console.log('[Swiper Init] Inicializando banners...');
-    
     createSingleImageSwiper({
       selector: '.banner-vestidos-swiper',
       nextSelector: '.banner-vestidos-swiper-button-next',
@@ -677,8 +666,6 @@ document.addEventListener('DOMContentLoaded', () => {
       prevSelector: '.home-banner2-swiper-button-prev',
       paginationSelector: '.home-banner2-swiper-pagination',
     });
-    
-    console.log('[Swiper Init] Banners inicializados');
   };
 
   // Inicializar después de que todo esté listo
