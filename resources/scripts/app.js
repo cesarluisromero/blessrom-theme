@@ -362,130 +362,180 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.addEventListener('DOMContentLoaded', function () {
-  new Swiper('.product-swiper', {
-    slidesPerView: 4,
-    slidesPerGroup: 4,
-    loop: true,
-    spaceBetween: 18,
-    navigation: {
-      nextEl: '.product-swiper-button-next',
-      prevEl: '.product-swiper-button-prev',
-      enabled: true,
-    },
-    scrollbar: {
-      el: '.swiper-scrollbar',
-      draggable: true,
-      hide: true,
-    },
-    autoplay: {
-      delay: 3000, // ⏱ Tiempo entre slides en milisegundos (3000 = 3 segundos)
-      disableOnInteraction: false // sigue después de hacer clic o tocar
-    },
-  
-    breakpoints: {
-      0: {
-        slidesPerView: 1,
-        slidesPerGroup: 1, 
-        navigation: { enabled: false },
-      },
-      640: {   
-        slidesPerView: 3,
-        slidesPerGroup: 3,
-      },
-      1024: {
-        slidesPerView: 6,
-        slidesPerGroup: 6,
-      },
-    },
+  const productElements = document.querySelectorAll('.product-swiper:not(.swiper-initialized)');
+  productElements.forEach((element) => {
+    try {
+      const swiper = new Swiper(element, {
+        slidesPerView: 4,
+        slidesPerGroup: 4,
+        loop: true,
+        spaceBetween: 18,
+        touchEventsTarget: 'container',
+        navigation: {
+          nextEl: element.closest('section')?.querySelector('.product-swiper-button-next'),
+          prevEl: element.closest('section')?.querySelector('.product-swiper-button-prev'),
+          enabled: true,
+        },
+        scrollbar: {
+          el: '.swiper-scrollbar',
+          draggable: true,
+          hide: true,
+        },
+        autoplay: {
+          delay: 3000,
+          disableOnInteraction: false
+        },
+        observer: true,
+        observeParents: true,
+        breakpoints: {
+          0: {
+            slidesPerView: 1,
+            slidesPerGroup: 1, 
+            navigation: { enabled: false },
+          },
+          640: {   
+            slidesPerView: 3,
+            slidesPerGroup: 3,
+          },
+          1024: {
+            slidesPerView: 6,
+            slidesPerGroup: 6,
+          },
+        },
+      });
+      setTimeout(() => swiper.update(), 100);
+    } catch (error) {
+      console.error('[Swiper] Error en .product-swiper:', error);
+    }
   });
 
-  new Swiper('.category-swiper', {
-    slidesPerView: 4,
-    slidesPerGroup: 4,
-    loop: true,
-    spaceBetween: 18,
-    navigation: { 
-      nextEl: '.category-swiper-button-next',
-      prevEl: '.category-swiper-button-prev',
-      enabled: true,
-    },
-    autoplay: {
-      delay: 3000, // ⏱ Tiempo entre slides en milisegundos (3000 = 3 segundos)
-      disableOnInteraction: false // sigue después de hacer clic o tocar
-    },
-    pagination: {
-      el: '.category-swiper-pagination',
-      clickable: true,
-      enabled: false,
-    },
-    breakpoints: {
-      0: { 
-        slidesPerView: 1,
-        slidesPerGroup: 1,
-        navigation: { enabled: false },
-        pagination:  { enabled: true  },
-      },
-      640: {   
-        slidesPerView: 3,
-        slidesPerGroup: 3,
-      },
-      1024: {
-        slidesPerView: 6,
-        slidesPerGroup: 6, 
-      },
-    },
+  const categoryElements = document.querySelectorAll('.category-swiper:not(.swiper-initialized)');
+  categoryElements.forEach((element) => {
+    try {
+      const swiper = new Swiper(element, {
+        slidesPerView: 4,
+        slidesPerGroup: 4,
+        loop: true,
+        spaceBetween: 18,
+        touchEventsTarget: 'container',
+        navigation: { 
+          nextEl: element.closest('section')?.querySelector('.category-swiper-button-next'),
+          prevEl: element.closest('section')?.querySelector('.category-swiper-button-prev'),
+          enabled: true,
+        },
+        autoplay: {
+          delay: 3000,
+          disableOnInteraction: false
+        },
+        pagination: {
+          el: element.closest('section')?.querySelector('.category-swiper-pagination'),
+          clickable: true,
+          enabled: false,
+        },
+        observer: true,
+        observeParents: true,
+        breakpoints: {
+          0: { 
+            slidesPerView: 1,
+            slidesPerGroup: 1,
+            navigation: { enabled: false },
+            pagination: { enabled: true },
+          },
+          640: {   
+            slidesPerView: 3,
+            slidesPerGroup: 3,
+          },
+          1024: {
+            slidesPerView: 6,
+            slidesPerGroup: 6, 
+          },
+        },
+      });
+      setTimeout(() => swiper.update(), 100);
+    } catch (error) {
+      console.error('[Swiper] Error en .category-swiper:', error);
+    }
   });
   // HERO (si lo usas) - bannervestidos-swiper
-  const bannervestidosElements = document.querySelectorAll('.bannervestidos-swiper:not(.swiper-initialized)');
-  bannervestidosElements.forEach((element) => {
-    const slides = element.querySelectorAll('.swiper-slide');
-    const slideCount = slides.length;
-    const hasMultipleSlides = slideCount > 1;
+  const initBannervestidos = () => {
+    const bannervestidosElements = document.querySelectorAll('.bannervestidos-swiper:not(.swiper-initialized)');
+    console.log(`[Swiper] Encontrados ${bannervestidosElements.length} elementos .bannervestidos-swiper`);
     
-    const section = element.closest('section');
-    const nextBtn = section ? section.querySelector('.bannervestidos-swiper-button-next') : null;
-    const prevBtn = section ? section.querySelector('.bannervestidos-swiper-button-prev') : null;
-    
-    new Swiper(element, {
-      slidesPerView: 1,
-      slidesPerGroup: 1,
-      loop: hasMultipleSlides,
-      spaceBetween: 10,
-      touchEventsTarget: 'container',
-      navigation: hasMultipleSlides && nextBtn && prevBtn ? { 
-        nextEl: nextBtn,
-        prevEl: prevBtn,
-        enabled: true,
-      } : false,
-      autoplay: hasMultipleSlides ? {
-        delay: 5000,
-        disableOnInteraction: false
-      } : false,
-      pagination: {
-        el: '.bannervestidos-swiper-pagination',
-        clickable: true,
-        enabled: false,
-      },
-      observer: true,
-      observeParents: true,
-      watchOverflow: true,
-      breakpoints: {
-        0: { 
+    bannervestidosElements.forEach((element) => {
+      const slides = element.querySelectorAll('.swiper-slide');
+      const slideCount = slides.length;
+      const hasMultipleSlides = slideCount > 1;
+      
+      console.log(`[Swiper] Inicializando .bannervestidos-swiper, slides: ${slideCount}`);
+      
+      const section = element.closest('section');
+      const nextBtn = section ? section.querySelector('.bannervestidos-swiper-button-next') : null;
+      const prevBtn = section ? section.querySelector('.bannervestidos-swiper-button-prev') : null;
+      
+      try {
+        const swiper = new Swiper(element, {
           slidesPerView: 1,
           slidesPerGroup: 1,
-          navigation: { enabled: false },
-          pagination: { enabled: hasMultipleSlides },
-        },
-        640: {   
-          slidesPerView: 1,
-          slidesPerGroup: 1,
-        },
-        1024: {
-          slidesPerView: 1,
-          slidesPerGroup: 1, 
-        },
-      },
+          loop: hasMultipleSlides,
+          spaceBetween: 10,
+          touchEventsTarget: 'container',
+          navigation: hasMultipleSlides && nextBtn && prevBtn ? { 
+            nextEl: nextBtn,
+            prevEl: prevBtn,
+            enabled: true,
+          } : false,
+          autoplay: hasMultipleSlides ? {
+            delay: 5000,
+            disableOnInteraction: false
+          } : false,
+          pagination: {
+            el: '.bannervestidos-swiper-pagination',
+            clickable: true,
+            enabled: false,
+          },
+          observer: true,
+          observeParents: true,
+          watchOverflow: true,
+          breakpoints: {
+            0: { 
+              slidesPerView: 1,
+              slidesPerGroup: 1,
+              navigation: { enabled: false },
+              pagination: { enabled: hasMultipleSlides },
+            },
+            640: {   
+              slidesPerView: 1,
+              slidesPerGroup: 1,
+            },
+            1024: {
+              slidesPerView: 1,
+              slidesPerGroup: 1, 
+            },
+          },
+        });
+        console.log(`[Swiper] ✅ .bannervestidos-swiper inicializado`, swiper);
+        
+        setTimeout(() => {
+          if (swiper) {
+            swiper.update();
+            console.log(`[Swiper] .bannervestidos-swiper actualizado`);
+          }
+        }, 100);
+      } catch (error) {
+        console.error(`[Swiper] ❌ Error inicializando .bannervestidos-swiper:`, error);
+      }
     });
+  };
+  
+  // Inicializar bannervestidos
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initBannervestidos);
+  } else {
+    setTimeout(initBannervestidos, 100);
+  }
+  
+  window.addEventListener('load', () => {
+    setTimeout(initBannervestidos, 200);
   });
 
   const createSingleImageSwiper = ({ selector, nextSelector, prevSelector, paginationSelector }) => {
@@ -555,13 +605,24 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       try {
+        console.log(`[Swiper] Inicializando ${selector}, slides: ${slideCount}`);
         const swiper = new Swiper(element, swiperConfig);
+        console.log(`[Swiper] ✅ ${selector} inicializado correctamente`, swiper);
+        
+        // Forzar actualización después de un breve delay para asegurar que el layout esté listo
+        setTimeout(() => {
+          if (swiper) {
+            swiper.update();
+            console.log(`[Swiper] ${selector} actualizado`);
+          }
+        }, 100);
         
         // Actualizar cuando el elemento se muestre (para elementos ocultos por CSS responsive)
         const updateWhenVisible = () => {
           if (swiper) {
             swiper.update();
             swiper.slideTo(0, 0);
+            console.log(`[Swiper] ${selector} actualizado por visibilidad`);
           }
         };
         
@@ -584,22 +645,25 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // También actualizar en resize
         let resizeTimer;
-        window.addEventListener('resize', () => {
+        const resizeHandler = () => {
           clearTimeout(resizeTimer);
           resizeTimer = setTimeout(() => {
             if (swiper) {
               swiper.update();
             }
           }, 250);
-        });
+        };
+        window.addEventListener('resize', resizeHandler);
         
       } catch (error) {
-        console.error(`Error inicializando ${selector}:`, error);
+        console.error(`[Swiper] ❌ Error inicializando ${selector}:`, error);
       }
     });
   };
 
   const initHomeBanners = () => {
+    console.log('[Swiper Init] Inicializando banners...');
+    
     createSingleImageSwiper({
       selector: '.banner-vestidos-swiper',
       nextSelector: '.banner-vestidos-swiper-button-next',
@@ -613,46 +677,70 @@ document.addEventListener('DOMContentLoaded', () => {
       prevSelector: '.home-banner2-swiper-button-prev',
       paginationSelector: '.home-banner2-swiper-pagination',
     });
+    
+    console.log('[Swiper Init] Banners inicializados');
   };
 
-  initHomeBanners();
+  // Inicializar después de que todo esté listo
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initHomeBanners);
+  } else {
+    // DOM ya está listo, pero esperar un poco para asegurar que las imágenes estén cargadas
+    setTimeout(initHomeBanners, 100);
+  }
+  
+  // También inicializar cuando la ventana se carga completamente
+  window.addEventListener('load', () => {
+    setTimeout(initHomeBanners, 200);
+  });
 
   // slider de vestidos 
-  new Swiper('.vestidos-swiper', {
-    slidesPerView: 4,
-    slidesPerGroup: 4,
-    loop: true,
-    spaceBetween: 18,
-    navigation: { 
-      nextEl: '.vestidos-swiper-button-next',
-      prevEl: '.vestidos-swiper-button-prev',
-      enabled: true,
-    },
-    autoplay: {
-      delay: 5000, // ⏱ Tiempo entre slides en milisegundos (3000 = 3 segundos)
-      disableOnInteraction: false // sigue después de hacer clic o tocar
-    },
-    pagination: {
-      el: '.vestidos-swiper-pagination',
-      clickable: true,
-      enabled: false,
-    },
-    breakpoints: {
-      0: { 
-        slidesPerView: 1,
-        slidesPerGroup: 1,
-        navigation: { enabled: false },
-        pagination:  { enabled: true  },
-      },
-      640: {   
-        slidesPerView: 3,
-        slidesPerGroup: 3,
-      },
-      1024: {
-        slidesPerView: 6,
-        slidesPerGroup: 6, 
-      },
-    },
+  const vestidosElements = document.querySelectorAll('.vestidos-swiper:not(.swiper-initialized)');
+  vestidosElements.forEach((element) => {
+    try {
+      const swiper = new Swiper(element, {
+        slidesPerView: 4,
+        slidesPerGroup: 4,
+        loop: true,
+        spaceBetween: 18,
+        touchEventsTarget: 'container',
+        navigation: { 
+          nextEl: element.closest('section')?.querySelector('.vestidos-swiper-button-next'),
+          prevEl: element.closest('section')?.querySelector('.vestidos-swiper-button-prev'),
+          enabled: true,
+        },
+        autoplay: {
+          delay: 5000,
+          disableOnInteraction: false
+        },
+        pagination: {
+          el: element.closest('section')?.querySelector('.vestidos-swiper-pagination'),
+          clickable: true,
+          enabled: false,
+        },
+        observer: true,
+        observeParents: true,
+        breakpoints: {
+          0: { 
+            slidesPerView: 1,
+            slidesPerGroup: 1,
+            navigation: { enabled: false },
+            pagination: { enabled: true },
+          },
+          640: {   
+            slidesPerView: 3,
+            slidesPerGroup: 3,
+          },
+          1024: {
+            slidesPerView: 6,
+            slidesPerGroup: 6, 
+          },
+        },
+      });
+      setTimeout(() => swiper.update(), 100);
+    } catch (error) {
+      console.error('[Swiper] Error en .vestidos-swiper:', error);
+    }
   });
 
 });
