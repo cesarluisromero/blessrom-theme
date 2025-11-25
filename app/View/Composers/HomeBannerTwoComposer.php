@@ -2,6 +2,7 @@
 
 namespace App\View\Composers;
 
+use App\View\Composers\Helpers\BannerCacheHelper;
 use Roots\Acorn\View\Composer;
 
 class HomeBannerTwoComposer extends Composer
@@ -29,56 +30,19 @@ class HomeBannerTwoComposer extends Composer
             $page_id = $config_page ? $config_page->ID : null;
         }
 
-        $processSlides = function (string $prefix, ?int $page_id): array {
-            $slides = [];
-            if (! $page_id) {
-                return $slides;
-            }
+        // Leer slides para desktop y móvil (con caché)
+        $slides_desktop = BannerCacheHelper::getCachedSlides('banner2_slide', $page_id);
+        $slides_mobile = BannerCacheHelper::getCachedSlides('banner2_slide_mobile', $page_id);
 
-            for ($i = 1; $i <= 10; $i++) {
-                $imagen = get_field("{$prefix}_{$i}_imagen", $page_id);
-                $alt = get_field("{$prefix}_{$i}_alt", $page_id);
-
-                if (! $imagen) {
-                    continue;
-                }
-
-                $imagen_url = '';
-                $imagen_alt = $alt ?: '';
-
-                if (is_array($imagen)) {
-                    $imagen_url = $imagen['url'] ?? '';
-                    $imagen_alt = $imagen_alt ?: ($imagen['alt'] ?? '');
-                } elseif (is_numeric($imagen)) {
-                    $data = wp_get_attachment_image_src($imagen, 'full');
-                    $imagen_url = $data[0] ?? '';
-                    if (! $imagen_alt) {
-                        $imagen_alt = get_post_meta($imagen, '_wp_attachment_image_alt', true) ?: '';
-                    }
-                } else {
-                    $imagen_url = $imagen;
-                }
-
-                if ($imagen_url) {
-                    $slides[] = [
-                        'imagen' => ['url' => $imagen_url],
-                        'alt' => $imagen_alt,
-                    ];
-                }
-            }
-
-            return $slides;
-        };
-
-        $slides_desktop = $processSlides('banner2_slide', $page_id);
-        $slides_mobile = $processSlides('banner2_slide_mobile', $page_id);
-
-        if (empty($slides_mobile) && ! empty($slides_desktop)) {
+        // Si no hay slides móviles, usar los de desktop como fallback
+        if (empty($slides_mobile) && !empty($slides_desktop)) {
             $slides_mobile = $slides_desktop;
         }
 
-        $button_url = $page_id ? get_field('banner2_boton_url', $page_id) : null;
-        $button_text = $page_id ? (get_field('banner2_boton_texto', $page_id) ?: 'Ver Más Estilos') : 'Ver Más Estilos';
+        // Obtener datos del botón (con caché)
+        $button_data = BannerCacheHelper::getCachedButton('banner2_boton_url', 'banner2_boton_texto', $page_id, 'Ver Más Estilos');
+        $button_url = $button_data['url'];
+        $button_text = $button_data['text'];
 
         return compact('slides_desktop', 'slides_mobile', 'button_url', 'button_text');
     }

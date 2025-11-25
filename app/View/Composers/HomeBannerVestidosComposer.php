@@ -2,6 +2,7 @@
 
 namespace App\View\Composers;
 
+use App\View\Composers\Helpers\BannerCacheHelper;
 use Roots\Acorn\View\Composer;
 
 class HomeBannerVestidosComposer extends Composer
@@ -25,59 +26,19 @@ class HomeBannerVestidosComposer extends Composer
             $page_id = $config_page ? $config_page->ID : null;
         }
 
-        // Función helper para procesar slides
-        $processSlides = function($prefix, $page_id) {
-            $slides = [];
-            // Leer hasta 10 slides (puedes ajustar este número)
-            for ($i = 1; $i <= 10; $i++) {
-                $imagen = get_field("{$prefix}_{$i}_imagen", $page_id);
-                $alt = get_field("{$prefix}_{$i}_alt", $page_id);
-                
-                // Si hay imagen, procesar según el formato de retorno de ACF
-                if ($imagen) {
-                    $imagen_url = '';
-                    $imagen_alt = $alt ?: '';
-                    
-                    // Manejar diferentes formatos de retorno de ACF
-                    if (is_array($imagen)) {
-                        // Array de imagen (formato completo)
-                        $imagen_url = $imagen['url'] ?? '';
-                        $imagen_alt = $imagen_alt ?: ($imagen['alt'] ?? '');
-                    } elseif (is_numeric($imagen)) {
-                        // ID de imagen
-                        $imagen_data = wp_get_attachment_image_src($imagen, 'full');
-                        $imagen_url = $imagen_data ? $imagen_data[0] : '';
-                        if (!$imagen_alt) {
-                            $imagen_alt = get_post_meta($imagen, '_wp_attachment_image_alt', true) ?: '';
-                        }
-                    } else {
-                        // URL directa (string)
-                        $imagen_url = $imagen;
-                    }
-                    
-                    // Solo añadir si tenemos una URL válida
-                    if ($imagen_url) {
-                        $slides[] = [
-                            'imagen' => ['url' => $imagen_url],
-                            'alt' => $imagen_alt
-                        ];
-                    }
-                }
-            }
-            return $slides;
-        };
-
-        // Leer slides para desktop y móvil (usando prefijo 'slide_vestidos')
-        $slides_desktop = $page_id ? $processSlides('slide_vestidos', $page_id) : [];
-        $slides_mobile = $page_id ? $processSlides('slide_vestidos_mobile', $page_id) : [];
+        // Leer slides para desktop y móvil (con caché)
+        $slides_desktop = BannerCacheHelper::getCachedSlides('slide_vestidos', $page_id);
+        $slides_mobile = BannerCacheHelper::getCachedSlides('slide_vestidos_mobile', $page_id);
         
         // Si no hay slides móviles, usar los de desktop como fallback
         if (empty($slides_mobile) && !empty($slides_desktop)) {
             $slides_mobile = $slides_desktop;
         }
         
-        $button_url = $page_id ? get_field('boton_vestidos_url', $page_id) : null;
-        $button_text = $page_id ? (get_field('boton_vestidos_texto', $page_id) ?: 'Ver más vestidos') : 'Ver más vestidos';
+        // Obtener datos del botón (con caché)
+        $button_data = BannerCacheHelper::getCachedButton('boton_vestidos_url', 'boton_vestidos_texto', $page_id, 'Ver más vestidos');
+        $button_url = $button_data['url'];
+        $button_text = $button_data['text'];
 
         return compact('slides_desktop', 'slides_mobile', 'button_url', 'button_text');
     }

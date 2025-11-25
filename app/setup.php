@@ -538,3 +538,19 @@ if (function_exists('acf_add_options_page')) {
   ]);
 }
 */
+
+/**
+ * Invalidar caché de banners cuando se actualicen campos ACF
+ * 
+ * Esto asegura que los cambios en los campos se reflejen inmediatamente
+ * sin esperar a que expire la caché (1 hora por defecto).
+ */
+add_action('acf/save_post', function ($post_id) {
+    // IDs de las páginas donde están los campos de banners
+    $banner_page_ids = [2873, 2894, 2915];
+    
+    // Solo invalidar si es una de nuestras páginas de configuración
+    if (in_array((int) $post_id, $banner_page_ids, true)) {
+        \App\View\Composers\Helpers\BannerCacheHelper::clearAllPageCache((int) $post_id);
+    }
+}, 20); // Prioridad 20 para ejecutarse después de que ACF guarde los datos
