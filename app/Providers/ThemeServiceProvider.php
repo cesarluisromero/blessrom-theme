@@ -44,6 +44,7 @@ class ThemeServiceProvider extends SageServiceProvider
         \App\View\Composers\HeaderMenu::class,
         \App\View\Composers\HomeBannerComposer::class,
         \App\View\Composers\HomeBannerVestidosComposer::class,
+        \App\View\Composers\HomeBannerTwoComposer::class,
     ];
 
 }
