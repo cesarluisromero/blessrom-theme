@@ -22,6 +22,13 @@
                 class="w-full h-full object-cover"
                 fetchpriority="high" decoding="async">
             </div>
+            <div class="swiper-slide">
+              <img
+                src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/Red-Tan-and-Black-Modern-Fashion-Sale-Banner-Landscape.png') }}"
+                alt="Banner"
+                class="w-full h-full object-cover"
+                fetchpriority="high" decoding="async">
+            </div>
           @endforelse
         </div>
       
