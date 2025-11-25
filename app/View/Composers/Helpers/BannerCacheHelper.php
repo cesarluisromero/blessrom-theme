@@ -32,6 +32,16 @@ class BannerCacheHelper
         // Intentar obtener de la caché
         $slides = get_transient($cache_key);
 
+        // Debug para Query Monitor (si está activo)
+        if (defined('QM_COOKIE') && class_exists('QM_Collectors')) {
+            do_action('qm/debug', sprintf(
+                'Banner Cache: %s (page_id: %d) - %s',
+                $prefix,
+                $page_id,
+                false !== $slides ? 'HIT (from cache)' : 'MISS (regenerating)'
+            ));
+        }
+
         if (false !== $slides) {
             return $slides;
         }
@@ -117,6 +127,17 @@ class BannerCacheHelper
 
         $cache_key = self::getCacheKey("button_{$url_field}_{$text_field}", $page_id);
         $button = get_transient($cache_key);
+
+        // Debug para Query Monitor (si está activo)
+        if (defined('QM_COOKIE') && class_exists('QM_Collectors')) {
+            do_action('qm/debug', sprintf(
+                'Banner Button Cache: %s/%s (page_id: %d) - %s',
+                $url_field,
+                $text_field,
+                $page_id,
+                false !== $button ? 'HIT (from cache)' : 'MISS (regenerating)'
+            ));
+        }
 
         if (false !== $button) {
             return $button;
