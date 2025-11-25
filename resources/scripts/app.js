@@ -476,39 +476,37 @@ document.addEventListener('DOMContentLoaded', () => {
   // Banner de vestidos (home-banner-vestidos)
   const bannerVestidosElements = document.querySelectorAll('.banner-vestidos-swiper');
   bannerVestidosElements.forEach((element) => {
+    // Verificar que el elemento no haya sido inicializado ya
+    if (element.swiper) {
+      return;
+    }
+    
     const slides = element.querySelectorAll('.swiper-slide');
-    const hasMultipleSlides = slides.length > 1;
+    const slideCount = slides.length;
+    
+    // Si no hay slides, no inicializar
+    if (slideCount === 0) {
+      return;
+    }
     
     // Buscar botones de navegación en el contenedor padre
     const section = element.closest('section');
     const nextBtn = section ? section.querySelector('.banner-vestidos-swiper-button-next') : null;
     const prevBtn = section ? section.querySelector('.banner-vestidos-swiper-button-prev') : null;
     
-    new Swiper(element, {
+    // Configuración base - SIN loop por defecto
+    const swiperConfig = {
       slidesPerView: 1,
       slidesPerGroup: 1,
-      loop: hasMultipleSlides, // Solo activar loop si hay más de 1 slide
+      loop: false, // Desactivado por defecto
       spaceBetween: 10,
-      navigation: nextBtn && prevBtn ? { 
-        nextEl: nextBtn,
-        prevEl: prevBtn,
-        enabled: hasMultipleSlides, // Solo habilitar navegación si hay múltiples slides
-      } : false,
-      autoplay: hasMultipleSlides ? {
-        delay: 5000,
-        disableOnInteraction: false
-      } : false,
-      pagination: {
-        el: '.banner-vestidos-swiper-pagination',
-        clickable: true,
-        enabled: false,
-      },
+      navigation: false,
+      autoplay: false,
+      pagination: false,
       breakpoints: {
         0: { 
           slidesPerView: 1,
           slidesPerGroup: 1,
-          navigation: { enabled: false },
-          pagination: { enabled: hasMultipleSlides },
         },
         640: {   
           slidesPerView: 1,
@@ -519,7 +517,31 @@ document.addEventListener('DOMContentLoaded', () => {
           slidesPerGroup: 1, 
         },
       },
-    });
+    };
+    
+    // Solo activar loop, autoplay y navegación si hay MÁS de 1 slide
+    if (slideCount > 1) {
+      swiperConfig.loop = true;
+      swiperConfig.autoplay = {
+        delay: 5000,
+        disableOnInteraction: false
+      };
+      if (nextBtn && prevBtn) {
+        swiperConfig.navigation = {
+          nextEl: nextBtn,
+          prevEl: prevBtn,
+          enabled: true,
+        };
+      }
+      swiperConfig.pagination = {
+        el: '.banner-vestidos-swiper-pagination',
+        clickable: true,
+        enabled: false,
+      };
+      swiperConfig.breakpoints[0].pagination = { enabled: true };
+    }
+    
+    new Swiper(element, swiperConfig);
   });
 
   // slider de vestidos 
