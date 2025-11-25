@@ -8,7 +8,7 @@
             <div class="swiper-slide">
               <img
                 src="{{ esc_url($slide['imagen']['url'] ?? $slide['imagen'] ?? '') }}"
-                
+                alt="{{ esc_attr($slide['alt'] ?? '') }}"
                 class="w-full h-full object-cover"
                 {{ $index === 0 ? 'fetchpriority="high"' : 'loading="lazy"' }} 
                 decoding="async">
