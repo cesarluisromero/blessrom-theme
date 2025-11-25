@@ -80,7 +80,22 @@ class HomeBannerTwoComposer extends Composer
         $button_url = $page_id ? get_field('banner2_boton_url', $page_id) : null;
         $button_text = $page_id ? (get_field('banner2_boton_texto', $page_id) ?: 'Ver Más Estilos') : 'Ver Más Estilos';
 
-        return compact('slides_desktop', 'slides_mobile', 'button_url', 'button_text');
+        $debug_info = [];
+        if (current_user_can('administrator')) {
+            $debug_info = [
+                'page_id' => $page_id,
+                'desktop_count' => count($slides_desktop),
+                'mobile_count' => count($slides_mobile),
+                'button_url' => $button_url,
+                'button_text' => $button_text,
+                'fields' => [
+                    'banner2_slide_1_imagen' => get_field('banner2_slide_1_imagen', $page_id) ? 'OK' : 'MISSING',
+                    'banner2_slide_mobile_1_imagen' => get_field('banner2_slide_mobile_1_imagen', $page_id) ? 'OK' : 'MISSING',
+                ],
+            ];
+        }
+
+        return compact('slides_desktop', 'slides_mobile', 'button_url', 'button_text', 'debug_info');
     }
 }
 

@@ -1,3 +1,20 @@
+@if(isset($debug_info) && current_user_can('administrator'))
+  <div style="background:#fff3cd;border:2px solid #ffc107;padding:12px;margin:10px 0;font-family:monospace;font-size:12px;">
+    <strong>DEBUG home-banner2:</strong><br>
+    Page ID: {{ $debug_info['page_id'] ?? 'N/A' }}<br>
+    Desktop Slides: {{ $debug_info['desktop_count'] ?? 0 }}<br>
+    Mobile Slides: {{ $debug_info['mobile_count'] ?? 0 }}<br>
+    Button URL: {{ $debug_info['button_url'] ?? 'N/A' }}<br>
+    Button Text: {{ $debug_info['button_text'] ?? 'N/A' }}<br>
+    <strong>Campos:</strong><br>
+    @if(isset($debug_info['fields']))
+      @foreach($debug_info['fields'] as $field => $status)
+        {{ $field }}: {{ $status }}<br>
+      @endforeach
+    @endif
+  </div>
+@endif
+
 {{-- Slider solo para escritorio (md en adelante) --}}
 <section class="hidden md:block full-bleed text-center py-2 px-4">
   <div class="bg-white">
