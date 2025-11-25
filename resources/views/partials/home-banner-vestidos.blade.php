@@ -1,6 +1,6 @@
 <section class="hidden md:block full-bleed text-center py-2 px-4">
     <div class="bg-white">
-      <div class="swiper bannervestidos-swiper">
+      <div class="swiper banner-vestidos-swiper">
         <!-- Contenedor de slides -->
       
         <div class="swiper-wrapper">
@@ -28,8 +28,8 @@
 
         <!-- Botones -->
         
-        <div class="swiper-button-prev bannervestidos-swiper-button-prev !hidden md:!flex text-blue-500 absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center bg-white rounded-full shadow-md"></div>
-        <div class="swiper-button-next bannervestidos-swiper-button-next !hidden md:!flex text-blue-500 absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center bg-white rounded-full shadow-md"></div>
+        <div class="swiper-button-prev banner-vestidos-swiper-button-prev !hidden md:!flex text-blue-500 absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center bg-white rounded-full shadow-md"></div>
+        <div class="swiper-button-next banner-vestidos-swiper-button-next !hidden md:!flex text-blue-500 absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center bg-white rounded-full shadow-md"></div>
 
         {{-- botón fuera del swiper --}}
         @if($button_url)
@@ -47,7 +47,7 @@
 
 <section class="block md:hidden full-bleed text-center py-6 overflow-x-clip">
   <div class="bg-white">
-    <div class="swiper bannervestidos-swiper rounded-none" aria-label="Banner vestidos móvil">
+    <div class="swiper banner-vestidos-swiper rounded-none" aria-label="Banner vestidos móvil">
       <div class="swiper-wrapper">
         @forelse($slides_mobile as $index => $slide)
           <div class="swiper-slide">
@@ -71,8 +71,8 @@
       </div>
 
       {{-- Flechas (ocultas en móvil) --}}
-      <div class="swiper-button-prev bannervestidos-swiper-button-prev !hidden md:!flex"></div>
-      <div class="swiper-button-next bannervestidos-swiper-button-next !hidden md:!flex"></div>
+      <div class="swiper-button-prev banner-vestidos-swiper-button-prev !hidden md:!flex"></div>
+      <div class="swiper-button-next banner-vestidos-swiper-button-next !hidden md:!flex"></div>
       {{-- debajo del .swiper bannervestidos-swiper --}}
     
       {{-- botón fuera del swiper --}}
