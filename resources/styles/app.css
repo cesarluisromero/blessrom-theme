@@ -76,12 +76,16 @@ a {
 /* Deja que el Swiper y sus slides crezcan según el contenido (la imagen) */
 .bannervestidos-swiper,
 .bannervestidos-swiper .swiper-wrapper,
-.bannervestidos-swiper .swiper-slide {
+.bannervestidos-swiper .swiper-slide,
+.home-banner2-swiper,
+.home-banner2-swiper .swiper-wrapper,
+.home-banner2-swiper .swiper-slide {
   height: auto;
 }
 
 /* Asegura que la imagen dicte la altura y no deje huecos */
-.bannervestidos-swiper .swiper-slide > img {
+.bannervestidos-swiper .swiper-slide > img,
+.home-banner2-swiper .swiper-slide > img {
   display: block;
   width: 100%;
   height: auto;
