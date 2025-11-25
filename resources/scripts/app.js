@@ -487,6 +487,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const section = element.closest('section');
       const nextBtn = section ? section.querySelector(nextSelector) : null;
       const prevBtn = section ? section.querySelector(prevSelector) : null;
+      const paginationEl = paginationSelector && section ? section.querySelector(paginationSelector) : null;
 
       const swiperConfig = {
         slidesPerView: 1,
@@ -504,6 +505,8 @@ document.addEventListener('DOMContentLoaded', () => {
           enabled: true,
         } : false,
         pagination: false,
+        observer: true,
+        observeParents: true,
         breakpoints: {
           0: {
             slidesPerView: 1,
@@ -520,9 +523,9 @@ document.addEventListener('DOMContentLoaded', () => {
         },
       };
 
-      if (slideCount > 1 && paginationSelector) {
+      if (slideCount > 1 && paginationEl) {
         swiperConfig.pagination = {
-          el: paginationSelector,
+          el: paginationEl,
           clickable: true,
           enabled: false,
         };
@@ -530,6 +533,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       try {
+        console.info(`[Swiper] init ${selector}`, { slideCount });
         new Swiper(element, swiperConfig);
       } catch (error) {
         console.error(`Error inicializando ${selector}:`, error);
