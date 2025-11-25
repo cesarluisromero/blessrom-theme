@@ -474,75 +474,93 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Banner de vestidos (home-banner-vestidos)
-  const bannerVestidosElements = document.querySelectorAll('.banner-vestidos-swiper');
-  bannerVestidosElements.forEach((element) => {
-    // Verificar que el elemento no haya sido inicializado ya
-    if (element.swiper) {
+  // Inicializar después de que todo esté cargado
+  const initBannerVestidos = () => {
+    const bannerVestidosElements = document.querySelectorAll('.banner-vestidos-swiper:not(.swiper-initialized)');
+    
+    if (bannerVestidosElements.length === 0) {
       return;
     }
     
-    const slides = element.querySelectorAll('.swiper-slide');
-    const slideCount = slides.length;
-    
-    // Si no hay slides, no inicializar
-    if (slideCount === 0) {
-      return;
-    }
-    
-    // Buscar botones de navegación en el contenedor padre
-    const section = element.closest('section');
-    const nextBtn = section ? section.querySelector('.banner-vestidos-swiper-button-next') : null;
-    const prevBtn = section ? section.querySelector('.banner-vestidos-swiper-button-prev') : null;
-    
-    // Configuración base - SIN loop por defecto
-    const swiperConfig = {
-      slidesPerView: 1,
-      slidesPerGroup: 1,
-      loop: false, // Desactivado por defecto
-      spaceBetween: 10,
-      navigation: false,
-      autoplay: false,
-      pagination: false,
-      breakpoints: {
-        0: { 
-          slidesPerView: 1,
-          slidesPerGroup: 1,
-        },
-        640: {   
-          slidesPerView: 1,
-          slidesPerGroup: 1,
-        },
-        1024: {
-          slidesPerView: 1,
-          slidesPerGroup: 1, 
-        },
-      },
-    };
-    
-    // Solo activar loop, autoplay y navegación si hay MÁS de 1 slide
-    if (slideCount > 1) {
-      swiperConfig.loop = true;
-      swiperConfig.autoplay = {
-        delay: 5000,
-        disableOnInteraction: false
-      };
-      if (nextBtn && prevBtn) {
-        swiperConfig.navigation = {
-          nextEl: nextBtn,
-          prevEl: prevBtn,
-          enabled: true,
-        };
+    bannerVestidosElements.forEach((element) => {
+      const slides = element.querySelectorAll('.swiper-slide');
+      const slideCount = slides.length;
+      
+      // Si no hay slides, no inicializar
+      if (slideCount === 0) {
+        return;
       }
-      swiperConfig.pagination = {
-        el: '.banner-vestidos-swiper-pagination',
-        clickable: true,
-        enabled: false,
+      
+      // Buscar botones de navegación en el contenedor padre
+      const section = element.closest('section');
+      const nextBtn = section ? section.querySelector('.banner-vestidos-swiper-button-next') : null;
+      const prevBtn = section ? section.querySelector('.banner-vestidos-swiper-button-prev') : null;
+      
+      // Configuración base - SIN loop por defecto
+      const swiperConfig = {
+        slidesPerView: 1,
+        slidesPerGroup: 1,
+        loop: false, // Desactivado por defecto - IMPORTANTE
+        spaceBetween: 10,
+        allowTouchMove: slideCount > 1, // Solo permitir toque si hay múltiples slides
+        breakpoints: {
+          0: { 
+            slidesPerView: 1,
+            slidesPerGroup: 1,
+          },
+          640: {   
+            slidesPerView: 1,
+            slidesPerGroup: 1,
+          },
+          1024: {
+            slidesPerView: 1,
+            slidesPerGroup: 1, 
+          },
+        },
       };
-      swiperConfig.breakpoints[0].pagination = { enabled: true };
-    }
-    
-    new Swiper(element, swiperConfig);
-  });
+      
+      // Solo activar loop, autoplay y navegación si hay MÁS de 1 slide
+      if (slideCount > 1) {
+        swiperConfig.loop = true;
+        swiperConfig.autoplay = {
+          delay: 5000,
+          disableOnInteraction: false
+        };
+        if (nextBtn && prevBtn) {
+          swiperConfig.navigation = {
+            nextEl: nextBtn,
+            prevEl: prevBtn,
+            enabled: true,
+          };
+        }
+        swiperConfig.pagination = {
+          el: '.banner-vestidos-swiper-pagination',
+          clickable: true,
+          enabled: false,
+        };
+        swiperConfig.breakpoints[0].pagination = { enabled: true };
+      } else {
+        // Con 1 slide, asegurar que todo esté desactivado
+        swiperConfig.navigation = false;
+        swiperConfig.autoplay = false;
+        swiperConfig.pagination = false;
+      }
+      
+      try {
+        new Swiper(element, swiperConfig);
+      } catch (error) {
+        console.error('Error inicializando banner-vestidos-swiper:', error);
+      }
+    });
+  };
+  
+  // Ejecutar después de que el DOM esté listo
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initBannerVestidos);
+  } else {
+    // DOM ya está listo
+    setTimeout(initBannerVestidos, 100);
+  }
 
   // slider de vestidos 
   new Swiper('.vestidos-swiper', {
