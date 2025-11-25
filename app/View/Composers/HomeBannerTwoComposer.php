@@ -21,7 +21,7 @@ class HomeBannerTwoComposer extends Composer
          * Alternativa: asigna un slug único (por ejemplo, configuracion-banner-principal)
          * y actualiza la búsqueda en get_page_by_path más abajo.
          */
-        $page_id = 0; // ⬅️ Reemplaza con el ID de la página de configuración
+        $page_id = 2915; // ⬅️ Reemplaza con el ID de la página de configuración
 
         // Fallback: intentar buscar por slug si no se configuró el ID
         if (!$page_id) {
