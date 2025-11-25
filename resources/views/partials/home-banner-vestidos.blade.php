@@ -18,20 +18,23 @@
             <div class="swiper-slide">
               <img
                 src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/Red-Tan-and-Black-Modern-Fashion-Sale-Banner-Landscape.png') }}"
-                alt="Banner"
+                alt="Experimenta nuestra pasión por la moda en Tarapoto"
                 class="w-full h-full object-cover"
                 fetchpriority="high" decoding="async">
             </div>
             <div class="swiper-slide">
               <img
-                src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/Red-Tan-and-Black-Modern-Fashion-Sale-Banner-Landscape.png') }}"
-                alt="Banner"
+                src="{{ esc_url('https://blessrom.com/wp-content/uploads/2025/09/Beige-Brown-Clean-Aesthetic-Fashion-Collection-Medium-Banner-scaled.png') }}"
+                alt="Colección de vestidos"
                 class="w-full h-full object-cover"
-                fetchpriority="high" decoding="async">
-            </div>
+                loading="lazy" decoding="async">
+          < /div>
           @endforelse
         </div>
-      
+        <div class="swiper-wrapper">
+          
+          
+        </div>
 
         <!-- Botones -->
         
