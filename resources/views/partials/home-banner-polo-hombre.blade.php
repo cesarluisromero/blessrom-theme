@@ -29,8 +29,8 @@
 
         <!-- Botones -->
         
-        <div class="swiper-button-prev bannervestidos-swiper-button-prev !hidden md:!flex text-blue-500 absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center bg-white rounded-full shadow-md"></div>
-        <div class="swiper-button-next bannervestidos-swiper-button-next !hidden md:!flex text-blue-500 absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center bg-white rounded-full shadow-md"></div>
+        <div class="swiper-button-prev bannervestidos-swiper-button-prev !hidden md:!flex text-white absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center bg-transparent rounded-full"></div>
+        <div class="swiper-button-next bannervestidos-swiper-button-next !hidden md:!flex text-white absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center bg-transparent rounded-full"></div>
 
         {{-- botón fuera del swiper --}}
         @if($button_url)
