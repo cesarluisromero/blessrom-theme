@@ -477,66 +477,120 @@ document.addEventListener('DOMContentLoaded', () => {
     const elements = document.querySelectorAll(`${selector}:not(.swiper-initialized)`);
 
     elements.forEach((element) => {
-      const slides = element.querySelectorAll('.swiper-slide');
-      const slideCount = slides.length;
-
-      if (slideCount === 0) {
-        return;
-      }
-
-      const section = element.closest('section');
-      const nextBtn = section ? section.querySelector(nextSelector) : null;
-      const prevBtn = section ? section.querySelector(prevSelector) : null;
-      const paginationEl = paginationSelector && section ? section.querySelector(paginationSelector) : null;
-
-      const swiperConfig = {
-        slidesPerView: 1,
-        slidesPerGroup: 1,
-        loop: slideCount > 1,
-        spaceBetween: 10,
-        allowTouchMove: slideCount > 1,
-        autoplay: slideCount > 1 ? {
-          delay: 5000,
-          disableOnInteraction: false,
-        } : false,
-        navigation: slideCount > 1 && nextBtn && prevBtn ? {
-          nextEl: nextBtn,
-          prevEl: prevBtn,
-          enabled: true,
-        } : false,
-        pagination: false,
-        observer: true,
-        observeParents: true,
-        breakpoints: {
-          0: {
-            slidesPerView: 1,
-            slidesPerGroup: 1,
-          },
-          640: {
-            slidesPerView: 1,
-            slidesPerGroup: 1,
-          },
-          1024: {
-            slidesPerView: 1,
-            slidesPerGroup: 1,
-          },
-        },
+      // Verificar si el elemento está visible (no oculto por CSS)
+      const isVisible = () => {
+        const style = window.getComputedStyle(element);
+        return style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0';
       };
 
-      if (slideCount > 1 && paginationEl) {
-        swiperConfig.pagination = {
-          el: paginationEl,
-          clickable: true,
-          enabled: false,
-        };
-        swiperConfig.breakpoints[0].pagination = { enabled: true };
-      }
+      const initSwiper = () => {
+        // Si ya está inicializado, no hacer nada
+        if (element.swiper) {
+          return;
+        }
 
-      try {
-        console.info(`[Swiper] init ${selector}`, { slideCount });
-        new Swiper(element, swiperConfig);
-      } catch (error) {
-        console.error(`Error inicializando ${selector}:`, error);
+        const slides = element.querySelectorAll('.swiper-slide');
+        const slideCount = slides.length;
+
+        if (slideCount === 0) {
+          return;
+        }
+
+        const section = element.closest('section');
+        const nextBtn = section ? section.querySelector(nextSelector) : null;
+        const prevBtn = section ? section.querySelector(prevSelector) : null;
+        const paginationEl = paginationSelector && section ? section.querySelector(paginationSelector) : null;
+
+        const swiperConfig = {
+          slidesPerView: 1,
+          slidesPerGroup: 1,
+          loop: slideCount > 1,
+          spaceBetween: 10,
+          allowTouchMove: slideCount > 1,
+          touchEventsTarget: 'container',
+          autoplay: slideCount > 1 ? {
+            delay: 5000,
+            disableOnInteraction: false,
+          } : false,
+          navigation: slideCount > 1 && nextBtn && prevBtn ? {
+            nextEl: nextBtn,
+            prevEl: prevBtn,
+            enabled: true,
+          } : false,
+          pagination: false,
+          observer: true,
+          observeParents: true,
+          watchOverflow: true,
+          breakpoints: {
+            0: {
+              slidesPerView: 1,
+              slidesPerGroup: 1,
+            },
+            640: {
+              slidesPerView: 1,
+              slidesPerGroup: 1,
+            },
+            1024: {
+              slidesPerView: 1,
+              slidesPerGroup: 1,
+            },
+          },
+        };
+
+        if (slideCount > 1 && paginationEl) {
+          swiperConfig.pagination = {
+            el: paginationEl,
+            clickable: true,
+            enabled: false,
+          };
+          swiperConfig.breakpoints[0].pagination = { enabled: true };
+        }
+
+        try {
+          console.info(`[Swiper] init ${selector}`, { slideCount, visible: isVisible() });
+          const swiper = new Swiper(element, swiperConfig);
+          
+          // Si el elemento estaba oculto, actualizar cuando se muestre
+          if (!isVisible()) {
+            const checkVisibility = setInterval(() => {
+              if (isVisible() && swiper) {
+                swiper.update();
+                swiper.slideTo(0, 0); // Resetear al primer slide
+                clearInterval(checkVisibility);
+              }
+            }, 100);
+            
+            // Limpiar después de 5 segundos si no se muestra
+            setTimeout(() => clearInterval(checkVisibility), 5000);
+          }
+        } catch (error) {
+          console.error(`Error inicializando ${selector}:`, error);
+        }
+      };
+
+      // Inicializar inmediatamente si está visible
+      if (isVisible()) {
+        initSwiper();
+      } else {
+        // Si está oculto, usar IntersectionObserver para inicializar cuando sea visible
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting && !element.swiper) {
+              initSwiper();
+              observer.disconnect();
+            }
+          });
+        }, { threshold: 0.1 });
+        
+        observer.observe(element);
+        
+        // Fallback: inicializar después de un delay si aún no se ha inicializado
+        setTimeout(() => {
+          if (!element.swiper) {
+            initSwiper();
+            observer.disconnect();
+          }
+        }, 1000);
       }
     });
   };
