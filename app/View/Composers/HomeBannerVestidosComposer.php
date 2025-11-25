@@ -79,24 +79,7 @@ class HomeBannerVestidosComposer extends Composer
         $button_url = $page_id ? get_field('boton_vestidos_url', $page_id) : null;
         $button_text = $page_id ? (get_field('boton_vestidos_texto', $page_id) ?: 'Ver más vestidos') : 'Ver más vestidos';
 
-        // DEBUG TEMPORAL - Quitar después de verificar
-        $debug_info = [];
-        if (current_user_can('administrator')) {
-            $debug_info = [
-                'page_id' => $page_id,
-                'desktop_count' => count($slides_desktop),
-                'mobile_count' => count($slides_mobile),
-                'button_url' => $button_url,
-                'button_text' => $button_text,
-                'test_fields' => [
-                    'slide_vestidos_1_imagen' => get_field('slide_vestidos_1_imagen', $page_id) ? 'EXISTS' : 'NOT FOUND',
-                    'slide_vestidos_1_alt' => get_field('slide_vestidos_1_alt', $page_id) ? 'EXISTS' : 'NOT FOUND',
-                    'slide_vestidos_mobile_1_imagen' => get_field('slide_vestidos_mobile_1_imagen', $page_id) ? 'EXISTS' : 'NOT FOUND',
-                ]
-            ];
-        }
-
-        return compact('slides_desktop', 'slides_mobile', 'button_url', 'button_text', 'debug_info');
+        return compact('slides_desktop', 'slides_mobile', 'button_url', 'button_text');
     }
 }
 

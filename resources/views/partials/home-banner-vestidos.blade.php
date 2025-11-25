@@ -1,21 +1,3 @@
-{{-- DEBUG TEMPORAL - Quitar después --}}
-@if(isset($debug_info) && current_user_can('administrator'))
-<div style="background: #fff3cd; border: 2px solid #ffc107; padding: 15px; margin: 10px; font-family: monospace; font-size: 12px;">
-  <strong>DEBUG Banner Vestidos:</strong><br>
-  Page ID: {{ $debug_info['page_id'] ?? 'N/A' }}<br>
-  Desktop Slides: {{ $debug_info['desktop_count'] ?? 0 }}<br>
-  Mobile Slides: {{ $debug_info['mobile_count'] ?? 0 }}<br>
-  Button URL: {{ $debug_info['button_url'] ?? 'N/A' }}<br>
-  Button Text: {{ $debug_info['button_text'] ?? 'N/A' }}<br>
-  <strong>Campos encontrados:</strong><br>
-  @if(isset($debug_info['test_fields']))
-    @foreach($debug_info['test_fields'] as $field => $status)
-      {{ $field }}: {{ $status }}<br>
-    @endforeach
-  @endif
-</div>
-@endif
-
 <section class="hidden md:block full-bleed text-center py-2 px-4">
     <div class="bg-white">
       <div class="swiper bannervestidos-swiper">
